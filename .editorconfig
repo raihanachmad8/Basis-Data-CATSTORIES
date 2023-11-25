@@ -1,0 +1,28 @@
+
+# Vite
+*.vue
+*.svelte
+*.md
+
+# JSON
+*.json
+
+# JavaScript
+*.js
+
+# HTML
+*.html
+
+# JSX
+*.jsx
+
+# TypeScript
+*.ts
+
+# TSX
+*.tsx
+
+# Set indentation style and size
+[*.{vue,svelte,md,json,js,html,jsx,ts,tsx}]
+indent_style = space
+indent_size = 4
