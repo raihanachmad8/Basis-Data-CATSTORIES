@@ -18,7 +18,6 @@ export async function seed(knex) {
             };
         }));
         console.log('seed catatan_transaksi');
-        console.log(catatan_transaksi);
-        // return knex('catatan_transaksi').insert(catatan_transaksi);
+        return knex('catatan_transaksi').insert(catatan_transaksi);
     });
 }
