@@ -1,13 +1,33 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Home from "./pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Inventaris from "./pages/Inventaris";
+import Transaksi from "./pages/Transaksi";
+import Pemasok from "./pages/Pemasok";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />,
+        element: <Login />,
+    },
+    {
+        path: "/dashboard",
+        element: <Dashboard />,
+    },
+    {
+        path: "/inventaris",
+        element: <Inventaris />,
+    },
+    {
+        path: "/transaksi",
+        element: <Transaksi />,
+    },
+    {
+        path: "/pemasok",
+        element: <Pemasok />,
     },
 ]);
 
