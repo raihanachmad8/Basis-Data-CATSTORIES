@@ -9,8 +9,8 @@ export const authMiddleware = async (req, res, next) => {
     if (!token) {
         res.status(401)
             .json({
-                error: "Unauthorized",
                 status: 401,
+                error: "Unauthorized",
             })
             .end();
     } else {
@@ -22,8 +22,8 @@ export const authMiddleware = async (req, res, next) => {
             if (!user) {
                 res.status(401)
                     .json({
-                        error: "Unauthorized",
                         sttaus: 401,
+                        error: "Unauthorized",
                     })
                     .end();
             } else {
@@ -33,8 +33,8 @@ export const authMiddleware = async (req, res, next) => {
         } catch (error) {
             res.status(401)
                 .json({
-                    error: "Unauthorized",
                     sttaus: 401,
+                    error: "Unauthorized",
                 })
                 .end();
         }

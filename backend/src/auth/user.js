@@ -7,6 +7,6 @@ export const Account = [
     {
         username: "user",
         password: "user",
-        role: "karyawangir"
+        role: "karyawan"
     }
 ]

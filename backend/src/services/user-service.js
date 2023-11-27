@@ -7,19 +7,6 @@ import {
 } from '../validations/user-validation.js'
 import { logger } from '../app/logging.js';
 
-const akun =  [
-    {
-        username: "admin",
-        password: "admin",
-        role: "admin"
-    },
-    {
-        username: "user",
-        password: "user",
-        role: "user"
-    }
-]
-
 const login = async (req) => {
     const userValidate = validate(loginUserValidation, req)
     const {username, password} = userValidate
@@ -61,15 +48,11 @@ const logout = async (username) => {
         logger.error("User not found")
         throw new ResponseError(404, "User not found")
     }
-    res.clearCookie('Authorization')
-    logger.info(`User ${req.user.username} logged out`)
-    res.status(200).json({
-        status: 200
-    })
 }
 
 
 export default {
     login,
-    logout
+    logout,
+    get
 }

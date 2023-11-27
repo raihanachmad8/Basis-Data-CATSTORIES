@@ -11,9 +11,9 @@ const login = async (req, res, next) => {
         res.cookie('Authorization', token, {httpOnly: true})
         logger.info(`User ${result.username} logged in`)
         res.status(200).json({
+            status: 200,
             message: "Login success",
             data: result,
-            status: 200
         })
     } catch (e) {
         next(e)
@@ -22,11 +22,14 @@ const login = async (req, res, next) => {
 
 const get = async (req, res, next) => {
     try {
-        const result = await userService.get(req.user.username)
+        const cookie = req.cookies.Authorization
+        const decoded = jwt.verify(cookie, process.env.JWT_SECRET)
+        const result = await userService.get(decoded.user.username)
+        logger.info(`User ${result.username} get data`)
         res.status(200).json({
+            status: 200,
             message: "Get user success",
             data: result,
-            status: 200
         })
     } catch (e) {
         next(e)
@@ -36,10 +39,15 @@ const get = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     try {
-        await userService.logout(req.user.useraname)
+        const cookie = req.cookies.Authorization
+        const decoded = await jwt.verify(cookie, process.env.JWT_SECRET)
+
+        await userService.logout(decoded.user.username)
+        res.clearCookie('Authorization')
+        logger.info(`User ${req.user.username} logged out`)
         res.status(200).json({
+            status: 200,
             message: "Logout success",
-            status: 200
         })
     } catch (e) {
         next(e)

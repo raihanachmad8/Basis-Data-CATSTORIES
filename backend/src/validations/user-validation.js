@@ -6,6 +6,7 @@ const loginUserValidation = Joi.object({
 })
 
 const getUserValidation = Joi.string().min(4).required()
+
 export {
     loginUserValidation,
     getUserValidation
