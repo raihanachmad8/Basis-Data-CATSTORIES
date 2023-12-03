@@ -1,13 +1,13 @@
 {
-    "name": "sistem-manajemen-inventaris-toko",
+    "name": "platform-adopsi-kucing",
     "version": "1.0.0",
-    "description": "Studi Kasus: Sistem Manajemen Inventaris Toko dengan Fungsi CRUD menggunakan Microsoft SQL Server",
+    "description": "Studi Kasus: Platform Adopsi Kucing untuk Mewujudkan Rumah Baru yang Penuh Kasih dengan Fungsi CRUD menggunakan Microsoft SQL Server",
     "main": "index.js",
     "type": "module",
     "scripts": {
         "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
         "start:frontend": "cd frontend && pnpm run dev",
-        "start:backend": "cd backend/src && node server.js",
+        "start:backend": "cd backend/src && nodemon server.js",
         "knex:migrate": "npx knex migrate:latest",
         "knex:rollback": "knex migrate:rollback",
         "knex:seed": "knex seed:run"
@@ -26,8 +26,12 @@
         "jsonwebtoken": "^9.0.2",
         "knex": "^3.0.1",
         "mssql": "^10.0.1",
+        "nodemon": "^3.0.2",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0",
         "uuid": "^9.0.1",
-        "winston": "^3.11.0"
+        "winston": "^3.11.0",
+        "yamljs": "^0.3.0"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.3.1",

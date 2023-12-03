@@ -1,12 +1,23 @@
 import {validate} from '../validations/validate.js'
 import {ResponseError} from "../errors/response-error.js";
-import { Account } from '../auth/user.js';
 import {
     getUserValidation,
     loginUserValidation
 } from '../validations/user-validation.js'
 import { logger } from '../app/logging.js';
 
+const Account = [
+    {
+        username: "admin",
+        password: "admin",
+        role: "admin"
+    },
+    {
+        username: "user",
+        password: "user",
+        role: "user"
+    }
+]
 const login = async (req) => {
     const userValidate = validate(loginUserValidation, req)
     const {username, password} = userValidate
