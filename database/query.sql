@@ -1,44 +1,69 @@
--- Tabel Jenis
+-- Tabel: Jenis
 CREATE TABLE Jenis (
-    ID_Jenis VARCHAR(10) PRIMARY KEY,
-    Nama VARCHAR(100)
+    ID_Jenis    VARCHAR(50)     PRIMARY KEY,
+    Nama        VARCHAR(100)    NOT NULL
 );
 
--- Tabel Kucing
+-- Tabel: Kucing
 CREATE TABLE Kucing (
-    ID_Kucing VARCHAR(10) PRIMARY KEY,
-    Foto VARCHAR(50),
-    Umur INT,
-    Tanggal_Masuk DATE,
-    Harga DECIMAL,
-    Status VARCHAR(10) CHECK(Status IN ('Tersedia', 'Terjual')),
-    ID_Jenis VARCHAR(10) REFERENCES Jenis(ID_Jenis),
-    Keterangan TEXT
+    ID_Kucing       VARCHAR(50)     PRIMARY KEY,
+    ID_Jenis        VARCHAR(50)     REFERENCES Jenis(ID_Jenis),
+    Nama            VARCHAR(50)     NOT NULL,
+    Foto            VARCHAR(100)    NOT NULL,
+    Umur            SMALLINT        NOT NULL, --Bulan
+    Jenis_Kelamin   VARCHAR(6)      NOT NULL    CHECK(Jenis_Kelamin IN('Jantan', 'Betina')),
+    Tanggal_Masuk   DATE            NOT NULL,
+    Biaya           DECIMAL         NOT NULL,
+    Status          VARCHAR(10)     NOT NULL    CHECK(Status IN('Tersedia', 'Tidak Tersedia')),
+    Keterangan      TEXT
 );
 
--- Tabel Pembeli
+-- Tabel: Alamat
+CREATE TABLE Alamat (
+    ID_Alamat       VARCHAR(50) PRIMARY KEY,
+    Jalan           TEXT        NOT NULL,
+    Kota            VARCHAR(50) NOT NULL,
+    Provinsi        VARCHAR(50) NOT NULL,
+    Kode_Pos        CHAR(5)     NOT NULL
+);
+
+-- Tabel: Pembeli
 CREATE TABLE Pembeli (
-    ID_Pembeli VARCHAR(10) PRIMARY KEY,
-    Nama VARCHAR(100),
-    No_Telp VARCHAR(15),
-    Alamat TEXT
+    ID_Pembeli     VARCHAR(50)      PRIMARY KEY,
+    ID_Alamat      VARCHAR(50)      REFERENCES Alamat(ID_Alamat),
+    Nama           VARCHAR(100)     NOT NULL,
+    Email          NVARCHAR(255)    NOT NULL,
+    No_Telp        VARCHAR(15)      NOT NULL
 );
 
--- Tabel Transaksi
+-- Tabel: Pengiriman
+CREATE TABLE Pengiriman (
+    ID_Pengiriman       VARCHAR(50)     PRIMARY KEY,
+    ID_Alamat           VARCHAR(50)     REFERENCES Alamat(ID_Alamat),
+    Jenis_Pengiriman    VARCHAR(10)     NOT NULL    CHECK(Jenis_Pengiriman IN('Ambil Toko', 'Kirim'))  ,
+    Nomor_Resi          VARCHAR(30)
+);
+
+-- Tabel: Pembayaran
+CREATE TABLE Pembayaran (
+    ID_Pembayaran       VARCHAR(50) PRIMARY KEY,
+    Metode_Pembayaran   VARCHAR(10) NOT NULL        CHECK(Metode_Pembayaran IN('Cash', 'Transfer')),
+    Total_Biaya         DECIMAL     NOT NULL
+);
+
+-- Tabel: Transaksi
 CREATE TABLE Transaksi (
-    ID_Transaksi VARCHAR(10) PRIMARY KEY,
-    ID_Pembeli VARCHAR(10) REFERENCES Pembeli(ID_Pembeli),
-    Pembayaran VARCHAR(10) CHECK(Pembayaran IN ('Cash', 'Transfer')),
-    Pengiriman VARCHAR(10) CHECK(Pengiriman IN ('Ambil Toko', 'Kirim')),
-    Tanggal_Transaksi DATE,
-    Total_Harga DECIMAL,
-    Pesan TEXT
+    ID_Transaksi        VARCHAR(50) PRIMARY KEY,
+    ID_Pembeli          VARCHAR(50) REFERENCES Pembeli(ID_Pembeli),
+    ID_Pengiriman       VARCHAR(50) REFERENCES Pengiriman(ID_Pengiriman),
+    ID_Pembayaran       VARCHAR(50) REFERENCES Pembayaran(ID_Pembayaran),
+    Tanggal_Transaksi   DATE        NOT NULL,
+    Pesan               TEXT
 );
 
--- Tabel Detail_Transaksi
+-- Tabel: Detail_Transaksi
 CREATE TABLE Detail_Transaksi (
-    ID_DetailTrc VARCHAR(10) PRIMARY KEY,
-    ID_Kucing VARCHAR(10) REFERENCES Kucing(ID_Kucing),
-    ID_Transaksi VARCHAR(10) REFERENCES Transaksi(ID_Transaksi),
-    Jumlah INT
+    ID_Detail_Transaksi VARCHAR(50) PRIMARY KEY,
+    ID_Transaksi        VARCHAR(50) NOT NULL    REFERENCES Transaksi(ID_Transaksi),
+    ID_Kucing           VARCHAR(50) REFERENCES Kucing(ID_Kucing)
 );
