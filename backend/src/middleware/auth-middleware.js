@@ -6,6 +6,7 @@ configureEnvironment('../../../.env')
 
 export const authMiddleware = async (req, res, next) => {
     const token = req.cookies.Authorization
+    
     if (!token) {
         res.status(401)
             .json({
@@ -15,7 +16,7 @@ export const authMiddleware = async (req, res, next) => {
             .end();
     } else {
         try {
-            const secret = process.env.JWT_SECRET;
+            const secret = process.env.JWT_KEY;
             const decodedToken = jwt.verify(token, secret);
             const user = decodedToken.user;
 
@@ -31,10 +32,10 @@ export const authMiddleware = async (req, res, next) => {
                 next();
             }
         } catch (error) {
-            res.status(401)
+            res.status(404)
                 .json({
-                    sttaus: 401,
-                    error: "Unauthorized",
+                    sttaus: 404,
+                    error: "NOT FOUND",
                 })
                 .end();
         }

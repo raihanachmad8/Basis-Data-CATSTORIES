@@ -8,6 +8,7 @@
         "dev": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
         "start:frontend": "cd frontend && pnpm run dev",
         "start:backend": "cd backend/src && nodemon server.js",
+        "migrate:seed": "npx knex migrate:latest && npx knex seed:run",
         "knex:migrate": "npx knex migrate:latest",
         "knex:rollback": "knex migrate:rollback",
         "knex:seed": "knex seed:run"
