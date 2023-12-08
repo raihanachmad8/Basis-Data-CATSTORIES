@@ -1,3 +1,13 @@
+USE [master];
+
+IF EXISTS(SELECT * FROM sys.databases WHERE name = 'CATADOPT')
+    DROP DATABASE [CATADOPT];
+
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'CATADOPT')
+    CREATE DATABASE [CATADOPT];
+
+USE [CATADOPT];
+
 -- Tabel: Jenis
 CREATE TABLE Jenis (
     ID_Jenis    VARCHAR(50)     PRIMARY KEY,
