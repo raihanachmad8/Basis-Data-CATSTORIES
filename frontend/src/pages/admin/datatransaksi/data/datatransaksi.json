@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "id_pembeli": 1,
+        "qty": 2,
+        "pembayaran": "Transfer",
+        "pengiriman": "JNE",
+        "total": 200000,
+        "created_at": "2022-01-01 00:00:00",
+        "pesan": "Terima kasih"
+    },
+    {
+        "id": 2,
+        "id_pembeli": 2,
+        "qty": 3,
+        "pembayaran": "Transfer",
+        "pengiriman": "JNE",
+        "total": 300000,
+        "created_at": "2022-01-01 00:00:00",
+        "pesan": "Terima kasih"
+    },
+    {
+        "id": 3,
+        "id_pembeli": 3,
+        "qty": 4,
+        "pembayaran": "Transfer",
+        "pengiriman": "JNE",
+        "total": 400000,
+        "created_at": "2022-01-01 00:00:00",
+        "pesan": "Terima kasih"
+    },
+    {
+        "id": 4,
+        "id_pembeli": 4,
+        "qty": 5,
+        "pembayaran": "Transfer",
+        "pengiriman": "JNE",
+        "total": 500000,
+        "created_at": "2022-01-01 00:00:00",
+        "pesan": "Terima kasih"
+    },
+    {
+        "id": 5,
+        "id_pembeli": 5,
+        "qty": 6,
+        "pembayaran": "Transfer",
+        "pengiriman": "JNE",
+        "total": 600000,
+        "created_at": "2022-01-01 00:00:00",
+        "pesan": "Terima kasih"
+    }
+]

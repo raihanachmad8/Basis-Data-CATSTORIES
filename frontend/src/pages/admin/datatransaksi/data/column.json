@@ -1,0 +1,30 @@
+[
+    {
+        "header": "ID_Transaksi",
+        "accessor": "id_transaksi"
+    },
+    {
+        "header": "ID_Pembeli",
+        "accessor": "id_pembeli"
+    },
+    {
+        "header": "Pembayaran",
+        "accessor": "pembayaran"
+    },
+    {
+        "header": "Pengiriman",
+        "accessor": "pengiriman"
+    },
+    {
+        "header": "Total",
+        "accessor": "total"
+    },
+    {
+        "header": "Created_at",
+        "accessor": "created_at"
+    },
+    {
+        "header": "Pesan",
+        "accessor": "pesan"
+    }
+]

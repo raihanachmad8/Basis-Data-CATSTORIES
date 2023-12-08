@@ -1,0 +1,90 @@
+[
+    {
+        "id": "1",
+        "type": "Anggora",
+        "name": "Cat 1",
+        "age": 1,
+        "price": 550,
+        "breed": "breed 1",
+        "color": "color 1",
+        "description": "description 1",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "2",
+        "type": "Anggora",
+        "name": "Cat 2",
+        "age": 1,
+        "price": 550,
+        "breed": "breed 1",
+        "color": "color 1",
+        "description": "description 1",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "3",
+        "type": "Anggora",
+        "name": "Cat 3",
+        "age": 3,
+        "price": 550,
+        "breed": "breed 3",
+        "color": "color 3",
+        "description": "description 3",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "4",
+        "type": "Anggora",
+        "name": "Cat 3",
+        "age": 3,
+        "price": 550,
+        "breed": "breed 3",
+        "color": "color 3",
+        "description": "description 3",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "5",
+        "type": "Anggora",
+        "name": "Cat 3",
+        "age": 3,
+        "price": 550,
+        "breed": "breed 3",
+        "color": "color 3",
+        "description": "description 3",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "6",
+        "type": "Anggora",
+        "name": "Cat 3",
+        "age": 3,
+        "price": 550,
+        "breed": "breed 3",
+        "color": "color 3",
+        "description": "description 3",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "7",
+        "type": "Anggora",
+        "name": "Cat 3",
+        "age": 3,
+        "price": 550,
+        "breed": "breed 3",
+        "color": "color 3",
+        "description": "description 3",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    },
+    {
+        "id": "8",
+        "type": "Anggora",
+        "name": "Cat 3",
+        "age": 3,
+        "price": 550,
+        "breed": "breed 3",
+        "color": "color 3",
+        "description": "description 3",
+        "image": "../../../public/assets/images/cat-exapmle.jpg"
+    }
+]

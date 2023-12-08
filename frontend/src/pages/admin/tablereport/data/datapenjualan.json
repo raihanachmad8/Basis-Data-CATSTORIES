@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "month": "Januari",
+        "year": "2021",
+        "total": 100000
+    },
+    {
+        "id": 2,
+        "month": "Februari",
+        "year": "2021",
+        "total": 200000
+    },
+    {
+        "id": 3,
+        "month": "Maret",
+        "year": "2021",
+        "total": 300000
+    },
+    {
+        "id": 4,
+        "month": "April",
+        "year": "2021",
+        "total": 400000
+    },
+    {
+        "id": 5,
+        "month": "Mei",
+        "year": "2021",
+        "total": 500000
+    },
+    {
+        "id": 6,
+        "month": "Juni",
+        "year": "2021",
+        "total": 600000
+    },
+    {
+        "id": 7,
+        "month": "Juli",
+        "year": "2021",
+        "total": 700000
+    },
+    {
+        "id": 8,
+        "month": "Agustus",
+        "year": "2021",
+        "total": 800000
+    },
+    {
+        "id": 9,
+        "month": "September",
+        "year": "2021",
+        "total": 900000
+    },
+    {
+        "id": 10,
+        "month": "Oktober",
+        "year": "2021",
+        "total": 1000000
+    },
+    {
+        "id": 11,
+        "month": "November",
+        "year": "2021",
+        "total": 1100000
+    },
+    {
+        "id": 12,
+        "month": "Desember",
+        "year": "2021",
+        "total": 1200000
+    }
+]

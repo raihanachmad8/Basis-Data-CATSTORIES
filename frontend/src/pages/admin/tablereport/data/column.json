@@ -1,0 +1,50 @@
+[
+    {
+        "header": "Januari",
+        "accessor": "januari"
+    },
+    {
+        "header": "Februari",
+        "accessor": "februari"
+    },
+    {
+        "header": "Maret",
+        "accessor": "maret"
+    },
+    {
+        "header": "April",
+        "accessor": "april"
+    },
+    {
+        "header": "Mei",
+        "accessor": "mei"
+    },
+    {
+        "header": "Juni",
+        "accessor": "juni"
+    },
+    {
+        "header": "Juli",
+        "accessor": "juli"
+    },
+    {
+        "header": "Agustus",
+        "accessor": "agustus"
+    },
+    {
+        "header": "September",
+        "accessor": "september"
+    },
+    {
+        "header": "Oktober",
+        "accessor": "oktober"
+    },
+    {
+        "header": "November",
+        "accessor": "november"
+    },
+    {
+        "header": "Desember",
+        "accessor": "desember"
+    }
+]
