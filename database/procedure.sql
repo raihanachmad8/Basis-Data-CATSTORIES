@@ -1,5 +1,7 @@
 USE CATADOPT;
 
+--INSERT-----------------------------------------------------------------------------------------------------------------------------------------------------
+
 --Menambahkan data kucing baru ke dalam sistem
 CREATE PROCEDURE TambahKucing
 	@ID_Kucing VARCHAR(50),
@@ -36,7 +38,6 @@ BEGIN
 END;
 
 --Menambahkan data transaksi baru ke dalam sistem
--- Create a stored procedure to insert data into Transaksi and Detail_Transaksi tables
 CREATE PROCEDURE Tambah Transaksi
     @ID_Transaksi VARCHAR(50),
     @ID_Pembeli VARCHAR(50),
@@ -68,18 +69,167 @@ BEGIN
     VALUES (@ID_Jenis, @Jenis_Kucing);
 END;
 
---Menghapus data kucing ke dalam sistem
+--Menambahkan data jenis pengiriman baru ke dalam sistem
+CREATE PROCEDURE TambahJenisPengiriman
+    @ID_Jenis_Pengiriman VARCHAR(50),
+    @Jenis_Pengiriman VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Jenis_Pengiriman (ID_Jenis_Pengiriman, Jenis_Pengiriman)
+    VALUES (@ID_Jenis_Pengiriman, @Jenis_Pengiriman);
+END;
 
---Menghapus data pembeli ke dalam sistem
+--Menambahkan data metode pembayaran baru ke dalam sistem
+CREATE PROCEDURE TambahMetodePembayaran
+    @ID_Metode_Pembayaran VARCHAR(50),
+    @Metode_Pembayaran VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Metode_Pembayaran (ID_Metode_Pembayaran, Metode_Pembayaran)
+    VALUES (@ID_Metode_Pembayaran, @Metode_Pembayaran);
+END;
 
---Menghapus data transaksi ke dalam sistem
 
---Menghapus data jenis kucing ke dalam sistem
+--DELETE-----------------------------------------------------------------------------------------------------------------------------------------------------
 
---Mengupdate data kucing ke dalam sistem
+--Menghapus data kucing dalam sistem
+CREATE PROCEDURE HapusKucing
+	@ID_Kucing VARCHAR(50)
+AS
+BEGIN
+	DELETE FROM Kucing WHERE ID_Kucing = @ID_Kucing;
+END;
 
---Mengupdate data pembeli ke dalam sistem
+--Menghapus data pembeli dalam sistem
+CREATE PROCEDURE HapusPembeli
+	@ID_Pembeli VARCHAR(50)
+AS
+BEGIN
+	DELETE FROM Pembeli WHERE ID_Pembeli = @ID_Pembeli;
+END;
+
+--Menghapus data transaksi dalam sistem
+CREATE PROCEDURE HapusTransaksi
+	@ID_Transaksi VARCHAR(50)
+AS
+BEGIN
+	DELETE FROM Transaksi  WHERE ID_Transaksi = @ID_Transaksi;
+	DELETE FROM Detail_Transaksi WHERE ID_Transaksi = @ID_Transaksi;
+END;
+
+--Menghapus data jenis kucing dalam sistem
+CREATE PROCEDURE HapusJenisKucing
+	@ID_Jenis VARCHAR(50)
+AS
+BEGIN
+	DELETE FROM Jenis WHERE ID_Jenis = @ID_Jenis;
+END;
+
+--Menghapus data jenis pengiriman dalam sistem
+CREATE PROCEDURE HapusJenisPengiriman
+    @ID_Jenis_Pengiriman VARCHAR(50)
+AS
+BEGIN
+    DELETE FROM Jenis_Pengiriman
+    WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman;
+END;
+
+--Menghapus data metode pembayaran dalam sistem
+CREATE PROCEDURE HapusMetodePembayaran
+    @ID_Metode_Pembayaran VARCHAR(50)
+AS
+BEGIN
+    DELETE FROM Metode_Pembayaran
+    WHERE ID_Metode_Pembayaran = @ID_Metode_Pembayaran;
+END;
+
+
+
+--UPDATE-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--Mengupdate data kucing dalam sistem
+CREATE PROCEDURE UpdateKucing
+    @ID_Kucing VARCHAR(50),
+    @ID_Jenis VARCHAR(50),
+    @Nama_Kucing VARCHAR(50),
+    @Foto VARCHAR(100),
+    @Umur SMALLINT,
+    @Jenis_Kelamin VARCHAR(6),
+    @Tanggal_Masuk DATE,
+    @Biaya DECIMAL,
+    @Status VARCHAR(10),
+    @Keterangan TEXT
+AS
+BEGIN
+    UPDATE Kucing
+    SET 
+        ID_Jenis = @ID_Jenis,
+        Nama_Kucing = @Nama_Kucing,
+        Foto = @Foto,
+        Umur = @Umur,
+        Jenis_Kelamin = @Jenis_Kelamin,
+        Tanggal_Masuk = @Tanggal_Masuk,
+        Biaya = @Biaya,
+        Status = @Status,
+        Keterangan = @Keterangan
+    WHERE ID_Kucing = @ID_Kucing;
+END;
+
+--Mengupdate data pembeli dalam sistem
+CREATE PROCEDURE UpdatePembeli
+    @ID_Pembeli VARCHAR(50),
+    @Nama_Pembeli VARCHAR(100),
+    @Email NVARCHAR(255),
+    @No_Telp VARCHAR(15),
+    @Alamat TEXT
+AS
+BEGIN
+    UPDATE Pembeli
+    SET 
+        Nama_Pembeli = @Nama_Pembeli,
+        Email = @Email,
+        No_Telp = @No_Telp,
+        Alamat = @Alamat
+    WHERE ID_Pembeli = @ID_Pembeli;
+END;
+
 
 --Mengupdate data transaksi ke dalam sistem
 
 --Mengupdate data jenis kucing ke dalam sistem
+CREATE PROCEDURE UpdateJenis
+    @ID_Jenis VARCHAR(50),
+    @Jenis_Kucing VARCHAR(50)
+AS
+BEGIN
+    UPDATE Jenis
+    SET 
+        Jenis_Kucing = @Jenis_Kucing
+    WHERE ID_Jenis = @ID_Jenis;
+END;
+
+--Mengupdate data jenis pengiriman ke dalam sistem
+CREATE PROCEDURE UpdateJenisPengiriman
+    @ID_Jenis_Pengiriman VARCHAR(50),
+    @Jenis_Pengiriman VARCHAR(20)
+AS
+BEGIN
+    UPDATE Jenis_Pengiriman
+    SET 
+        Jenis_Pengiriman = @Jenis_Pengiriman
+    WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman;
+END;
+
+--Mengupdate data metode pembayaran ke dalam sistem
+CREATE PROCEDURE UpdateMetodePembayaran
+    @ID_Metode_Pembayaran VARCHAR(50),
+    @Metode_Pembayaran VARCHAR(20)
+AS
+BEGIN
+	UPDATE Metode_Pembayaran
+    SET 
+        Metode_Pembayaran = @Metode_Pembayaran
+    WHERE ID_Metode_Pembayaran = @ID_Metode_Pembayaran;
+END;
+
+

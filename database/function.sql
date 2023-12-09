@@ -1,5 +1,6 @@
 USE CATADOPT;
---FUNCTION
+
+--FUNCTION------------------------------------------------------------------------------------
 
 --Menghitung jumlah total biaya dari suatu transaksi
 CREATE FUNCTION HitungTotal(@id_transaksi VARCHAR(50))
@@ -48,10 +49,8 @@ RETURN
         CASE WHEN @sort = 2 THEN Umur END DESC
 );
 
-SELECT * FROM SortKucingByUmur(1);
-
 --Menampilkan data kucing yang tersedia
-CREATE FUNCTION ShowAvailableCat ()
+CREATE FUNCTION TampilKucingTersedia ()
 RETURNS TABLE
 AS 
 RETURN
@@ -61,10 +60,8 @@ RETURN
 	WHERE Status = 'Tersedia'
 );
 
-SELECT * FROM ShowAvailableCat();
-
 --Menampilkan semua data kucing
-CREATE FUNCTION ShowCat ()
+CREATE FUNCTION TampilKucing ()
 RETURNS TABLE
 AS 
 RETURN
@@ -73,10 +70,8 @@ RETURN
 	FROM Kucing
 );
 
-SELECT * FROM ShowCat();
-
 --Menampilkan semua data Pembeli
-CREATE FUNCTION ShowCust ()
+CREATE FUNCTION TampilPembeli ()
 RETURNS TABLE
 AS 
 RETURN
@@ -85,10 +80,38 @@ RETURN
 	FROM Pembeli
 );
 
-SELECT * FROM ShowCust();
+--Menampilkan semua data jenis kucing
+CREATE FUNCTION TampilJenisKucing ()
+RETURNS TABLE
+AS 
+RETURN
+(
+	SELECT *
+	FROM Jenis
+);
+
+--Menampilkan semua data jenis pengiriman
+CREATE FUNCTION TampilJenisPengiriman ()
+RETURNS TABLE
+AS 
+RETURN
+(
+	SELECT *
+	FROM Jenis_Pengiriman
+);
+
+--Menampilkan semua data jenis pengiriman
+CREATE FUNCTION TampilMetodePembayaran ()
+RETURNS TABLE
+AS 
+RETURN
+(
+	SELECT *
+	FROM Metode_Pembayaran
+);
 
 --Menampilkan semua data Transaksi
-CREATE FUNCTION ShowTransaction ()
+CREATE FUNCTION TampilTransaksi ()
 RETURNS TABLE
 AS 
 RETURN
@@ -101,10 +124,8 @@ RETURN
 	JOIN Metode_Pembayaran BAYAR ON T.ID_Metode_Pembayaran = BAYAR.ID_Metode_Pembayaran
 );
 
-SELECT * FROM ShowTransaction();
-
 --Menampilkan semua data detail transaksi berdasarkan id transaksi
-CREATE FUNCTION ShowDetail (@id_transaksi VARCHAR(50))
+CREATE FUNCTION TampilDetail (@id_transaksi VARCHAR(50))
 RETURNS TABLE
 AS 
 RETURN
@@ -113,7 +134,7 @@ RETURN
 		ST.ID_Transaksi, ST.Nama_Pembeli, ST.Jenis_Pengiriman, ST.Metode_Pembayaran, ST.Total_Biaya, ST.Nomor_Resi, ST.Tanggal_Transaksi, ST.Pesan,
 		K.ID_Kucing, K.Nama_Kucing 'Nama Kucing', J.Jenis_Kucing, K.Jenis_Kelamin, K.Biaya
 	FROM Detail_Transaksi DT
-	JOIN ShowTransaction() ST ON ST.ID_Transaksi = DT.ID_Transaksi
+	JOIN TampilTransaksi() ST ON ST.ID_Transaksi = DT.ID_Transaksi
 	JOIN Kucing K ON K.ID_Kucing = DT.ID_Kucing
 	JOIN Jenis J ON K.ID_Jenis = J.ID_Jenis
 	WHERE DT.ID_Transaksi = @id_transaksi
