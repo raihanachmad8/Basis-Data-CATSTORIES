@@ -1,72 +1,112 @@
--- Insert data into Jenis table
-INSERT INTO Jenis (ID_Jenis, Nama) VALUES
-('JEN001', 'Persia'),
-('JEN002', 'Maine Coon'),
-('JEN003', 'Siamese'),
-('JEN004', 'Bengal'),
-('JEN005', 'Sphynx');
+USE CATADOPT;
 
--- Insert data into Kucing table
-INSERT INTO Kucing (ID_Kucing, ID_Jenis, Nama, Foto, Umur, Jenis_Kelamin, Tanggal_Masuk, Biaya, Status, Keterangan) VALUES
-('KUC001', 'JEN001', 'Fluffy', 'fluffy.jpg', 4, 'Jantan', '2023-01-01', 500.00, 'Tersedia', 'Cat with fluffy fur'),
-('KUC002', 'JEN002', 'Whiskers', 'whiskers.jpg', 6, 'Betina', '2023-02-15', 700.00, 'Tersedia', 'Playful and friendly'),
-('KUC003', 'JEN003', 'Mittens', 'mittens.jpg', 9, 'Betina', '2023-03-10', 600.00, 'Tersedia', 'Loves to cuddle'),
-('KUC004', 'JEN004', 'Leo', 'leo.jpg', 12, 'Jantan', '2023-04-20', 800.00, 'Tersedia', 'Energetic and playful'),
-('KUC005', 'JEN005', 'Naked', 'naked.jpg', 10, 'Jantan', '2023-05-05', 1000.00, 'Tersedia', 'Hairless cat'),
-('KUC006', 'JEN001', 'Oreo', 'oreo.jpg', 13, 'Betina', '2023-06-10', 750.00, 'Tersedia', 'Has unique folded ears'),
-('KUC007', 'JEN002', 'Milo', 'milo.jpg', 4, 'Jantan', '2023-07-05', 900.00, 'Tersedia', 'Known for their docile nature'),
-('KUC008', 'JEN001', 'Luna', 'luna.jpg', 3, 'Betina', '2023-08-20', 850.00, 'Tersedia', 'Distinctive blue-gray coat'),
-('KUC009', 'JEN001', 'Simba', 'simba.jpg', 2, 'Jantan', '2023-09-15', 700.00, 'Tersedia', 'Thick, luxurious fur'),
-('KUC010', 'JEN005', 'Cleo', 'cleo.jpg', 11, 'Betina', '2023-10-01', 600.00, 'Tersedia', 'Has a short, ticked coat pattern');
+-- Tabel Jenis
+INSERT INTO Jenis (ID_Jenis, Jenis_Kucing) VALUES
+('J1', 'Persia'),
+('J2', 'Maine Coon'),
+('J3', 'Siamese'),
+('J4', 'Sphynx'),
+('J5', 'Bengal'),
+('J6', 'Ragdoll'),
+('J7', 'Scottish Fold'),
+('J8', 'British Shorthair'),
+('J9', 'Abyssinian'),
+('J10', 'Russian Blue');
 
+-- Tabel Kucing
+INSERT INTO Kucing (ID_Kucing, ID_Jenis, Nama_Kucing, Foto, Umur, Jenis_Kelamin, Tanggal_Masuk, Biaya, Status, Keterangan) VALUES
+('K1', 'J1', 'Fluffy', 'fluffy.jpg', 2, 'Jantan', '2023-01-01', 200.00, 'Tersedia', 'Deskripsi Fluffy'),
+('K2', 'J2', 'Mittens', 'mittens.jpg', 1, 'Betina', '2023-02-01', 150.00, 'Tersedia', 'Deskripsi Mittens'),
+('K3', 'J4', 'Whiskers', 'whiskers.jpg', 3, 'Jantan', '2023-03-01', 180.00, 'Tersedia', 'Deskripsi Whiskers'),
+('K4', 'J4', 'Leo', 'leo.jpg', 2, 'Jantan', '2023-04-01', 220.00, 'Tersedia', 'Deskripsi Leo'),
+('K5', 'J5', 'Nala', 'nala.jpg', 1, 'Betina', '2023-05-01', 170.00, 'Tersedia', 'Deskripsi Nala'),
+('K6', 'J1', 'Smokey', 'smokey.jpg', 2, 'Jantan', '2023-06-01', 180.00, 'Tersedia', 'Deskripsi Smokey'),
+('K7', 'J1', 'Luna', 'luna.jpg', 1, 'Betina', '2023-07-01', 160.00, 'Tersedia', 'Deskripsi Luna'),
+('K8', 'J2', 'Oreo', 'oreo.jpg', 3, 'Jantan', '2023-08-01', 200.00, 'Tersedia', 'Deskripsi Oreo'),
+('K9', 'J4', 'Cleo', 'cleo.jpg', 2, 'Betina', '2023-09-01', 190.00, 'Tersedia', 'Deskripsi Cleo'),
+('K10', 'J5', 'Simba', 'simba.jpg', 1, 'Jantan', '2023-10-01', 170.00, 'Tersedia', 'Deskripsi Simba'),
+('K11', 'J1', 'Whiskey', 'whiskey.jpg', 2, 'Jantan', '2023-11-01', 180.00, 'Tersedia', 'Deskripsi Whiskey'),
+('K12', 'J2', 'Mocha', 'mocha.jpg', 1, 'Betina', '2023-11-15', 160.00, 'Tersedia', 'Deskripsi Mocha'),
+('K13', 'J3', 'Nacho', 'nacho.jpg', 3, 'Jantan', '2023-12-01', 200.00, 'Tersedia', 'Deskripsi Nacho'),
+('K14', 'J4', 'Sasha', 'sasha.jpg', 2, 'Betina', '2023-12-15', 190.00, 'Tersedia', 'Deskripsi Sasha'),
+('K15', 'J5', 'Felix', 'felix.jpg', 1, 'Jantan', '2024-01-01', 170.00, 'Tersedia', 'Deskripsi Felix'),
+('K16', 'J6', 'Lola', 'lola.jpg', 3, 'Betina', '2024-01-15', 180.00, 'Tersedia', 'Deskripsi Lola'),
+('K17', 'J7', 'Max', 'max.jpg', 2, 'Jantan', '2024-02-01', 160.00, 'Tersedia', 'Deskripsi Max'),
+('K18', 'J8', 'Zoe', 'zoe.jpg', 1, 'Betina', '2024-02-15', 200.00, 'Tersedia', 'Deskripsi Zoe'),
+('K19', 'J9', 'Rocky', 'rocky.jpg', 3, 'Jantan', '2024-03-01', 190.00, 'Tersedia', 'Deskripsi Rocky'),
+('K20', 'J10', 'Coco', 'coco.jpg', 2, 'Betina', '2024-03-15', 170.00, 'Tersedia', 'Deskripsi Coco'),
+('K21', 'J1', 'Oliver', 'oliver.jpg', 2, 'Jantan', '2024-04-01', 180.00, 'Tersedia', 'Deskripsi Oliver'),
+('K22', 'J2', 'Milo', 'milo.jpg', 1, 'Betina', '2024-04-15', 160.00, 'Tersedia', 'Deskripsi Milo'),
+('K23', 'J3', 'Tiger', 'tiger.jpg', 3, 'Jantan', '2024-05-01', 200.00, 'Tersedia', 'Deskripsi Tiger'),
+('K24', 'J4', 'Lily', 'lily.jpg', 2, 'Betina', '2024-05-15', 190.00, 'Tersedia', 'Deskripsi Lily'),
+('K25', 'J5', 'Charlie', 'charlie.jpg', 1, 'Jantan', '2024-06-01', 170.00, 'Tersedia', 'Deskripsi Charlie'),
+('K26', 'J6', 'Bella', 'bella.jpg', 3, 'Betina', '2024-06-15', 180.00, 'Tersedia', 'Deskripsi Bella'),
+('K27', 'J7', 'Leo Jr.', 'leo_jr.jpg', 2, 'Jantan', '2024-07-01', 160.00, 'Tersedia', 'Deskripsi Leo Jr.'),
+('K28', 'J8', 'Sophie', 'sophie.jpg', 1, 'Betina', '2024-07-15', 200.00, 'Tersedia', 'Deskripsi Sophie'),
+('K29', 'J9', 'Misty', 'misty.jpg', 3, 'Jantan', '2024-08-01', 190.00, 'Tersedia', 'Deskripsi Misty'),
+('K30', 'J10', 'Chloe', 'chloe.jpg', 2, 'Betina', '2024-08-15', 170.00, 'Tersedia', 'Deskripsi Chloe');
 
--- Insert data into Alamat table
-INSERT INTO Alamat (ID_Alamat, Jalan, Kota, Provinsi, Kode_Pos) VALUES
-('ALM001', 'Jl. Kucing Bahagia No. 123', 'Jakarta', 'DKI Jakarta', '12345'),
-('ALM002', 'Jl. Meong Indah No. 456', 'Bandung', 'Jawa Barat', '67890'),
-('ALM003', 'Jl. Kitten Jaya No. 789', 'Surabaya', 'Jawa Timur', '54321'),
-('ALM004', 'Jl. Purr Mandiri No. 101', 'Semarang', 'Jawa Tengah', '98765'),
-('ALM005', 'Jl. Cat Lovers No. 202', 'Yogyakarta', 'DI Yogyakarta', '13579');
+-- Tabel Pembeli
+INSERT INTO Pembeli (ID_Pembeli, Nama_Pembeli, Email, No_Telp, Alamat) VALUES
+('P1', 'John Doe', 'john.doe@email.com', '123456789', '123 Main St, City A, Province A, 12345'),
+('P2', 'Jane Smith', 'jane.smith@email.com', '987654321', '456 Oak St, City B, Province B, 67890'),
+('P3', 'Bob Johnson', 'bob.johnson@email.com', '555111222', '789 Maple St, City C, Province C, 10111'),
+('P4', 'Alice Williams', 'alice.williams@email.com', '111222333', '321 Pine St, City D, Province D, 22233'),
+('P5', 'Charlie Brown', 'charlie.brown@email.com', '444555666', '654 Elm St, City E, Province E, 44455'),
+('P6', 'Vunky Himawan', 'pungbei@email.com', '444559266', '78 Elma St, City E, Province E, 44415');
 
--- Insert data into Pembeli table
-INSERT INTO Pembeli (ID_Pembeli, ID_Alamat, Nama, Email, No_Telp) VALUES
-('PEM001', 'ALM001', 'John Doe', 'john.doe@email.com', '081234567890'),
-('PEM002', 'ALM002', 'Jane Smith', 'jane.smith@email.com', '082345678901'),
-('PEM003', 'ALM003', 'Bob Johnson', 'bob.johnson@email.com', '083456789012'),
-('PEM004', 'ALM004', 'Alice Brown', 'alice.brown@email.com', '084567890123'),
-('PEM005', 'ALM005', 'Charlie Davis', 'charlie.davis@email.com', '085678901234');
+-- Tabel Jenis Pengiriman
+INSERT INTO Jenis_Pengiriman (ID_Jenis_Pengiriman, Jenis_Pengiriman) VALUES
+('JP1', 'Ambil Toko'),
+('JP2', 'Kirim JNT'),
+('JP3', 'Kirim JNE'),
+('JP4', 'Kirim GrabExpress'),
+('JP5', 'Kirim GoSend'),
+('JP6', 'COD');
 
--- Insert data into Pengiriman table
-INSERT INTO Pengiriman (ID_Pengiriman, ID_Alamat, Jenis_Pengiriman, Nomor_Resi) VALUES
-('PNG001', 'ALM001', 'Ambil Toko', 'RESI001'),
-('PNG002', 'ALM002', 'Kirim', 'RESI002'),
-('PNG003', 'ALM003', 'Ambil Toko', 'RESI003'),
-('PNG004', 'ALM004', 'Kirim', 'RESI004'),
-('PNG005', 'ALM005', 'Kirim', 'RESI005');
+-- Tabel Metode Pembayaran
+INSERT INTO Metode_Pembayaran (ID_Metode_Pembayaran, Metode_Pembayaran) VALUES
+('MPB1', 'Cash'),
+('MPB2', 'Transfer Mandiri'),
+('MPB3', 'Transfer BRI'),
+('MPB4', 'Transfer BNI'),
+('MPB5', 'Transfer BCA'),
+('MPB6', 'OVO'),
+('MPB7', 'GoPay');
 
--- Insert data into Pembayaran table
-INSERT INTO Pembayaran (ID_Pembayaran, Metode_Pembayaran, Total_Biaya) VALUES
-('BYR001', 'Cash', 500.00),
-('BYR002', 'Transfer', 700.00),
-('BYR003', 'Cash', 600.00),
-('BYR004', 'Transfer', 800.00),
-('BYR005', 'Transfer', 1000.00);
-
--- Insert data into Transaksi table
-INSERT INTO Transaksi (ID_Transaksi, ID_Pembeli, ID_Pengiriman, ID_Pembayaran, Tanggal_Transaksi, Pesan) VALUES
-('TRS001', 'PEM001', 'PNG001', 'BYR001', '2023-01-15', 'Thank you for your purchase!'),
-('TRS002', 'PEM002', 'PNG002', 'BYR002', '2023-02-28', 'Your order is on the way!'),
-('TRS003', 'PEM003', 'PNG003', 'BYR003', '2023-03-20', 'Enjoy your new furry friend!'),
-('TRS004', 'PEM004', 'PNG004', 'BYR004', '2023-04-25', 'Thank you for choosing us!'),
-('TRS005', 'PEM005', 'PNG005', 'BYR005', '2023-05-10', 'Your hairless cat is ready for pickup!');
-
--- Insert data into Detail_Transaksi table
+-- Tabel Detail_Transaksi
 INSERT INTO Detail_Transaksi (ID_Detail_Transaksi, ID_Transaksi, ID_Kucing) VALUES
-('DTL001', 'TRS001', 'KUC001'),
-('DTL002', 'TRS002', 'KUC002'),
-('DTL003', 'TRS003', 'KUC003'),
-('DTL004', 'TRS004', 'KUC004'),
-('DTL005', 'TRS005', 'KUC005'),
-('DTL006', 'TRS001', 'KUC006'),
-('DTL007', 'TRS001', 'KUC007'),
-('DTL008', 'TRS004', 'KUC008');
+('DT1', 'T1', 'K3'),
+('DT2', 'T1', 'K2'),
+('DT3', 'T2', 'K1'),
+('DT4', 'T2', 'K5'),
+('DT5', 'T3', 'K8'),
+('DT6', 'T3', 'K4'),
+('DT7', 'T4', 'K9'),
+('DT8', 'T4', 'K25'),
+('DT9', 'T5', 'K6'),
+('DT10', 'T5', 'K10'),
+('DT11', 'T6', 'K21'),
+('DT12', 'T6', 'K12'),
+('DT13', 'T7', 'K23'),
+('DT14', 'T7', 'K30'),
+('DT15', 'T8', 'K28'),
+('DT16', 'T8', 'K26'),
+('DT17', 'T9', 'K29'),
+('DT18', 'T9', 'K18'),
+('DT19', 'T9', 'K20'),
+('DT20', 'T10', 'K19');
+
+
+-- Tabel Transaksi
+INSERT INTO Transaksi (ID_Transaksi, ID_Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Total_Biaya, Nomor_Resi, Tanggal_Transaksi, Pesan) VALUES
+('T1', 'P1', 'JP1', 'MPB1', dbo.HitungTotal('T1'), 'RESI123', '2023-01-15', 'Pesan transaksi 1'),
+('T2', 'P2', 'JP2', 'MPB2', dbo.HitungTotal('T2'), 'RESI456', '2023-02-20', 'Pesan transaksi 2'),
+('T3', 'P1', 'JP1', 'MPB1', dbo.HitungTotal('T3'), 'RESI789', '2023-03-25', 'Pesan transaksi 3'),
+('T4', 'P1', 'JP6', 'MPB4', dbo.HitungTotal('T4'), 'RESI101', '2023-04-30', 'Pesan transaksi 4'),
+('T5', 'P5', 'JP1', 'MPB5', dbo.HitungTotal('T5'), 'RESI222', '2023-05-05', 'Pesan transaksi 5'),
+('T6', 'P1', 'JP3', 'MPB1', dbo.HitungTotal('T6'), 'RESI333', '2023-06-10', 'Pesan transaksi 6'),
+('T7', 'P2', 'JP1', 'MPB2', dbo.HitungTotal('T7'), 'RESI444', '2023-07-15', 'Pesan transaksi 7'),
+('T8', 'P3', 'JP6', 'MPB3', dbo.HitungTotal('T8'), 'RESI555', '2023-08-20', 'Pesan transaksi 8'),
+('T9', 'P4', 'JP1', 'MPB4', dbo.HitungTotal('T9'), 'RESI666', '2023-09-25', 'Pesan transaksi 9'),
+('T10', 'P5', 'JP4', 'MPB7', dbo.HitungTotal('T10'), 'RESI777', '2023-10-30', 'Pesan transaksi 10');

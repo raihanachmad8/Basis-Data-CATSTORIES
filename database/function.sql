@@ -1,52 +1,4 @@
-/* 
-CREATE PROCEDURE UpdateAlamatPelanggan
-    @Alamat VARCHAR(200),
-    @IDPelanggan INT
-AS
-BEGIN
-    UPDATE Pelanggan 
-    SET Alamat = @Alamat 
-    WHERE ID_Pelanggan = @IDPelanggan
-END;
-
-EXEC UpdateAlamatPelanggan @Alamat = 'Jl. Maju No. 987', @IDPelanggan = 105;
-
-Select * from Pelanggan where ID_Pelanggan = 105
-
--- 15.Tampilkan total gaji yang dibayarkan per cabang
-SELECT
-	C.ID_Cabang,
-	C.Nama_Cabang,
-	SUM(K.Gaji) 'Gaji yang Dibayarkan'
-FROM Cabang C
-LEFT JOIN Karyawan K ON K.ID_Cabang = C.ID_Cabang
-GROUP BY C.ID_Cabang, C.Nama_Cabang;
-
-create function HistoyPeminjaman
-(
-	@bookid int
-)
-returns table
-as
-return
-(
-select
-    b.BookID,
-    b.Title,
-    b.Author,
-    l.LoanID,
-    u.UserName,
-    l.LoanDate,
-    l.ReturnDate
-from Loans l
-join Books b on l.BookID = b.BookID
-join Users u on l.UserID = u.UserID
-where b.BookID = @bookid
-)
-*/
-
 USE CATADOPT;
-
 --FUNCTION
 
 --Menghitung jumlah total biaya dari suatu transaksi
@@ -57,14 +9,14 @@ BEGIN
 	DECLARE @total_biaya DECIMAL;
 
 	SELECT @total_biaya = SUM(K.Biaya)
-	FROM Transaksi T
-	JOIN Detail_Transaksi DT ON DT.ID_Transaksi = T.ID_Transaksi
+	FROM Detail_Transaksi DT
 	JOIN Kucing K ON DT.ID_Kucing = K.ID_Kucing
-	WHERE T.ID_Transaksi = @id_transaksi;
+	WHERE DT.ID_Transaksi = @id_transaksi;
 
-	RETURN ISNULL(@total_biaya, 0);
+	RETURN @total_biaya;
 END;
 
+DROP FUNCTION HITUNGTOTAL
 
 --Mengurutkan data kucing berdasarkan Jenisnya
 CREATE FUNCTION SortKucingByJenis (@sort INT)
@@ -142,11 +94,11 @@ AS
 RETURN
 (
 	SELECT 
-		T.ID_Transaksi, BELI.Nama 'Nama Pembeli', KIRIM.Jenis_Pengiriman , BAYAR.Metode_Pembayaran, T.Tanggal_Transaksi, T.Pesan
+		T.ID_Transaksi, P.Nama_Pembeli, KIRIM.Jenis_Pengiriman, BAYAR.Metode_Pembayaran, T.Total_Biaya, T.Nomor_Resi, T.Tanggal_Transaksi, T.Pesan
 	FROM Transaksi T
-	JOIN Pembeli BELI ON BELI.ID_Pembeli = T.ID_Pembeli
-	JOIN Pengiriman KIRIM ON KIRIM.ID_Pengiriman = T.ID_Pengiriman
-	JOIN Pembayaran BAYAR ON BAYAR.ID_Pembayaran = T.ID_Pembayaran
+	JOIN Pembeli P ON T.ID_Pembeli = P.ID_Pembeli
+	JOIN Jenis_Pengiriman KIRIM ON T.ID_Jenis_Pengiriman = KIRIM.ID_Jenis_Pengiriman
+	JOIN Metode_Pembayaran BAYAR ON T.ID_Metode_Pembayaran = BAYAR.ID_Metode_Pembayaran
 );
 
 SELECT * FROM ShowTransaction();
@@ -158,42 +110,12 @@ AS
 RETURN
 (
 	SELECT 
-		ST.ID_Transaksi, ST.[Nama Pembeli], ST.Jenis_Pengiriman, ST.Metode_Pembayaran, ST.Tanggal_Transaksi, ST.Pesan,
-		K.Nama 'Nama Kucing'
+		ST.ID_Transaksi, ST.Nama_Pembeli, ST.Jenis_Pengiriman, ST.Metode_Pembayaran, ST.Total_Biaya, ST.Nomor_Resi, ST.Tanggal_Transaksi, ST.Pesan,
+		K.ID_Kucing, K.Nama_Kucing 'Nama Kucing', J.Jenis_Kucing, K.Jenis_Kelamin, K.Biaya
 	FROM Detail_Transaksi DT
 	JOIN ShowTransaction() ST ON ST.ID_Transaksi = DT.ID_Transaksi
 	JOIN Kucing K ON K.ID_Kucing = DT.ID_Kucing
+	JOIN Jenis J ON K.ID_Jenis = J.ID_Jenis
 	WHERE DT.ID_Transaksi = @id_transaksi
 );
-
---Menampilkan semua data pengiriman pada transaksi
-CREATE FUNCTION DataPengiriman (@id_transaksi VARCHAR(50))
-RETURNS TABLE
-AS 
-RETURN
-(
-	SELECT 
-		T.ID_Transaksi, P.Jenis_Pengiriman, A.Jalan, A.Kota, A.Provinsi, A.Kode_Pos, P.Nomor_Resi
-	FROM Transaksi T
-	JOIN Pengiriman P ON P.ID_Pengiriman = T.ID_Pengiriman
-	JOIN Alamat A ON A.ID_Alamat = P.ID_Alamat
-	WHERE T.ID_Transaksi = @id_transaksi
-);
-
---Menampilkan semua data pembayaran pada transaksi
-CREATE FUNCTION DataPengiriman (@id_transaksi VARCHAR(50))
-RETURNS TABLE
-AS 
-RETURN
-(
-	SELECT 
-		T.ID_Transaksi, P.Metode_Pembayaran, P.Total_Biaya
-	FROM Transaksi T
-	JOIN Pembayaran P ON P.ID_Pembayaran = T.ID_Pembayaran	
-	WHERE T.ID_Transaksi = @id_transaksi
-);
-
-
-
-
 
