@@ -74,6 +74,19 @@ INSERT INTO Metode_Pembayaran (ID_Metode_Pembayaran, Metode_Pembayaran) VALUES
 ('MPB6', 'OVO'),
 ('MPB7', 'GoPay');
 
+-- Tabel Transaksi
+INSERT INTO Transaksi (ID_Transaksi, ID_Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Nomor_Resi, Tanggal_Transaksi, Pesan) VALUES
+('T1', 'P1', 'JP1', 'MPB1', 'RESI123', '2023-01-15', 'Pesan transaksi 1'),
+('T2', 'P2', 'JP2', 'MPB2', 'RESI456', '2023-02-20', 'Pesan transaksi 2'),
+('T3', 'P1', 'JP1', 'MPB1', 'RESI789', '2023-03-25', 'Pesan transaksi 3'),
+('T4', 'P1', 'JP6', 'MPB4', 'RESI101', '2023-04-30', 'Pesan transaksi 4'),
+('T5', 'P5', 'JP1', 'MPB5', 'RESI222', '2023-05-05', 'Pesan transaksi 5'),
+('T6', 'P1', 'JP3', 'MPB1', 'RESI333', '2023-06-10', 'Pesan transaksi 6'),
+('T7', 'P2', 'JP1', 'MPB2', 'RESI444', '2023-07-15', 'Pesan transaksi 7'),
+('T8', 'P3', 'JP6', 'MPB3', 'RESI555', '2023-08-20', 'Pesan transaksi 8'),
+('T9', 'P4', 'JP1', 'MPB4', 'RESI666', '2023-09-25', 'Pesan transaksi 9'),
+('T10', 'P5', 'JP4', 'MPB7', 'RESI777', '2023-10-30', 'Pesan transaksi 10');
+
 -- Tabel Detail_Transaksi
 INSERT INTO Detail_Transaksi (ID_Detail_Transaksi, ID_Transaksi, ID_Kucing) VALUES
 ('DT1', 'T1', 'K3'),
@@ -97,16 +110,7 @@ INSERT INTO Detail_Transaksi (ID_Detail_Transaksi, ID_Transaksi, ID_Kucing) VALU
 ('DT19', 'T9', 'K20'),
 ('DT20', 'T10', 'K19');
 
-
--- Tabel Transaksi
-INSERT INTO Transaksi (ID_Transaksi, ID_Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Total_Biaya, Nomor_Resi, Tanggal_Transaksi, Pesan) VALUES
-('T1', 'P1', 'JP1', 'MPB1', dbo.HitungTotal('T1'), 'RESI123', '2023-01-15', 'Pesan transaksi 1'),
-('T2', 'P2', 'JP2', 'MPB2', dbo.HitungTotal('T2'), 'RESI456', '2023-02-20', 'Pesan transaksi 2'),
-('T3', 'P1', 'JP1', 'MPB1', dbo.HitungTotal('T3'), 'RESI789', '2023-03-25', 'Pesan transaksi 3'),
-('T4', 'P1', 'JP6', 'MPB4', dbo.HitungTotal('T4'), 'RESI101', '2023-04-30', 'Pesan transaksi 4'),
-('T5', 'P5', 'JP1', 'MPB5', dbo.HitungTotal('T5'), 'RESI222', '2023-05-05', 'Pesan transaksi 5'),
-('T6', 'P1', 'JP3', 'MPB1', dbo.HitungTotal('T6'), 'RESI333', '2023-06-10', 'Pesan transaksi 6'),
-('T7', 'P2', 'JP1', 'MPB2', dbo.HitungTotal('T7'), 'RESI444', '2023-07-15', 'Pesan transaksi 7'),
-('T8', 'P3', 'JP6', 'MPB3', dbo.HitungTotal('T8'), 'RESI555', '2023-08-20', 'Pesan transaksi 8'),
-('T9', 'P4', 'JP1', 'MPB4', dbo.HitungTotal('T9'), 'RESI666', '2023-09-25', 'Pesan transaksi 9'),
-('T10', 'P5', 'JP4', 'MPB7', dbo.HitungTotal('T10'), 'RESI777', '2023-10-30', 'Pesan transaksi 10');
+-- Hitung Biaya Total
+UPDATE Transaksi
+SET Total_Biaya = dbo.HitungTotal(ID_Transaksi)
+WHERE ID_Transaksi IN ('T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10');

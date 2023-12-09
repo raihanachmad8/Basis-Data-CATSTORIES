@@ -2,6 +2,46 @@ USE CATADOPT;
 
 --FUNCTION------------------------------------------------------------------------------------
 
+--Cari dari tabel kucing
+CREATE FUNCTION CariKucing(@key VARCHAR(50))
+RETURNS TABLE
+AS
+RETURN(
+    SELECT 
+		K.ID_Kucing, K.Nama_Kucing, J.Jenis_Kucing, K.Jenis_Kelamin, K.Biaya, K.Tanggal_Masuk, K.Status
+    FROM Kucing K
+    JOIN Jenis J ON J.ID_Jenis = K.ID_Jenis
+	WHERE K.Nama_Kucing LIKE '%' + @key + '%'
+       OR K.ID_Kucing LIKE '%' + @key + '%'
+	   OR K.Umur LIKE '%' + @key + '%'
+	   OR J.Jenis_Kucing LIKE '%' + @key + '%'
+	   OR K.Biaya LIKE '%' + @key + '%'
+	   OR K.Status LIKE '%' + @key + '%'
+       OR CAST(K.Tanggal_Masuk AS VARCHAR(50)) LIKE '%' + @key + '%'
+);
+
+--Cari dari tabel transaksi
+CREATE FUNCTION CariTransaksi(
+    @key VARCHAR(50)
+)
+RETURNS TABLE
+AS
+RETURN (
+    SELECT T.ID_Transaksi, P.Nama_Pembeli, JP.Jenis_Pengiriman, MP.Metode_Pembayaran, T.Tanggal_Transaksi, T.Total_Biaya
+    FROM Transaksi T
+    JOIN Pembeli P ON P.ID_Pembeli = T.ID_Pembeli
+	JOIN Jenis_Pengiriman JP ON JP.ID_Jenis_Pengiriman = T.ID_Jenis_Pengiriman
+	JOIN Metode_Pembayaran MP ON MP.ID_Metode_Pembayaran = T.ID_Metode_Pembayaran
+	WHERE P.Nama_Pembeli LIKE '%' + @key + '%'
+        OR JP.Jenis_Pengiriman LIKE '%' + @key + '%'
+        OR MP.Metode_Pembayaran LIKE '%' + @key + '%'
+        OR T.Total_Biaya LIKE '%' + @key + '%'
+		OR T.ID_Transaksi LIKE '%' + @key + '%'
+        OR T.Nomor_Resi LIKE '%' + @key + '%'
+        OR CAST(T.Tanggal_Transaksi AS VARCHAR(50)) LIKE '%' + @key + '%'
+);
+
+
 --Menghitung jumlah total biaya dari suatu transaksi
 CREATE FUNCTION HitungTotal(@id_transaksi VARCHAR(50))
 RETURNS DECIMAL
@@ -131,8 +171,7 @@ AS
 RETURN
 (
 	SELECT 
-		ST.ID_Transaksi, ST.Nama_Pembeli, ST.Jenis_Pengiriman, ST.Metode_Pembayaran, ST.Total_Biaya, ST.Nomor_Resi, ST.Tanggal_Transaksi, ST.Pesan,
-		K.ID_Kucing, K.Nama_Kucing 'Nama Kucing', J.Jenis_Kucing, K.Jenis_Kelamin, K.Biaya
+		ST.*, K.ID_Kucing, K.Nama_Kucing 'Nama Kucing', J.Jenis_Kucing, K.Jenis_Kelamin, K.Biaya
 	FROM Detail_Transaksi DT
 	JOIN TampilTransaksi() ST ON ST.ID_Transaksi = DT.ID_Transaksi
 	JOIN Kucing K ON K.ID_Kucing = DT.ID_Kucing

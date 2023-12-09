@@ -38,26 +38,31 @@ BEGIN
 END;
 
 --Menambahkan data transaksi baru ke dalam sistem
-CREATE PROCEDURE Tambah Transaksi
+CREATE PROCEDURE InsertTransaksi
     @ID_Transaksi VARCHAR(50),
     @ID_Pembeli VARCHAR(50),
     @ID_Jenis_Pengiriman VARCHAR(50),
     @ID_Metode_Pembayaran VARCHAR(50),
     @Nomor_Resi VARCHAR(30),
     @Tanggal_Transaksi DATE,
-    @Pesan TEXT,
+    @Pesan TEXT
+AS
+BEGIN
+    INSERT INTO Transaksi (ID_Transaksi, ID_Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Nomor_Resi, Tanggal_Transaksi, Pesan)
+    VALUES (@ID_Transaksi, @ID_Pembeli, @ID_Jenis_Pengiriman, @ID_Metode_Pembayaran, @Nomor_Resi, @Tanggal_Transaksi, @Pesan);
+END;
+
+CREATE PROCEDURE InsertDetailTransaksi
     @ID_Detail_Transaksi VARCHAR(50),
+    @ID_Transaksi VARCHAR(50),
     @ID_Kucing VARCHAR(50)
 AS
 BEGIN
-    -- Insert into Transaksi table
-    INSERT INTO Transaksi (ID_Transaksi, ID_Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Total_Biaya, Nomor_Resi, Tanggal_Transaksi, Pesan)
-    VALUES (@ID_Transaksi, @ID_Pembeli, @ID_Jenis_Pengiriman, @ID_Metode_Pembayaran, dbo.HitungTotal(@ID_Transaksi), @Nomor_Resi, @Tanggal_Transaksi, @Pesan);
-
-    -- Insert into Detail_Transaksi table
     INSERT INTO Detail_Transaksi (ID_Detail_Transaksi, ID_Transaksi, ID_Kucing)
     VALUES (@ID_Detail_Transaksi, @ID_Transaksi, @ID_Kucing);
+	UPDATE Transaksi SET Total_Biaya = dbo.HitungTotal(@ID_Transaksi) WHERE ID_Transaksi = @ID_Transaksi;
 END;
+
 
 --Menambahkan data jenis kucing baru ke dalam sistem
 CREATE PROCEDURE TambahJenis
