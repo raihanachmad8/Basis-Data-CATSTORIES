@@ -2,7 +2,7 @@ export function up(knex) {
     return knex.schema.createTable("Kucing", (table) => {
         table.string("ID_Kucing", 50).primary();
         table.string("ID_Jenis", 50)
-        table.string("Nama", 50).notNullable();
+        table.string("Nama_Kucing", 50).notNullable();
         table.string("Foto", 100).notNullable();
         table.smallint("Umur").notNullable();
         table.string("Jenis_Kelamin", 6).notNullable().checkIn(["Jantan", "Betina"]);

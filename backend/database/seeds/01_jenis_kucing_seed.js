@@ -5,16 +5,17 @@ export async function seed(knex) {
     await knex('Transaksi').del()
     return await knex('Jenis').del().then(async () => {
         const Jenis = await Promise.all([
-            { ID_Jenis: faker.string.uuid(), Nama: 'Persia' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Maine Coon' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Siamese' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Sphynx' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Bengal' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Ragdoll' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Scottish Fold' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'British Shorthair' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Abyssinian' },
-            { ID_Jenis: faker.string.uuid(), Nama: 'Russian Blue' }
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Persia' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Maine Coon' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Siamese' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Sphynx' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Bengal' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Ragdoll' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Scottish Fold' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'British Shorthair' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Abyssinian' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Russian Blue' },
+            { ID_Jenis: faker.string.uuid(), Jenis_Kucing: 'Anggora' }
         ])
         await knex('Jenis').insert(Jenis)
         console.log('seed Jenis Kucing  success')

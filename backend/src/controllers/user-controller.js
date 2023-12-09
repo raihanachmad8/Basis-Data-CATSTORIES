@@ -9,12 +9,16 @@ const login = async (req, res, next) => {
         const result = await userService.login(req.body)
         const token = jwt.sign({user: result}, process.env.JWT_KEY, {expiresIn: '1h'})
         res.cookie('Authorization', token, {httpOnly: true})
-        console.log("token: " + token)
         logger.info(`User ${result.username} logged in`)
         res.status(200).json({
             status: 200,
             message: "Login success",
-            data: result,
+            data: {
+                user: {
+                    username: result.username,
+                },
+                token: token
+            },
         })
     } catch (e) {
         next(e)
@@ -30,7 +34,7 @@ const get = async (req, res, next) => {
         res.status(200).json({
             status: 200,
             message: "Get user success",
-            data: result,
+            data: {user: result},
         })
     } catch (e) {
         next(e)
@@ -49,6 +53,7 @@ const logout = async (req, res, next) => {
         res.status(200).json({
             status: 200,
             message: "Logout success",
+            data: 'OK'
         })
     } catch (e) {
         next(e)

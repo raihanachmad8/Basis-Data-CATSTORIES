@@ -32,10 +32,10 @@ export const authMiddleware = async (req, res, next) => {
                 next();
             }
         } catch (error) {
-            res.status(404)
+            res.status(401)
                 .json({
-                    sttaus: 404,
-                    error: "NOT FOUND",
+                    sttaus: 401,
+                    error: "Unauthorized",
                 })
                 .end();
         }

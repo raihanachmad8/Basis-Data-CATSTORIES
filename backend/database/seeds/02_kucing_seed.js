@@ -7,7 +7,7 @@ export async function seed(knex) {
             return {
                 ID_Kucing: faker.string.uuid(),
                 ID_Jenis: faker.helpers.arrayElement(ID_Jenis).ID_Jenis,
-                Nama: faker.animal.cat(),
+                Nama_Kucing: faker.animal.cat(),
                 Foto: faker.image.url(),
                 Umur: faker.number.int({ min: 1, max: 10 }),
                 Jenis_Kelamin: faker.helpers.arrayElement(['Jantan', 'Betina']),

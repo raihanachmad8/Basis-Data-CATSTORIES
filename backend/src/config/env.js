@@ -1,11 +1,8 @@
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import {resolve} from 'path';
+import { getDirname } from './directory.js';
 
 export const configureEnvironment = (path) => {
-    const envFilePath = resolve(__dirname, path)
+    const envFilePath = resolve(getDirname(), path)
     dotenv.config({ path: envFilePath })
 };
