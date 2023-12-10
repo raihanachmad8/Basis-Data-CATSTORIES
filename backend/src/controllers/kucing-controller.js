@@ -47,8 +47,6 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
-        console.log(req.body)
-        console.log(req.file)
         const result = await kucingService.update(req.body, req.file)
         logger.info('Update kucing success')
         res.status(201).json({

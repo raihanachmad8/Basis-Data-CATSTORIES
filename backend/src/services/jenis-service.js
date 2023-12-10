@@ -4,7 +4,6 @@ import { ResponseError } from "../errors/response-error.js"
 import { jenisRepository } from "../repository/jenis-repository.js"
 import { jenisValidation } from "../validations/jenis-validation.js"
 import { validate } from "../validations/validate.js"
-import {v4 as uuid} from 'uuid'
 
 const getAllJenis = async () => {
     const result = await jenisRepository.getAllJenis()
@@ -12,7 +11,6 @@ const getAllJenis = async () => {
         logger.error("Jenis not found")
         throw new ResponseError(404, "Jenis not found")
     }
-
     return result
 } 
 
@@ -40,10 +38,7 @@ const create = async (jenis) => {
         logger.error("Error while validating jenis:", validateJenis.error.message);
         throw new ResponseError(400, validateJenis.error.message);
     }
-    const result = await jenisRepository.create({
-        ID_Jenis: uuid().toString(),
-        ...jenis
-    });
+    const result = await jenisRepository.create(jenis);
     if (!result || result.length === 0) {
         logger.error("Failed to create jenis");
         throw new ResponseError(404, "Failed to create jenis");

@@ -2,7 +2,7 @@ import { logger } from "../app/logging.js"
 import { jenisServce } from "../services/jenis-service.js"
 
 
-const getAllJenis = async (req, res) => {
+const getAllJenis = async (req, res, next) => {
     try {
         const result = await jenisServce.getAllJenis()
         logger.info("Get all jenis success")

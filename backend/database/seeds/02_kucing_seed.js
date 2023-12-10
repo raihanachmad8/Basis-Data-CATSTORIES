@@ -1,24 +1,98 @@
-import { faker } from "@faker-js/faker"
+import { faker } from "@faker-js/faker";
 
 export async function seed(knex) {
-    return await knex('Kucing').del().then(async () => {
-        const ID_Jenis = await knex.select('ID_Jenis').from('Jenis')
-        const Kucing = await Promise.all([...Array(20)].map(async () => {
-            return {
-                ID_Kucing: faker.string.uuid(),
-                ID_Jenis: faker.helpers.arrayElement(ID_Jenis).ID_Jenis,
-                Nama_Kucing: faker.animal.cat(),
-                Foto: faker.image.url(),
-                Umur: faker.number.int({ min: 1, max: 10 }),
-                Jenis_Kelamin: faker.helpers.arrayElement(['Jantan', 'Betina']),
-                Tanggal_Masuk: faker.date.past(),
-                Biaya: faker.number.float({ min: 0, max: 1000000, precision: 2}),
-                Status: faker.helpers.arrayElement(['Tersedia', 'Tidak Tersedia']),
-                Keterangan: faker.lorem.sentence()
-            }
-        }))
-        await knex('Kucing').insert(Kucing)
-        console.log('seed Kucing success')
-        return 
-    })
+    return await knex("Kucing")
+        .del()
+        .then(async () => {
+            const ID_Jenis = await knex.select("ID_Jenis").from("Jenis");
+            const Kucing = await Promise.all([
+                {
+                    ID_Kucing: "K1",
+                    ID_Jenis: "J1",
+                    Nama_Kucing: "Fluffy",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 2,
+                    Jenis_Kelamin: "Jantan",
+                    Tanggal_Masuk: "2023-01-01",
+                    Biaya: 200000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Fluufy",
+                },
+                {
+                    ID_Kucing: "K2",
+                    ID_Jenis: "J2",
+                    Nama_Kucing: "Mittens",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 2,
+                    Jenis_Kelamin: "Betina",
+                    Tanggal_Masuk: "2023-02-01",
+                    Biaya: 150000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Mittens",
+                },
+                {
+                    ID_Kucing: "K3",
+                    ID_Jenis: "J2",
+                    Nama_Kucing: "Whiskers",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 6,
+                    Jenis_Kelamin: "Jantan",
+                    Tanggal_Masuk: "2023-02-11",
+                    Biaya: 150000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Whiskers",
+                },
+                {
+                    ID_Kucing: "K4",
+                    ID_Jenis: "J2",
+                    Nama_Kucing: "Leo",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 6,
+                    Jenis_Kelamin: "Jantan",
+                    Tanggal_Masuk: "2023-03-01",
+                    Biaya: 320000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Leo",
+                },
+                {
+                    ID_Kucing: "K5",
+                    ID_Jenis: "J4",
+                    Nama_Kucing: "Leo",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 12,
+                    Jenis_Kelamin: "Jantan",
+                    Tanggal_Masuk: "2023-03-01",
+                    Biaya: 300000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Leo",
+                },
+                {
+                    ID_Kucing: "K6",
+                    ID_Jenis: "J10",
+                    Nama_Kucing: "Nala",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 12,
+                    Jenis_Kelamin: "Jantan",
+                    Tanggal_Masuk: "2023-03-01",
+                    Biaya: 245000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Nala",
+                },
+                {
+                    ID_Kucing: "K7",
+                    ID_Jenis: "J10",
+                    Nama_Kucing: "Moi",
+                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Umur: 12,
+                    Jenis_Kelamin: "Betina",
+                    Tanggal_Masuk: "2023-04-21",
+                    Biaya: 370000.0,
+                    Status: "Tersedia",
+                    Keterangan: "Deskripsi Moi",
+                },
+            ]);
+            await knex("Kucing").insert(Kucing);
+            console.log("seed Kucing success");
+            return;
+        });
 }

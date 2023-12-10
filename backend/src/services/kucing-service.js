@@ -23,7 +23,7 @@ const get = async (id) => {
 
     if (validateId.error) {
         logger.error("Error while validating id:", validateId.error.message);
-        throw new ResponseError(400, validateId.error.message);
+        throw new ResponseError(400, validateId.error?.message);
     }
 
     const result = await kucingRepository.findById(id);
@@ -37,7 +37,6 @@ const get = async (id) => {
 };
 
 const create = async (kucing, file) => {
-    
     logger.info("Create kucing:", kucing);
     const validateKucing = validate(
         kucingValidation.createKucingValdation,
@@ -59,7 +58,6 @@ const create = async (kucing, file) => {
     }
 
     const result = await kucingRepository.create({
-        ID_Kucing: uuid().toString(),
         Foto: foto,
         ...kucing,
     });
@@ -93,7 +91,6 @@ const update = async (kucing, file) => {
         );
         throw new ResponseError(400, validateKucing.error.message);
     }
-    console.log(data);
     const result = await kucingRepository.update(kucing.ID_Kucing, data);
     if (!result || result.length === 0) {
         logger.error("Failed to update kucing");
@@ -112,9 +109,8 @@ const remove = async (id) => {
     }
 
     const result = await kucingRepository.remove(id);
-    console.log(result)
 
-    if (!result) {
+    if (!result || result == false) {
         logger.error("Failed to delete kucing");
         throw new ResponseError(404, "Failed to delete kucing");
     }
@@ -132,19 +128,13 @@ const handleImage = async (file) => {
     } catch (validationError) {
         logger.error("Error while validating kucing or Foto:", validationError.message);
         const filePath = resolve(getDirname(), '../../storage/kucing/' + file.filename);
-        console.log(filePath);
-        console.log(getDirname());
 
         try {
-            // Remove the file if validation fails
             fs.unlinkSync(filePath);
             logger.info("File removed successfully:", filePath);
         } catch (unlinkError) {
-            // Handle errors that may occur while removing the file
             logger.error("Error while removing file:", unlinkError.message);
         }
-
-        // Throw a custom error without exposing the details of the validation error
         throw new ResponseError(400, "Validation error file not allowed: "  + validationError.message); 
     }
 }
