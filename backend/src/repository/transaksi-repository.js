@@ -12,7 +12,7 @@ const getAll = async () => {
     }
 }
 
-const seacrh = async (params) => {
+const search = async (params) => {
     try {
         const result = await db.select().table('Transaksi').whereLike(params)
         return result
@@ -62,9 +62,25 @@ const remove = async (id) => {
     }
 }
 
+const incrementId = async (table, column, prefix = '') => {
+    try {
+        const result = await db
+        .raw(`
+        SELECT TOP 1 ${column}
+        FROM ${table}
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        `)
+        const newId = result[0][column].substring(prefix.length)
+        return prefix + (parseInt(newId) + 1)
+    } catch (error) {
+        logger.error('Error while getting last id kucing', error)
+        throw new ResponseError(500, "Internal Server Error")
+    }
+}
+
 export const transaksiRepository = {
     getAll,
-    seacrh,
+    search,
     findById,
     create,
     update,

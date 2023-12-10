@@ -14,7 +14,10 @@ const validateImageFile =  Joi.object({
     
 
 const createKucingValdation = Joi.object({
-    ID_Jenis: Joi.string().required(),
+    Jenis_Kucing: Joi.object({
+        ID_Jenis: Joi.string().required(),
+        Jenis_Kucing: Joi.string().required(),
+    }),
     Nama_Kucing: Joi.string().min(3).max(50).required(),
     Umur: Joi.number().integer().min(0).required(),
     Jenis_Kelamin: Joi.string()
@@ -34,11 +37,10 @@ const createKucingValdation = Joi.object({
 
 const updateKucingValdation = Joi.object({
     ID_Kucing: Joi.string().required(),
-    ID_Jenis: Joi.string()
-        .guid({
-            version: ["uuidv4", "uuidv5"],
-        })
-        .required(),
+    Jenis_Kucing: Joi.object({
+        ID_Jenis: Joi.string().required(),
+        Jenis_Kucing: Joi.string().required(),
+    }),
     Nama_Kucing: Joi.string().min(3).max(50).required(),
     Umur: Joi.number().integer().min(0).required(),
     Jenis_Kelamin: Joi.string()

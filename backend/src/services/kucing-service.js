@@ -6,7 +6,6 @@ import { kucingValidation } from "../validations/kucing-validation.js";
 import { validate } from "../validations/validate.js";
 import {resolve} from 'path';
 import * as fs from 'fs';   
-import {v4 as uuid} from 'uuid'
 
 const getAll = async () => {
     const result = await kucingRepository.getAll();
@@ -37,36 +36,42 @@ const get = async (id) => {
 };
 
 const create = async (kucing, file) => {
-    logger.info("Create kucing:", kucing);
-    const validateKucing = validate(
-        kucingValidation.createKucingValdation,
-        kucing
-    )
-    let foto = null;
-    if (file) {
-        await handleImage(file);
-        foto = "http://localhost:3000/storage/kucing/" + file.filename;
-    }
-    
-    if (validateKucing.error) {
-        logger.error(
-            "Error while validating kucing:",
-            validateKucing.error?.message
-            );
+    try {
+        logger.info("Create kucing:", kucing);
+        const validateKucing = validate(
+            kucingValidation.createKucingValdation,
+            kucing
+        )
+        let foto = null;
+        if (file) {
+            await handleImage(file);
+            foto = "http://localhost:3000/storage/kucing/" + file.filename;
+        }
         
-        throw new ResponseError(400, "Validation error");
-    }
+        if (validateKucing.error) {
+            logger.error(
+                "Error while validating kucing:",
+                validateKucing.error?.message
+                );
+            throw new ResponseError(400, "Validation error");
+        }
 
-    const result = await kucingRepository.create({
-        Foto: foto,
-        ...kucing,
-    });
-    if (!result || result.length === 0) {
-        logger.error("Failed to create kucing");
-        throw new ResponseError(404, "Failed to create kucing");
+        const result = await kucingRepository.create({
+            ID_Jenis: kucing.Jenis_Kucing.ID_Jenis,
+            Foto: foto,
+            ...kucing,
+        });
+        if (!result || result.length === 0) {
+            logger.error("Failed to create kucing");
+            throw new ResponseError(404, "Failed to create kucing");
+        }
+        logger.info("Create kucing success");
+        return result;
+    } catch (error) {
+        logger.error("Error while creating kucing:", error);
+        handleDelete(file)
+        throw new ResponseError(400, "Validation error", error?.message);
     }
-    logger.info("Create kucing success");
-    return result;
 };
 
 
@@ -80,9 +85,9 @@ const update = async (kucing, file) => {
     if (file) {
         await handleImage(file);
         foto = "http://localhost:3000/storage/kucing/" + file.filename;
+    } else {
+        foto = (await kucingRepository.findById(kucing.ID_Kucing)).Foto;
     }
-
-    const data = (foto) ? {...kucing, Foto: foto} : kucing;
 
     if (validateKucing.error) {
         logger.error(
@@ -91,13 +96,13 @@ const update = async (kucing, file) => {
         );
         throw new ResponseError(400, validateKucing.error.message);
     }
-    const result = await kucingRepository.update(kucing.ID_Kucing, data);
+    const result = await kucingRepository.update({ID_Jenis: kucing.Jenis_Kucing.ID_Jenis,Foto: foto, ...kucing});
     if (!result || result.length === 0) {
         logger.error("Failed to update kucing");
         throw new ResponseError(404, "Failed to update kucing");
     }
     logger.info("Update kucing success");
-    return data;
+    return result;
 };
 
 const remove = async (id) => {
@@ -127,15 +132,19 @@ const handleImage = async (file) => {
         
     } catch (validationError) {
         logger.error("Error while validating kucing or Foto:", validationError.message);
-        const filePath = resolve(getDirname(), '../../storage/kucing/' + file.filename);
-
-        try {
-            fs.unlinkSync(filePath);
-            logger.info("File removed successfully:", filePath);
-        } catch (unlinkError) {
-            logger.error("Error while removing file:", unlinkError.message);
-        }
+        handleDelete(file)
         throw new ResponseError(400, "Validation error file not allowed: "  + validationError.message); 
+    }
+}
+
+const handleDelete = async (file) => {
+    const filePath = resolve(getDirname(), '../../storage/kucing/' + file.filename);
+
+    try {
+        fs.unlinkSync(filePath);
+        logger.info("File removed successfully:", filePath);
+    } catch (unlinkError) {
+        logger.error("Error while removing file:", unlinkError.message);
     }
 }
 

@@ -46,7 +46,7 @@ export async function seed(knex) {
                     ID_Kucing: "K4",
                     ID_Jenis: "J2",
                     Nama_Kucing: "Leo",
-                    Foto: "http://localhost:3000/storage/kucing/1702092125730-96533786-kucing.jpg",
+                    Foto: "http://localhost:3000/storage/kucing/1702230916071-998995605-.jpg",
                     Umur: 6,
                     Jenis_Kelamin: "Jantan",
                     Tanggal_Masuk: "2023-03-01",

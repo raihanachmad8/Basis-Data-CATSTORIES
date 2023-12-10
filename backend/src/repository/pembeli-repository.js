@@ -12,7 +12,7 @@ const getAll = async () => {
     }
 }
 
-const seacrh = async (params) => {
+const search = async (params) => {
     try {
         const result = await db.select().table('Pembeli').whereLike(params)
         return result
@@ -34,8 +34,10 @@ const findById = async (id) => {
 
 const create = async (data) => {
     try {
-        const id = await insertId('Pembeli', 'ID_Pembeli', 'P')
-        await db('Pembeli').insert({ID_Pembeli: id, ...data})
+        const id = await incrementId('Pembeli', 'ID_Pembeli', 'P')
+        await db.raw(`
+        EXEC TambahPembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telepon = :No_Telepon, @Alamat_Pembeli = :Alamat_Pembeli;`,
+        { ID_Pembeli: id, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telepon: data.No_Telepon, Alamat_Pembeli: data.Alamat_Pembeli })
         return await db('Pembeli').where('ID_Pembeli', id)
     } catch (error) {
         logger.error(error)
@@ -45,7 +47,8 @@ const create = async (data) => {
 
 const update = async (id, data) => {
     try {
-        await db('Pembeli').where('ID_Pembeli', id).update(data)
+        await db.raw(`EXEC UpdatePembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telepon = :No_Telepon, @Alamat_Pembeli = :Alamat_Pembeli;`, 
+        { ID_Pembeli: id, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telepon: data.No_Telepon, Alamat_Pembeli: data.Alamat_Pembeli })
         return await db('Pembeli').where('ID_Pembeli', id)
     } catch (error) {
         logger.error(error)
@@ -63,24 +66,26 @@ const remove = async (id) => {
     }
 }
 
-const incrementId = async (table, column, prefix = "") => {
+const incrementId = async (table, column, prefix = '') => {
     try {
-        const result = await db(table)
-            .select(column)
-            .orderBy(column, "desc")
-            .first();
-        const newId = result.ID_Kucing.substr(prefix.length);
-        return prefix + (parseInt(newId) + 1);
+        const result = await db
+        .raw(`
+        SELECT TOP 1 ${column}
+        FROM ${table}
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        `)
+        const newId = result[0][column].substring(prefix.length)
+        return prefix + (parseInt(newId) + 1)
     } catch (error) {
-        logger.error("Error while getting last id kucing", error);
-        throw new ResponseError(500, "Internal Server Error");
+        logger.error('Error while getting last id kucing', error)
+        throw new ResponseError(500, "Internal Server Error")
     }
-};
+}
 
 
 export const pembeliRepository = {
     getAll,
-    seacrh,
+    search,
     findById,
     create,
     update,

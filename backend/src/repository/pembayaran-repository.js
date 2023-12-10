@@ -67,19 +67,21 @@ const remove = async (id) => {
     }
 }
 
-const incrementId = async (table, column, prefix = "") => {
+const incrementId = async (table, column, prefix = '') => {
     try {
-        const result = await db(table)
-            .select(column)
-            .orderBy(column, "desc")
-            .first();
-        const newId = result.ID_Kucing.substr(prefix.length);
-        return prefix + (parseInt(newId) + 1);
+        const result = await db
+        .raw(`
+        SELECT TOP 1 ${column}
+        FROM ${table}
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        `)
+        const newId = result[0][column].substring(prefix.length)
+        return prefix + (parseInt(newId) + 1)
     } catch (error) {
-        logger.error("Error while getting last id kucing", error);
-        throw new ResponseError(500, "Internal Server Error");
+        logger.error('Error while getting last id kucing', error)
+        throw new ResponseError(500, "Internal Server Error")
     }
-};
+}
 
 export const pembayaranRepository = {
     getAll,
