@@ -70,6 +70,6 @@ CREATE TABLE Detail_Transaksi (
     ID_Detail_Transaksi VARCHAR(50) PRIMARY KEY,
     ID_Transaksi VARCHAR(50),
     ID_Kucing VARCHAR(50),
-	FOREIGN KEY (ID_Transaksi) REFERENCES Transaksi(ID_Transaksi)
+	FOREIGN KEY (ID_Transaksi) REFERENCES Transaksi(ID_Transaksi),
     FOREIGN KEY (ID_Kucing) REFERENCES Kucing(ID_Kucing)
 );
