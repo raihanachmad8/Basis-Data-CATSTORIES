@@ -4,7 +4,6 @@ import { ResponseError } from "../errors/response-error.js"
 import { pembeliRepository } from "../repository/pembeli-repository.js"
 import { pembeliValidation } from "../validations/pembeli-validation.js"
 import { validate } from "../validations/validate.js"
-import {v4 as uuid} from 'uuid'
 
 const getAll = async () => {
     const result = await pembeliRepository.getAll()
@@ -51,10 +50,7 @@ const create = async (pembeli) => {
         throw new ResponseError(400, "Validation error: ",validatePembeli.error?.message );
     }
 
-    const result = await pembeliRepository.create({
-        ID_Pembeli: uuid(),
-        ...pembeli 
-    })
+    const result = await pembeliRepository.create(pembeli)
     if (!result || result.length === 0) {
         logger.error("Failed to create pembeli");
         throw new ResponseError(404, "Failed to create pembeli");

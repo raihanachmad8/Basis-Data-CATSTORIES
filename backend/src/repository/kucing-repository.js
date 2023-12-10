@@ -110,7 +110,6 @@ const incrementId = async (table, column, prefix = "") => {
             .orderBy(column, "desc")
             .first();
         const newId = result.ID_Kucing.substr(prefix.length);
-        console.log(prefix + (parseInt(newId) + 1));
         return prefix + (parseInt(newId) + 1);
     } catch (error) {
         logger.error("Error while getting last id kucing", error);

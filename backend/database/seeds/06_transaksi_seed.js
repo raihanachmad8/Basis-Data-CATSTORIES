@@ -5,16 +5,10 @@ export async function seed(knex) {
         const ID_Pembeli = await knex.select('ID_Pembeli').from('Pembeli')
         const ID_Jenis_Pengiriman = await knex.select('ID_Jenis_Pengiriman').from('Jenis Pengiriman')
         const ID_Metode_Pembayaran = await knex.select('ID_Metode_Pembayaran').from('Metode Pembayaran')
-        const Transaksi = await Promise.all([...Array(20)].map(async () => {
-            return {
-                ID_Transaksi: faker.string.uuid(),
-                ID_Pembeli: faker.helpers.arrayElement(ID_Pembeli).ID_Pembeli,
-                ID_Jenis_Pengiriman: faker.helpers.arrayElement(ID_Jenis_Pengiriman).ID_Jenis_Pengiriman,
-                ID_Metode_Pembayaran: faker.helpers.arrayElement(ID_Metode_Pembayaran).ID_Metode_Pembayaran,
-                Tanggal_Transaksi: faker.date.past(),
-                Pesan: faker.lorem.sentence(),
-            }
-        }))
+        const Transaksi = await Promise.all([
+            {ID_Transaksi:'T1', ID_Pembeli: 'P1', ID_Jenis_Pengiriman: 'JP1', ID_Metode_Pembayaran: 'MPB1', Total_Biaya: 230000, Nomor_Resi: 'RESI123', Tanggal_Transaksi: '2023-01-15', Pesan: 'Pesan transaksi 1'},
+            {ID_Transaksi:'T2', ID_Pembeli: 'P2', ID_Jenis_Pengiriman: 'JP2', ID_Metode_Pembayaran: 'MPB2', Total_Biaya: 300000, Nomor_Resi: 'RESI456', Tanggal_Transaksi: '2023-02-20', Pesan: 'Pesan transaksi 2'},
+        ])
         await knex('Transaksi').insert(Transaksi)
         console.log('seed Transaksi success')
         return 
