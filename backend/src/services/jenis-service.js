@@ -1,0 +1,92 @@
+
+import { logger } from "../app/logging.js"
+import { ResponseError } from "../errors/response-error.js"
+import { jenisRepository } from "../repository/jenis-repository.js"
+import { jenisValidation } from "../validations/jenis-validation.js"
+import { validate } from "../validations/validate.js"
+import {v4 as uuid} from 'uuid'
+
+const getAllJenis = async () => {
+    const result = await jenisRepository.getAllJenis()
+    if (!result || result.length === 0) {
+        logger.error("Jenis not found")
+        throw new ResponseError(404, "Jenis not found")
+    }
+
+    return result
+} 
+
+const get = async (id) => {
+    const validateId = validate(jenisValidation.getJenisValidation, id);
+
+    if (validateId.error) {
+        logger.error("Error while validating id:", validateId.error.message);
+        throw new ResponseError(400, validateId.error.message);
+    }
+
+    const result = await jenisRepository.findById(id);
+
+    if (!result || result.length === 0) {
+        logger.error("Jenis not found");
+        throw new ResponseError(404, "Jenis not found");
+    }
+    return result
+}
+
+const create = async (jenis) => {
+    logger.info("Create jenis:", jenis);
+    const validateJenis = validate(jenisValidation.createJenisValdation, jenis);
+    if (validateJenis.error) {
+        logger.error("Error while validating jenis:", validateJenis.error.message);
+        throw new ResponseError(400, validateJenis.error.message);
+    }
+    const result = await jenisRepository.create({
+        ID_Jenis: uuid().toString(),
+        ...jenis
+    });
+    if (!result || result.length === 0) {
+        logger.error("Failed to create jenis");
+        throw new ResponseError(404, "Failed to create jenis");
+    }
+    return result;
+}
+
+const update = async (jenis) => {
+    logger.info("Update jenis:", jenis);
+    const validateJenis = validate(jenisValidation.updateJenisValdation, jenis);
+    if (validateJenis.error) {
+        logger.error("Error while validating jenis:", validateJenis.error.message);
+        throw new ResponseError(400, validateJenis.error.message);
+    }
+    const result = await jenisRepository.update(jenis.ID_Jenis, jenis);
+    if (!result || result.length === 0) {
+        logger.error("Failed to update jenis");
+        throw new ResponseError(404, "Failed to update jenis");
+    }
+    return result
+}
+
+const remove = async (id) => {
+    const validateId = validate(jenisValidation.getJenisValidation, id);
+
+    if (validateId.error) {
+        logger.error("Error while validating id:", validateId.error.message);
+        throw new ResponseError(400, validateId.error.message);
+    }
+
+    const result = await jenisRepository.remove(id);
+    if (!result || result.length === 0) {
+        logger.error("Failed to delete jenis");
+        throw new ResponseError(404, "Failed to delete jenis");
+    }
+    return result
+}
+
+
+export const jenisServce =  {
+    getAllJenis,
+    get,
+    create,
+    update,
+    remove
+}

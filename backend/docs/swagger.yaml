@@ -12,11 +12,17 @@ externalDocs:
 servers:
   - url: 'http://localhost:3000/api/v1'
     description: Development server
-paths: 
+paths:
+  /docs:
+    get:
+      tags:
+        -  API Documentation
+      summary: Get API Documentation
+
   /users/auth/login:
     post:
       tags:
-        - Users
+        - Authentication
       summary: Login
       requestBody:
         content:
@@ -24,24 +30,22 @@ paths:
             schema:
               $ref: '#/components/schemas/Login'
             example:
-              email: 'example.gmail.com'
-              password: '123456'
+              username: raihan
+              password: raihan
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                user:
-                  id: 1
-                  name: 'example'
-                  email: 'example.gmail.com'
-                  address: 'example'
-                  phone: '08123456789'
-                  role: 'admin'
-                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+                status: 200
+                message: Login success
+                data:
+                  - user:
+                    username: raihan
+                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJyYWloYW4iLCJpYXQiOjE2MjQ0NjY0NzMsImV4cCI6MTY
         '400':
           description: Bad Request
           content:
@@ -49,8 +53,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 400
-                message: Bad Request
+                status: 400
+                error: Username or password is wrong
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: User not found
         '500':
           description: Internal Server Error
           content:
@@ -58,13 +80,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
+                status: 500
+                error: Internal Server Error
   /users/auth/current:
     get:
       tags:
-        - Users
-      summary: Get Current User
+        -  Authentication
+      summary: Get current user
       security:
         - bearerAuth: []
       responses:
@@ -73,14 +95,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                id: 1
-                name: 'example'
-                email: 'example.gmail.com'
-                address: 'jl. example'
-                phone: '08123456789'
-                role: 'admin'
+                status: 200
+                message: Get current user success
+                data:
+                  - user:
+                      username: raihan
         '401':
           description: Unauthorized
           content:
@@ -88,8 +109,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 401
-                message: Unauthorized
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: User not found
         '500':
           description: Internal Server Error
           content:
@@ -97,31 +127,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
+                status: 500
+                error: Internal Server Error
   /users/auth/logout:
-    delete:
+    post:
       tags:
-        - Users
+        -  Authentication
       summary: Logout
       security:
         - bearerAuth: []
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseFailed'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                code: 200
-                message: OK
+                status: 200
+                message: Logout success
+                data: 'OK'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
         '500':
           description: Internal Server Error
           content:
@@ -129,39 +163,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
-  /cat-stories:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/jenis:
     get:
       tags:
-        - Cat Stories
-      summary: Get All Cat Stories
+        - Jenis
+      summary: Get all jenis
       security:
-        - bearerAuth: []
+        -  bearerAuth: []
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CatStory'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                - id: 1
-                  image: 'example.jpg'
-                  umur: 2
-                  jenis: 'anggora'
-                  harga: 100000
-                  tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                  status: 'tersedia'
-                - id: 2
-                  image: 'example2.jpg'
-                  umur: 4
-                  jenis: 'persia'
-                  harga: 100000
-                  tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                  status: 'terjual'
+                status: 200
+                message: Get all jenis success
+                data:
+                  - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Jenis: Russian Blue
+                  - ID_Jenis: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
+                    Nama_Jenis: Abyssinian
         '401':
           description: Unauthorized
           content:
@@ -169,26 +194,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 401
-                message: Unauthorized
-        '404' : 
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 404
-                message: Not Found
-        '408':
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 408
-                message: Request Timeout
+                status: 401
+                error: Unauthorized
         '500':
           description: Internal Server Error
           content:
@@ -196,37 +203,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
-  /cat-stories/{id}:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/jenis/{id}:
     get:
       tags:
-        - Cat Stories
-      summary: Get Cat Story By Id
+        - Jenis
+      summary: Get jenis by id
       security:
-        - bearerAuth: []
+        -  bearerAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
+        - in: path
+          name: id
           schema:
-            type: integer
-            format: int64
+            type: string
+          required: true
+          description: Jenis id
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CatStory'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                id: 1
-                image: 'example.jpg'
-                umur: 2
-                jenis: 'anggora'
-                harga: 100000
-                tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                status: 'tersedia'
+                status: 200
+                message: Get jenis success
+                data:
+                  - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Jenis: Russian Blue
         '401':
           description: Unauthorized
           content:
@@ -234,8 +239,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 401
-                message: Unauthorized
+                status: 401
+                error: Unauthorized
         '404':
           description: Not Found
           content:
@@ -243,60 +248,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 404
-                message: Not Found
-        '408': 
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 408
-                message: Request Timeout
+                status: 404
+                error: Jenis not found
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseFailed' 
+                $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
-  /cat-stories/create:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/jenis/create:
     post:
       tags:
-        - Cat Stories
-      summary: Create Cat Story
+        - Jenis
+      summary: Create new jenis
       security:
-        - bearerAuth: []
+        -  bearerAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CatStory'
+              type: object
+              properties:
+                Nama_Jenis:
+                  type: string
             example:
-              image: 'example.jpg'
-              umur: 2
-              jenis: 'anggora'
-              harga: 100000
-              tanggalMasuk: '2021-01-01T00:00:00.000Z'
-              status: 'tersedia'
+              Nama_Jenis: Russian Blue
       responses:
         '201':
-          description: Created
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CatStory'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                id: 1
-                image: 'example.jpg'
-                umur: 2
-                jenis: 'anggora'
-                harga: 100000
-                tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                status: 'tersedia'
+                status: 201
+                message: Create new jenis success
+                data:
+                  - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Jenis: Russian Blue
         '400':
           description: Bad Request
           content:
@@ -304,8 +296,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 400
-                message: Bad Request
+                status: 400
+                error: Nama_Jenis is required
         '401':
           description: Unauthorized
           content:
@@ -313,8 +305,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 401
-                message: Unauthorized
+                status: 401
+                error: Unauthorized
         '500':
           description: Internal Server Error
           content:
@@ -322,352 +314,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
-  /cat-stories/remove/{id}:
-    delete:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/jenis/update:
+    put:
       tags:
-        - Cat Stories
-      summary: Remove Cat Story By Id
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CatStory'
-              example:
-                id: 1
-                image: 'example.jpg'
-                umur: 2
-                jenis: 'anggora'
-                harga: 100000
-                tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                status: 'tersedia'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 401
-                message: Unauthorized
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 404
-                message: Not Found
-        '408': 
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 408
-                message: Request Timeout
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed' 
-              example:
-                code: 500
-                message: Internal Server Error
-  /cat-stories/transaction:
-    get:
-      tags:
-        - Cat Stories Transaction
-      summary: Get All Cat Story Transaction
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CatStoryTransaction'
-              example:
-                - id: 1
-                  pembeli:
-                    id: 1
-                    name: 'example'
-                    email: 'example.gmail.com'
-                    address: 'example'
-                    phone: '08123456789'
-                  detail:
-                    - id: 1
-                      catStory:
-                        id: 1
-                        image: 'example.jpg'
-                        umur: 2
-                        jenis: 'anggora'
-                        harga: 100000
-                        tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                        status: 'tersedia'
-                      jumlah: 1
-                      harga: 100000
-                    - id: 2
-                      catStory:
-                        id: 2
-                        image: 'example2.jpg'
-                        umur: 4
-                        jenis: 'persia'
-                        harga: 100000
-                        tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                        status: 'terjual'
-                      jumlah: 1
-                      harga: 100000
-                  jumlah: 2
-                  jenisPengiriman: 'jne'
-                  jenisPembayaran: 'transfer'
-                  pesan: 'example'
-                  totalHarga: 200000
-                  tanggalTransaksi: '2021-01-01T00:00:00.000Z'
-                  status: 'terkirim'
-                - id: 2
-                  pembeli:
-                    id: 2
-                    name: 'example2'
-                    email: 'example2.gmail.com'
-                    address: 'example2'
-                    phone: '08123456789'
-                  detail:
-                    - id: 3
-                      catStory:
-                        id: 3
-                        image: 'example3.jpg'
-                        umur: 2
-                        jenis: 'anggora'
-                        harga: 100000
-                        tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                        status: 'tersedia'
-                      jumlah: 1
-                      harga: 100000
-                    - id: 4
-                      catStory:
-                        id: 4
-                        image: 'example4.jpg'
-                        umur: 4
-                        jenis: 'persia'
-                        harga: 100000
-                        tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                        status: 'terjual'
-                      jumlah: 1
-                      harga: 100000
-                  jumlah: 2
-                  jenisPengiriman: 'jne'
-                  jenisPembayaran: 'transfer'
-                  pesan: 'example2'
-                  totalHarga: 200000
-                  tanggalTransaksi: '2021-01-01T00:00:00.000Z'
-                  status: 'proses'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 401
-                message: Unauthorized
-        '404' : 
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-                example:
-                  code: 404
-                  message: Not Found
-        '408':
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-                example:
-                  code: 408
-                  message: Request Timeout
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-                example:
-                  code: 500
-                  message: Internal Server Error
-  /cat-stories/transaction/{id}:
-    get:
-      tags:
-        - Cat Stories Transaction
-      summary: Get Cat Story Transaction By Id
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CatStoryTransaction'
-              example:
-                id: 1
-                pembeli:
-                  id: 1
-                  name: 'example'
-                  email: 'example.gmail.com'
-                  address: 'example'
-                  phone: '08123456789'
-                detail:
-                  - id: 1
-                    catStory:
-                      id: 1
-                      image: 'example.jpg'
-                      umur: 2
-                      jenis: 'anggora'
-                      harga: 100000
-                      tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                      status: 'tersedia'
-                    jumlah: 1
-                    harga: 100000
-                  - id: 2
-                    catStory:
-                      id: 2
-                      image: 'example2.jpg'
-                      umur: 4
-                      jenis: 'persia'
-                      harga: 100000
-                      tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                      status: 'terjual'
-                    jumlah: 1
-                    harga: 100000
-                jumlah: 2
-                jenisPengiriman: 'jne'
-                jenisPembayaran: 'transfer'
-                pesan: 'example'
-                totalHarga: 200000
-                tanggalTransaksi: '2021-01-01T00:00:00.000Z'
-                status: 'terkirim'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-                example:
-                  code: 401
-                  message: Unauthorized
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 404
-                message: Not Found
-        '408': 
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 408
-                message: Request Timeout
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'  
-              example:
-                code: 500
-                message: Internal Server Error
-  /cat-stories/transaction/create:
-    post:
-      tags:
-        - Cat Stories Transaction
-      summary: Create Cat Story Transaction
+        -  Jenis
+      summary: Update jenis
       security:
         - bearerAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CatStoryTransaction'
+              type: object
+              properties:
+                ID_Jenis:
+                  type: string
+                Nama_Jenis:
+                  type: string
+            example:
+              ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Nama_Jenis: Russian Blue
       responses:
         '201':
-          description: Created
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CatStoryTransaction'
+                $ref: '#/components/schemas/ResponseSuccess'
               example:
-                id: 1
-                pembeli:
-                  id: 1
-                  name: 'example'
-                  email: 'example.gmail.com'
-                  address: 'example'
-                  phone: '08123456789'
-                detail:
-                  - id: 1
-                    catStory:
-                      id: 1
-                      image: 'example.jpg'
-                      umur: 2
-                      jenis: 'anggora'
-                      harga: 100000
-                      tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                      status: 'tersedia'
-                    jumlah: 1
-                    harga: 100000
-                  - id: 2
-                    catStory:
-                      id: 2
-                      image: 'example2.jpg'
-                      umur: 4
-                      jenis: 'persia'
-                      harga: 100000
-                      tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                      status: 'terjual'
-                    jumlah: 1
-                    harga: 100000
-                jumlah: 2
-                jenisPengiriman: 'jne'
-                jenisPembayaran: 'transfer'
-                pesan: 'example'
-                totalHarga: 200000
-                tanggalTransaksi: '2021-01-01T00:00:00.000Z'
-                status: 'terkirim'
+                status: 201
+                message: Update jenis success
+                data:
+                  - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Jenis: Russian Blue
         '400':
           description: Bad Request
           content:
@@ -675,85 +356,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 400
-                message: Bad Request
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-                example:
-                  code: 401
-                  message: Unauthorized
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-                example:
-                  code: 500
-                  message: Internal Server Error
-  /cat-stories/transaction/remove/{id}:
-    delete:
-      tags:
-        - Cat Stories Transaction
-      summary: Remove Cat Story Transaction By Id
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CatStoryTransaction'
-              example:
-                id: 1
-                pembeli:
-                  id: 1
-                  name: 'example'
-                  email: 'example.gmail.com'
-                  address: 'example'
-                  phone: '08123456789'
-                detail:
-                  - id: 1
-                    catStory:
-                      id: 1
-                      image: 'example.jpg'
-                      umur: 2
-                      jenis: 'anggora'
-                      harga: 100000
-                      tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                      status: 'tersedia'
-                    jumlah: 1
-                    harga: 100000
-                  - id: 2
-                    catStory:
-                      id: 2
-                      image: 'example2.jpg'
-                      umur: 4
-                      jenis: 'persia'
-                      harga: 100000
-                      tanggalMasuk: '2021-01-01T00:00:00.000Z'
-                      status: 'terjual'
-                    jumlah: 1
-                    harga: 100000
-                jumlah: 2
-                jenisPengiriman: 'jne'
-                jenisPembayaran: 'transfer'
-                pesan: 'example'
-                totalHarga: 200000
-                tanggalTransaksi: '2021-01-01T00:00:00.000Z'
-                status: 'Dibatalakan'              
+                status: 400
+                error: Nama_Jenis is required
         '401':
           description: Unauthorized
           content:
@@ -761,8 +365,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 401
-                message: Unauthorized 
+                status: 401
+                error: Unauthorized
         '404':
           description: Not Found
           content:
@@ -770,17 +374,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 404
-                message: Not Found
-        '408': 
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResponseFailed'
-              example:
-                code: 408
-                message: Request Timeout
+                status: 404
+                error: Jenis not found
         '500':
           description: Internal Server Error
           content:
@@ -788,8 +383,474 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
-                code: 500
-                message: Internal Server Error
+                status: 500
+                error: Internal Server Error
+  /cat-stories/jenis/delete:
+    delete:
+      tags:
+        -  Jenis
+      summary: Delete jenis
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID_Jenis:
+                  type: string
+            example:
+              ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 201
+                message: Delete jenis success
+                data: 'OK'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 400
+                error: ID_Jenis is required
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Jenis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: Jenis not found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/kucing:
+    get: 
+      tags:
+        - Kucing
+      summary: Get all kucing
+      security: 
+        -  bearerAuth: []
+      responses:
+        '200': 
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 200
+                message: Get all kucing success
+                data:
+                  - ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Kucing: Kucing
+                    Foto: 
+                      - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                    Umur: 1
+                    Jenis_Kelamin: Jantan
+                    Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                    Biaya: 100000
+                    Status: 1
+                    Keterangan: Kucing ini sangat lucu
+        '400': 
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 400
+                error: ID_Jenis is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Kucing not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: Kucing not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/kucing/{id}:
+    get: 
+      tags: 
+        -  Kucing
+      summary: Get kucing by id
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Kucing id
+      responses:
+        '200': 
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 200
+                message: Get kucing success
+                data:
+                  - ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Kucing: Kucing
+                    Foto: 
+                      - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                    Umur: 1
+                    Jenis_Kelamin: Jantan
+                    Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                    Biaya: 100000
+                    Status: 1
+                    Keterangan: Kucing ini sangat lucu
+        '400': 
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 400
+                error: ID_Jenis is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Kucing not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: Kucing not found 
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 500
+                error: Internal Server Error
+                
+  /cat-stories/kucing/create:
+    post: 
+      tags:
+        - Kucing
+      summary: Create new kucing
+      security:
+        -  bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ID_Jenis:
+                  type: string
+                Nama_Kucing:
+                  type: string
+                Foto:
+                  type: string
+                  format: binary
+                Umur:
+                  type: integer
+                  format: int64
+                Jenis_Kelamin:
+                  type: string
+                Tanggal_Masuk:
+                  type: string
+                Biaya:
+                  type: integer
+                  format: int64
+                Status:
+                  type: integer
+                  format: int64
+                Keterangan:
+                  type: string
+            example:
+              ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Nama_Kucing: Kucing
+              Foto: 
+                - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+              Umur: 1
+              Jenis_Kelamin: Jantan
+              Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+              Biaya: 100000
+              Status: 1
+              Keterangan: Kucing ini sangat lucu
+      responses:
+        '201': 
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 201
+                message: Create new kucing success
+                data:
+                  - ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Kucing: Kucing
+                    Foto: 
+                      - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                    Umur: 1
+                    Jenis_Kelamin: Jantan
+                    Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                    Biaya: 100000
+                    Status: 1
+                    Keterangan: Kucing ini sangat lucu
+        '400': 
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 400
+                error: ID_Jenis is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/kucing/update:
+    put:
+      tags:
+        -  Kucing
+      summary: Update kucing
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ID_Kucing:
+                  type: string
+                ID_Jenis:
+                  type: string
+                Nama_Kucing:
+                  type: string
+                Foto:
+                  type: string
+                  format: binary
+                Umur:
+                  type: integer
+                  format: int64
+                Jenis_Kelamin:
+                  type: string
+                Tanggal_Masuk:
+                  type: string
+                Biaya:
+                  type: integer
+                  format: int64
+                Status:
+                  type: integer
+                  format: int64
+                Keterangan:
+                  type: string
+            example:
+              ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Nama_Kucing: Kucing
+              Foto: 
+                - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+              Umur: 1
+              Jenis_Kelamin: Jantan
+              Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+              Biaya: 100000
+              Status: 1
+              Keterangan: Kucing ini sangat lucu
+      responses:
+        '201': 
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 201
+                message: Update kucing success
+                data:
+                  - ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Kucing: Kucing
+                    Foto: 
+                      - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+        '400': 
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 400
+                error: ID_Jenis is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Kucing not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: Kucing not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/kucing/delete:
+    delete:
+      tags:
+        -  Kucing
+      summary: Delete kucing
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID_Kucing:
+                  type: string
+            example:
+              ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+      responses:
+        '201': 
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 201
+                message: Delete kucing success
+                data: 'OK'
+        '400': 
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 400
+                error: ID_Jenis is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Kucing not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 404
+                error: Kucing not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example:
+                status: 500
+                error: Internal Server Error
+
+  
+
+
 
 components:
   securitySchemes:
@@ -798,120 +859,76 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        email:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
-        role:
-          type: string
     Login:
       type: object
       properties:
-        email:
+        username:
           type: string
         password:
           type: string
-    LoginResponse:
+    LoginDataResponse:
       type: object
       properties:
         user:
-          $ref: '#/components/schemas/User'
+          type: object
         token:
           type: string
-    CatStory:
+    LoginCurrentResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        image:
-          type: string
-        umur:
-          type: integer
-          format: int32
-        jenis: 
-          type: string
-        harga: 
-          type: integer
-          format: int32
-        tanggalMasuk:
-          type: string
-          format: date-time
+        user:
+          type: object
+    ResponseSuccess:
+      type: object
+      properties:
         status:
-          type: string
-    CatStoryPembeli: 
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        email:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
-    CatStoryTransaction:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        pembeli:
-          $ref: '#/components/schemas/CatStoryPembeli'
-        detail: 
-          type: array
-          items:
-            $ref: '#/components/schemas/CatStoryTransactionDetail'
-        jumlah:
-          type: integer
-          format: int32
-        jenisPengiriman:
-          type: string
-        jenisPembayaran:
-          type: string
-        pesan: 
-          type: string
-        totalHarga:
-          type: integer
-          format: int32
-        tanggalTransaksi:
-          type: string
-          format: date-time
-        status:
-          type: string
-    CatStoryTransactionDetail:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        catStory:
-          $ref: '#/components/schemas/CatStory'
-        jumlah:
-          type: integer
-          format: int32
-        harga:
-          type: integer
-          format: int32
-    ResponseFailed:
-      type: object
-      properties:
-        code:
           type: integer
           format: int32
         message:
           type: string
-          
+        data:
+          oneOf:
+            - type: array
+            - type: string
+    ResponseFailed:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        error:
+          type: string
+    JenisCat:
+      type: object
+      properties:
+        ID_Jenis:
+          type: integer
+          format: int64
+        Nama_Jenis:
+          type: string
+    Kucing:
+      type: object
+      properties:
+        ID_Kucing:
+          type: string
+        ID_Jenis:
+          type: string
+        Nama_Kucing:
+          type: string
+        Foto:
+          type: object
+        Umur:
+          type: integer
+          format: int64
+        Jenis_Kelamin:
+          type: string
+        Tanggal_Masuk:
+          type: string
+        Biaya:
+          type: integer
+          format: int64
+        Status:
+          type: integer
+          format: int64
+        Keterangan: 
+          type: string
