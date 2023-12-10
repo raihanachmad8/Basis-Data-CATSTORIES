@@ -34,8 +34,9 @@ const findById = async (id) => {
 
 const create = async (data) => {
     try {
-        const result = await db('Jenis Pengiriman').insert(data)
-        return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', data.ID_Jenis_Pengiriman)
+        const id = await incrementId('Jenis Pengiriman', 'ID_Jenis_Pengiriman', 'JP')
+        await db('Jenis Pengiriman').insert({ID_Jenis_Pengiriman:id, ...data})
+        return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id)
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -44,7 +45,7 @@ const create = async (data) => {
 
 const update = async (id, data) => {
     try {
-        const result = await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id).update(data)
+        await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id).update(data)
         return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id)
     } catch (error) {
         logger.error(error)
@@ -61,6 +62,20 @@ const remove = async (id) => {
         throw new ResponseError(500, "Internal Server Error", error?.message)
     }
 }
+
+const incrementId = async (table, column, prefix = "") => {
+    try {
+        const result = await db(table)
+            .select(column)
+            .orderBy(column, "desc")
+            .first();
+        const newId = result.ID_Kucing.substr(prefix.length);
+        return prefix + (parseInt(newId) + 1);
+    } catch (error) {
+        logger.error("Error while getting last id kucing", error);
+        throw new ResponseError(500, "Internal Server Error");
+    }
+};
 
 export const pengirimanRepository = {
     getAll,

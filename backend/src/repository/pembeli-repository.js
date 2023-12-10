@@ -34,8 +34,9 @@ const findById = async (id) => {
 
 const create = async (data) => {
     try {
-        await db('Pembeli').insert(data)
-        return await db('Pembeli').where('ID_Pembeli', data.ID_Pembeli)
+        const id = await insertId('Pembeli', 'ID_Pembeli', 'P')
+        await db('Pembeli').insert({ID_Pembeli: id, ...data})
+        return await db('Pembeli').where('ID_Pembeli', id)
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -61,6 +62,20 @@ const remove = async (id) => {
         throw new ResponseError(500, "Internal Server Error")
     }
 }
+
+const incrementId = async (table, column, prefix = "") => {
+    try {
+        const result = await db(table)
+            .select(column)
+            .orderBy(column, "desc")
+            .first();
+        const newId = result.ID_Kucing.substr(prefix.length);
+        return prefix + (parseInt(newId) + 1);
+    } catch (error) {
+        logger.error("Error while getting last id kucing", error);
+        throw new ResponseError(500, "Internal Server Error");
+    }
+};
 
 
 export const pembeliRepository = {

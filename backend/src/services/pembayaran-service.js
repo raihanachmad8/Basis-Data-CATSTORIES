@@ -4,7 +4,6 @@ import { ResponseError } from "../errors/response-error.js"
 import { pembayaranRepository } from "../repository/pembayaran-repository.js"
 import { pembayaranValidation } from "../validations/pembayaran-validation.js"
 import { validate } from "../validations/validate.js"
-import {v4 as uuid} from 'uuid'
 
 const getAll = async () => {
     const result = await pembayaranRepository.getAll()
@@ -49,10 +48,7 @@ const create = async (pembayaran) => {
         throw new ResponseError(400, "Validation error: ",validatePembayaran.error?.message );
     }
 
-    const result = await pembayaranRepository.create({
-        ID_Metode_Pembayaran: uuid(),
-        ...pembayaran 
-    })
+    const result = await pembayaranRepository.create(pembayaran)
     if (!result || result.length === 0) {
         logger.error("Failed to create pembayaran");
         throw new ResponseError(500, "Failed to create pembayaran");

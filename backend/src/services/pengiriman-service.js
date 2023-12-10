@@ -1,5 +1,4 @@
 import { logger } from "../app/logging.js"
-import {v4 as uuid} from 'uuid'
 import { pengirimanRepository } from "../repository/pengiriman-repository.js"
 import { pengirimanValidation } from "../validations/pengiriman-validation.js"
 import { ResponseError } from "../errors/response-error.js"
@@ -47,10 +46,7 @@ const create = async (pengiriman) => {
         throw new ResponseError(400, "Validation error: ",validatePengiriman.error?.message );
     }
 
-    const result = await pengirimanRepository.create({
-        ID_Jenis_Pengiriman: uuid(),
-        ...pengiriman 
-    })
+    const result = await pengirimanRepository.create(pengiriman)
     if (!result || result.length === 0) {
         logger.error("Failed to create jenis pengiriman");
         throw new ResponseError(404, "Failed to create jenis pengiriman");

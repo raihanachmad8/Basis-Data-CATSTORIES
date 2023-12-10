@@ -35,9 +35,9 @@ const findById = async (id) => {
 
 const create = async (jenis) => {
     try {
-        id = incrementId('Jenis', 'ID_Jenis', 'J')
-        const result = await db("Jenis").insert(Jenis);
-        return await db("Jenis").where({ ID_Jenis: jenis.ID_Jenis }).select("*");
+        const id = await incrementId('Jenis', 'ID_Jenis', 'J')
+        await db("Jenis").insert({ID_Jenis: id, ...Jenis});
+        return await db("Jenis").where({ ID_Jenis: id }).select("*");
     } catch (error) {
         logger.error("Error while creating Jenis:", error);
     }
@@ -45,7 +45,7 @@ const create = async (jenis) => {
 
 const update = async (id, jenis) => {
     try {
-        const result = await db("jenis").where({ ID_Jenis: id }).update(jenis)
+        await db("jenis").where({ ID_Jenis: id }).update(jenis)
         return await db("jenis").where({ ID_Jenis: id }).select("*");
     } catch (error) {
         logger.error("Error while updating Jenis:", error);

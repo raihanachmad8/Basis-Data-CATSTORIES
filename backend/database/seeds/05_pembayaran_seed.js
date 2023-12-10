@@ -2,12 +2,15 @@ import { faker } from "@faker-js/faker"
 
 export async function seed(knex) {
     return await knex('Metode Pembayaran').del().then(async () => {
-        const Pembayaran = await Promise.all([...Array(20)].map(async () => {
-            return {
-                ID_Metode_Pembayaran: faker.string.uuid(),
-                Metode_Pembayaran: faker.helpers.arrayElement(["Transfer", "Cash"]),
-            }
-        }))
+        const Pembayaran = await Promise.all([
+                {ID_Metode_Pembayaran: 'MPB1', Metode_Pembayaran:'Cash'},
+                {ID_Metode_Pembayaran: 'MPB2', Metode_Pembayaran:'Transfer Mandiri'},
+                {ID_Metode_Pembayaran: 'MPB3', Metode_Pembayaran:'Transfer BRI'},
+                {ID_Metode_Pembayaran: 'MPB4', Metode_Pembayaran:'Transfer BNI'},
+                {ID_Metode_Pembayaran: 'MPB5', Metode_Pembayaran:'Transfer BCA'},
+                {ID_Metode_Pembayaran: 'MPB6', Metode_Pembayaran:'OVO'},
+                {ID_Metode_Pembayaran: 'MPB7', Metode_Pembayaran:'GoPay'},
+        ])
         await knex('Metode Pembayaran').insert(Pembayaran)
         console.log('seed Pembayaran success')
         return 
