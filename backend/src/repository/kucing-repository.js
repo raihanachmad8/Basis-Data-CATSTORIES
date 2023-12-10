@@ -72,10 +72,30 @@ const create = async (kucing) => {
     try {
         const id = await incrementId("Kucing", "ID_Kucing", "K");
         logger.info(id);
-        await db("Kucing").insert({
+        await db.raw(`
+        EXEC TambahKucing 
+            @ID_Kucing = :ID_Kucing,
+            @ID_Jenis = :ID_Jenis,
+            @Nama_Kucing = :Nama_Kucing,
+            @Foto = :Foto,
+            @Umur = :Umur,
+            @Jenis_Kelamin = :Jenis_Kelamin,
+            @Tanggal_Masuk = :Tanggal_Masuk,
+            @Biaya = :Biaya,
+            @Status = :Status,
+            @Keterangan = :Keterangan;
+        `, {
             ID_Kucing: id,
-            ...kucing,
-        });
+            ID_Jenis: kucing.ID_Jenis,
+            Nama_Kucing: kucing.Nama_Kucing,
+            Foto: kucing.Foto,
+            Umur: kucing.Umur,
+            Jenis_Kelamin: kucing.Jenis_Kelamin,
+            Tanggal_Masuk: kucing.Tanggal_Masuk,
+            Biaya: kucing.Biaya,
+            Status: kucing.Status,
+            Keterangan: kucing.Keterangan,
+        })
         return await db("Kucing").select("*").where({ ID_Kucing: id });
     } catch (error) {
         logger.error("Error while creating kucing:", error);
@@ -83,10 +103,33 @@ const create = async (kucing) => {
     }
 };
 
-const update = async (id, kucing) => {
+const update = async (kucing) => {
     try {
-        await db("Kucing").update(kucing).where({ ID_Kucing: id });
-        return db("Kucing").select("*").where({ ID_Kucing: id });
+        await db.raw(`
+        EXEC UpdateKucing 
+            @ID_Kucing = :ID_Kucing,
+            @ID_Jenis = :ID_Jenis,
+            @Nama_Kucing = :Nama_Kucing,
+            @Foto = :Foto,
+            @Umur = :Umur,
+            @Jenis_Kelamin = :Jenis_Kelamin,
+            @Tanggal_Masuk = :Tanggal_Masuk,
+            @Biaya = :Biaya,
+            @Status = :Status,
+            @Keterangan = :Keterangan;
+        `, {
+            ID_Kucing: kucing.ID_Kucing,
+            ID_Jenis: kucing.ID_Jenis,
+            Nama_Kucing: kucing.Nama_Kucing,
+            Foto: kucing.Foto,
+            Umur: kucing.Umur,
+            Jenis_Kelamin: kucing.Jenis_Kelamin,
+            Tanggal_Masuk: kucing.Tanggal_Masuk,
+            Biaya: kucing.Biaya,
+            Status: kucing.Status,
+            Keterangan: kucing.Keterangan,
+        })
+        return db("Kucing").select("*").where({ ID_Kucing: kucing.ID_Kucing });
     } catch (error) {
         logger.error("Error while updating kucing:", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -95,27 +138,30 @@ const update = async (id, kucing) => {
 
 const remove = async (id) => {
     try {
-        const result = await db("Kucing").del().where({ ID_Kucing: id });
-        return result;
+        const result = await db.raw(`
+        EXEC HapusKucing @ID_Kucing = :ID_Kucing;`, { ID_Kucing: id })
+        return (await db("Kucing").where({ ID_Kucing: id }) == false);
     } catch (error) {
         logger.error("Error while deleting kucing", error);
         throw new ResponseError(500, "Internal Server Error");
     }
 };
 
-const incrementId = async (table, column, prefix = "") => {
+const incrementId = async (table, column, prefix = '') => {
     try {
-        const result = await db(table)
-            .select(column)
-            .orderBy(column, "desc")
-            .first();
-        const newId = result.ID_Kucing.substr(prefix.length);
-        return prefix + (parseInt(newId) + 1);
+        const result = await db
+        .raw(`
+        SELECT TOP 1 ${column}
+        FROM ${table}
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        `)
+        const newId = result[0][column].substring(prefix.length)
+        return prefix + (parseInt(newId) + 1)
     } catch (error) {
-        logger.error("Error while getting last id kucing", error);
-        throw new ResponseError(500, "Internal Server Error");
+        logger.error('Error while getting last id kucing', error)
+        throw new ResponseError(500, "Internal Server Error")
     }
-};
+}
 
 const formattedResult = (result) => {
     return {

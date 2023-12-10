@@ -53,7 +53,7 @@ const update = async (jenis) => {
         logger.error("Error while validating jenis:", validateJenis.error.message);
         throw new ResponseError(400, validateJenis.error.message);
     }
-    const result = await jenisRepository.update(jenis.ID_Jenis, jenis);
+    const result = await jenisRepository.update(jenis);
     if (!result || result.length === 0) {
         logger.error("Failed to update jenis");
         throw new ResponseError(404, "Failed to update jenis");
@@ -70,7 +70,7 @@ const remove = async (id) => {
     }
 
     const result = await jenisRepository.remove(id);
-    if (!result || result.length === 0) {
+    if (!result || result == false) {
         logger.error("Failed to delete jenis");
         throw new ResponseError(404, "Failed to delete jenis");
     }

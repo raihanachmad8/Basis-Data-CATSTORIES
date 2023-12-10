@@ -36,17 +36,22 @@ const findById = async (id) => {
 const create = async (jenis) => {
     try {
         const id = await incrementId('Jenis', 'ID_Jenis', 'J')
-        await db("Jenis").insert({ID_Jenis: id, ...Jenis});
+        console.log(id)
+        await db.raw(`
+        EXEC TambahJenis @ID_Jenis = :ID_Jenis, @Jenis_Kucing = :Jenis_Kucing;`, 
+        { ID_Jenis: id, Jenis_Kucing: jenis.Jenis_Kucing });
         return await db("Jenis").where({ ID_Jenis: id }).select("*");
     } catch (error) {
         logger.error("Error while creating Jenis:", error);
     }
 }
 
-const update = async (id, jenis) => {
+const update = async (jenis) => {
     try {
-        await db("jenis").where({ ID_Jenis: id }).update(jenis)
-        return await db("jenis").where({ ID_Jenis: id }).select("*");
+        await db.raw(`
+        EXEC UpdateJenis @ID_Jenis = :ID_Jenis, @Jenis_Kucing = :Jenis_Kucing;`, 
+        { ID_Jenis: jenis.ID_Jenis, Jenis_Kucing: jenis.Jenis_Kucing });
+        return await db("Jenis").where({ ID_Jenis: jenis.ID_Jenis }).select("*");
     } catch (error) {
         logger.error("Error while updating Jenis:", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -55,8 +60,10 @@ const update = async (id, jenis) => {
 
 const remove = async (id) => {
     try {
-        const result =  await db("jenis").where({ ID_Jenis: id }).del();
-        return result
+        const result = await db.raw(`
+        EXEC HapusJenisKucing @ID_Jenis = :ID_Jenis;`, 
+        { ID_Jenis: id});
+        return ((await db("Jenis").where({ ID_Jenis: id }).select("*")).length === 0);
     } catch (error) {
         logger.error("Error while deleting Jenis:", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -65,8 +72,13 @@ const remove = async (id) => {
 
 const incrementId = async (table, column, prefix = '') => {
     try {
-        const result = await db(table).select(column).orderBy(column, 'desc').first()
-        const newId = result.ID_Kucing.substr(prefix.length)
+        const result = await db
+        .raw(`
+        SELECT TOP 1 ${column}
+        FROM ${table}
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        `)
+        const newId = result[0][column].substring(prefix.length)
         return prefix + (parseInt(newId) + 1)
     } catch (error) {
         logger.error('Error while getting last id kucing', error)
@@ -83,3 +95,4 @@ export const jenisRepository = {
     update,
     remove
 };
+
