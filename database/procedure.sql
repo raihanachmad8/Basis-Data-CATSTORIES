@@ -1,5 +1,80 @@
 USE CATADOPT;
 
+-- DROP PROCEDURE --------------------------------------------------------------------------
+
+-- Drop procedure TambahKucing
+DROP PROCEDURE TambahKucing;
+GO
+
+-- Drop procedure TambahPembeli
+DROP PROCEDURE TambahPembeli;
+GO
+
+-- Drop procedure InsertTransaksi
+DROP PROCEDURE InsertTransaksi;
+GO
+
+-- Drop procedure InsertDetailTransaksi
+DROP PROCEDURE InsertDetailTransaksi;
+GO
+
+-- Drop procedure TambahJenis
+DROP PROCEDURE TambahJenis;
+GO
+
+-- Drop procedure TambahJenisPengiriman
+DROP PROCEDURE TambahJenisPengiriman;
+GO
+
+-- Drop procedure TambahMetodePembayaran
+DROP PROCEDURE TambahMetodePembayaran;
+GO
+
+-- Drop procedure HapusKucing
+DROP PROCEDURE HapusKucing;
+GO
+
+-- Drop procedure HapusPembeli
+DROP PROCEDURE HapusPembeli;
+GO
+
+-- Drop procedure HapusTransaksi
+DROP PROCEDURE HapusTransaksi;
+GO
+
+-- Drop procedure HapusJenisKucing
+DROP PROCEDURE HapusJenisKucing;
+GO
+
+-- Drop procedure HapusJenisPengiriman
+DROP PROCEDURE HapusJenisPengiriman;
+GO
+
+-- Drop procedure HapusMetodePembayaran
+DROP PROCEDURE HapusMetodePembayaran;
+GO
+
+-- Drop procedure UpdateKucing
+DROP PROCEDURE UpdateKucing;
+GO
+
+-- Drop procedure UpdatePembeli
+DROP PROCEDURE UpdatePembeli;
+GO
+
+-- Drop procedure UpdateJenis
+DROP PROCEDURE UpdateJenis;
+GO
+
+-- Drop procedure UpdateJenisPengiriman
+DROP PROCEDURE UpdateJenisPengiriman;
+GO
+
+-- Drop procedure UpdateMetodePembayaran
+DROP PROCEDURE UpdateMetodePembayaran;
+GO
+
+
 --INSERT-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 --Menambahkan data kucing baru ke dalam sistem

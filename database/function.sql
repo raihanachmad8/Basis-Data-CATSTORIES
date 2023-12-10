@@ -1,5 +1,59 @@
 USE CATADOPT;
 
+-- DROP FUNCTION --------------------------------------------------------------------------
+
+-- Drop function CariKucing
+DROP FUNCTION CariKucing;
+GO
+
+-- Drop function CariTransaksi
+DROP FUNCTION CariTransaksi;
+GO
+
+-- Drop function HitungTotal
+DROP FUNCTION HitungTotal;
+GO
+
+-- Drop function SortKucingByJenis
+DROP FUNCTION SortKucingByJenis;
+GO
+
+-- Drop function SortKucingByUmur
+DROP FUNCTION SortKucingByUmur;
+GO
+
+-- Drop function TampilKucingTersedia
+DROP FUNCTION TampilKucingTersedia;
+GO
+
+-- Drop function TampilKucing
+DROP FUNCTION TampilKucing;
+GO
+
+-- Drop function TampilPembeli
+DROP FUNCTION TampilPembeli;
+GO
+
+-- Drop function TampilJenisKucing
+DROP FUNCTION TampilJenisKucing;
+GO
+
+-- Drop function TampilJenisPengiriman
+DROP FUNCTION TampilJenisPengiriman;
+GO
+
+-- Drop function TampilMetodePembayaran
+DROP FUNCTION TampilMetodePembayaran;
+GO
+
+-- Drop function TampilTransaksi
+DROP FUNCTION TampilTransaksi;
+GO
+
+-- Drop function TampilDetail
+DROP FUNCTION TampilDetail;
+GO
+
 --FUNCTION------------------------------------------------------------------------------------
 
 --Cari dari tabel kucing
