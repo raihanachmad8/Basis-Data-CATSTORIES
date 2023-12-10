@@ -2,11 +2,7 @@ import Joi from "joi";
 
 const jenis = ["Jantan", "Betina"];
 const status = ["Tersedia", "Tidak Tersedia"];
-const getKucingValidation = Joi.string()
-    .guid({
-        version: ["uuidv4", "uuidv5"],
-    })
-    .required();
+const getKucingValidation = Joi.string().required();
 
 const validateImageFile =  Joi.object({
         mimetype: Joi.string()
@@ -18,12 +14,7 @@ const validateImageFile =  Joi.object({
     
 
 const createKucingValdation = Joi.object({
-    ID_Jenis: Joi.string()
-        .guid({ version: [
-            'uuidv4',
-            'uuidv5'
-        ]})
-        .required(),
+    ID_Jenis: Joi.string().required(),
     Nama_Kucing: Joi.string().min(3).max(50).required(),
     Umur: Joi.number().integer().min(0).required(),
     Jenis_Kelamin: Joi.string()
@@ -42,12 +33,7 @@ const createKucingValdation = Joi.object({
 });
 
 const updateKucingValdation = Joi.object({
-    ID_Kucing: Joi.string()
-        .guid({ version: [
-            'uuidv4',
-            'uuidv5'
-        ]})
-        .required(),
+    ID_Kucing: Joi.string().required(),
     ID_Jenis: Joi.string()
         .guid({
             version: ["uuidv4", "uuidv5"],

@@ -1,6 +1,6 @@
 export function up(knex) {
     return knex.schema.table("Kucing", (table) => {
-        table.foreign("ID_Jenis").references("ID_Jenis").inTable("Jenis");
+        table.foreign("ID_Jenis").references("ID_Jenis").inTable("Jenis").onDelete('SET NULL').onUpdate('CASCADE')
     })
 }
 

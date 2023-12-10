@@ -1,18 +1,12 @@
 import Joi from "joi";
 
-const getJenisValidation = Joi.string().guid({ version: [
-    'uuidv4',
-    'uuidv5'
-]}).required();
+const getJenisValidation = Joi.string().required();
 const createJenisValdation = Joi.object({
-    Nama: Joi.string().min(3).max(50).required()
+    Jenis_Kucing: Joi.string().min(3).max(50).required()
 });
 const updateJenisValdation = Joi.object({
-    ID_Jenis: Joi.string().guid({ version: [
-        'uuidv4',
-        'uuidv5'
-    ]}).required(),
-    Nama: Joi.string().min(3).max(50).required(),
+    ID_Jenis: Joi.string().required(),
+    Jenis_Kucing: Joi.string().min(3).max(50).required(),
 });
 
 

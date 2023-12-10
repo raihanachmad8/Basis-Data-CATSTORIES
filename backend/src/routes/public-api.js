@@ -8,6 +8,9 @@ import { jenisController } from "../controllers/jenis-controller.js";
 import { kucingController } from "../controllers/kucing-controller.js";
 import multer from 'multer'
 import { getDirname } from "../config/directory.js";
+import { pembeliController } from "../controllers/pembeli-service.js";
+import { pengirimanController } from "../controllers/pengiriman-controller.js";
+import { pembayaranController } from "../controllers/pembayaran-controller.js";
 
 
 const swaggerSpec = YAML.load(resolve(getDirname(), '../../docs/swagger.yaml'))
@@ -51,6 +54,24 @@ publicRouter.get('/api/v1/cat-stories/kucing/:id', kucingController.get)
 publicRouter.post('/api/v1/cat-stories/kucing/create', upload.single('Foto'), kucingController.create)
 publicRouter.put('/api/v1/cat-stories/kucing/update', upload.single('Foto'), kucingController.update)
 publicRouter.delete('/api/v1/cat-stories/kucing/delete/:id', kucingController.remove)
+
+publicRouter.get('/api/v1/cat-stories/pembeli', pembeliController.getAllPembeli)
+publicRouter.get('/api/v1/cat-stories/pembeli/:id', pembeliController.get)
+publicRouter.post('/api/v1/cat-stories/pembeli/create', pembeliController.create)
+publicRouter.put('/api/v1/cat-stories/pembeli/update', pembeliController.update)
+publicRouter.delete('/api/v1/cat-stories/pembeli/delete/:id', pembeliController.remove)
+
+publicRouter.get('/api/v1/cat-stories/pengiriman', pengirimanController.getAllPengiriman)
+publicRouter.get('/api/v1/cat-stories/pengiriman/:id', pengirimanController.get)
+publicRouter.post('/api/v1/cat-stories/pengiriman/create', pengirimanController.create)
+publicRouter.put('/api/v1/cat-stories/pengiriman/update', pengirimanController.update)
+publicRouter.delete('/api/v1/cat-stories/pengiriman/delete/:id', pengirimanController.remove)
+
+publicRouter.get('/api/v1/cat-stories/pembayaran', pembayaranController.getAllPembayaran)
+publicRouter.get('/api/v1/cat-stories/pembayaran/:id', pembayaranController.get)
+publicRouter.post('/api/v1/cat-stories/pembayaran/create', pembayaranController.create)
+publicRouter.put('/api/v1/cat-stories/pembayaran/update', pembayaranController.update)
+publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranController.remove)
 
 export {
     publicRouter

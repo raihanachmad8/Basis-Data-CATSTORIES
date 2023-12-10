@@ -1,7 +1,7 @@
 export function up(knex) {
     return knex.table('Detail_Transaksi', (table) => {
-        table.foreign('ID_Transaksi').references('ID_Transaksi').inTable('Transaksi');
-        table.foreign('ID_Kucing').references('ID_Kucing').inTable('Kucing');
+        table.foreign('ID_Transaksi').references('ID_Transaksi').inTable('Transaksi').onDelete('SET NULL').onUpdate('CASCADE')
+        table.foreign('ID_Kucing').references('ID_Kucing').inTable('Kucing').onDelete('SET NULL').onUpdate('CASCADE')
     })
 }
 
