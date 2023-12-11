@@ -1,4 +1,4 @@
--- Create Trigger to Delete Old Kucing Data
+-- Pemicu untuk menghapus data kucing lama
 
 DROP TRIGGER DeleteOldKucing;
 
@@ -16,4 +16,14 @@ BEGIN
 );
 END;
 
+-- Pemicu untuk menghapus status kucing
+CREATE TRIGGER UpdateStatusKucing
+ON Detail_Transaksi
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    UPDATE Kucing
+    SET Status = 'Tidak Tersedia'
+    WHERE ID_Kucing IN (SELECT ID_Kucing FROM Detail_Transaksi);
+END;
 
