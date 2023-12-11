@@ -58,6 +58,14 @@ GO
 DROP PROCEDURE UpdateKucing;
 GO
 
+-- Drop procedure UpdateTransaksi
+DROP PROCEDURE UpdateTransaksi;
+GO
+
+-- Drop procedure UpdateDetailTransaksi
+DROP PROCEDURE UpdateDetailTransaksi;
+GO
+
 -- Drop procedure UpdatePembeli
 DROP PROCEDURE UpdatePembeli;
 GO

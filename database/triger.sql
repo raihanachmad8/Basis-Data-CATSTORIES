@@ -17,6 +17,8 @@ BEGIN
 END;
 
 -- Pemicu untuk menghapus status kucing
+DROP TRIGGER UpdateStatusKucing;
+
 CREATE TRIGGER UpdateStatusKucing
 ON Detail_Transaksi
 AFTER INSERT, UPDATE
