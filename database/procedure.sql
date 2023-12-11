@@ -275,6 +275,43 @@ END;
 
 
 --Mengupdate data transaksi ke dalam sistem
+CREATE PROCEDURE UpdateTransaksi
+    @ID_Transaksi VARCHAR(50),
+    @ID_Pembeli VARCHAR(50),
+    @ID_Jenis_Pengiriman VARCHAR(50),
+    @ID_Metode_Pembayaran VARCHAR(50),
+    @Nomor_Resi VARCHAR(30),
+    @Tanggal_Transaksi DATE,
+    @Pesan TEXT
+AS
+BEGIN
+    UPDATE Transaksi
+    SET 
+        ID_Pembeli = @ID_Pembeli,
+        ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman,
+        ID_Metode_Pembayaran = @ID_Metode_Pembayaran,
+        Nomor_Resi = @Nomor_Resi,
+        Tanggal_Transaksi = @Tanggal_Transaksi,
+        Pesan = @Pesan
+    WHERE ID_Transaksi = @ID_Transaksi;
+END;
+
+CREATE PROCEDURE UpdateDetailTransaksi
+    @ID_Detail_Transaksi VARCHAR(50),
+    @ID_Transaksi VARCHAR(50),
+    @ID_Kucing VARCHAR(50)
+AS
+BEGIN
+    UPDATE Detail_Transaksi
+    SET 
+        ID_Transaksi = @ID_Transaksi,
+        ID_Kucing = @ID_Kucing
+    WHERE ID_Detail_Transaksi = @ID_Detail_Transaksi;
+
+    UPDATE Transaksi
+    SET Total_Biaya = dbo.HitungTotal(@ID_Transaksi)
+    WHERE ID_Transaksi = @ID_Transaksi;
+END;
 
 --Mengupdate data jenis kucing ke dalam sistem
 CREATE PROCEDURE UpdateJenis
