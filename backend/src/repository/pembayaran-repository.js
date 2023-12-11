@@ -16,7 +16,7 @@ const getAll = async () => {
     }
 }
 
-const seacrh = async (params) => {
+const search = async (params) => {
     try {
         const result = await db.select().table('Metode Pembayaran').whereLike(params)
         return result
@@ -39,7 +39,9 @@ const findById = async (id) => {
 const create = async (data) => {
     try {
         const id = await incrementId('Metode Pembayaran', 'ID_Metode_Pembayaran', 'MPB')
-        await db('Metode Pembayaran').insert({ID_Metode_Pembayaran:id,...data})
+        await db.raw(`
+        EXEC TambahMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran, @Metode_Pembayaran = :Metode_Pembayaran;`,
+        {ID_Metode_Pembayaran: id, Metode_Pembayaran: data.Metode_Pembayaran})
         return await db('Metode Pembayaran').where('ID_Metode_Pembayaran',id)
     } catch (error) {
         logger.error(error)
@@ -47,9 +49,11 @@ const create = async (data) => {
     }
 }
 
-const update = async (id, data) => {
+const update = async (data) => {
     try {
-        await db('Metode Pembayaran').where('ID_Metode_Pembayaran', id).update(data)
+        await db.raw(`
+        EXEC UpdateMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran, @Metode_Pembayaran = :Metode_Pembayaran;`,
+        {ID_Metode_Pembayaran: data.ID_Metode_Pembayaran, Metode_Pembayaran: data.Metode_Pembayaran})
         return await db('Metode Pembayaran').where('ID_Metode_Pembayaran', id)
     } catch (error) {
         logger.error(error)
@@ -59,8 +63,10 @@ const update = async (id, data) => {
 
 const remove = async (id) => {
     try {
-        const result = await db('Metode Pembayaran').where('ID_Metode_Pembayaran', id).del()
-        return result
+        const result = await db.raw(`
+        EXEC HapusMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran;`,
+        {ID_Metode_Pembayaran: id})
+        return (await db('Metode Pembayaran').where('ID_Metode_Pembayaran', id) == false )
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -85,7 +91,7 @@ const incrementId = async (table, column, prefix = '') => {
 
 export const pembayaranRepository = {
     getAll,
-    seacrh,
+    search,
     findById,
     create,
     update,

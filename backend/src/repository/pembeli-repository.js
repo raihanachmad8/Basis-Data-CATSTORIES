@@ -45,10 +45,10 @@ const create = async (data) => {
     }
 }
 
-const update = async (id, data) => {
+const update = async (data) => {
     try {
         await db.raw(`EXEC UpdatePembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telepon = :No_Telepon, @Alamat_Pembeli = :Alamat_Pembeli;`, 
-        { ID_Pembeli: id, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telepon: data.No_Telepon, Alamat_Pembeli: data.Alamat_Pembeli })
+        { ID_Pembeli: data.ID_Pembeli, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telepon: data.No_Telepon, Alamat_Pembeli: data.Alamat_Pembeli })
         return await db('Pembeli').where('ID_Pembeli', id)
     } catch (error) {
         logger.error(error)
@@ -58,8 +58,8 @@ const update = async (id, data) => {
 
 const remove = async (id) => {
     try {
-        const result = await db('Pembeli').where('ID_Pembeli', id).del()
-        return result
+        const result = await db.raw(`EXEC HapusPembeli @ID_Pembeli = :ID_Pembeli;`, { ID_Pembeli: id })
+        return (await db('Pembeli').where('ID_Pembeli', id) == false )
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
