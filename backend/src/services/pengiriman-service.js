@@ -31,6 +31,25 @@ const get = async (id) => {
     return result;
 }
 
+const getByName = async (nama) => {
+    const validateNama = validate(pengirimanValidation.getPengirimanNamaSchema, nama)
+
+    if (validateNama.error) {
+        logger.error("Error while validating nama:", validateNama.error.message);
+        throw new ResponseError(400, validateNama.error?.message);
+    }
+
+    const result = await pengirimanRepository.findByName(nama);
+
+    if (!result || result.length === 0) {
+        logger.error("jenis pengiriman not found");
+        throw new ResponseError(404, "jenis pengiriman not found");
+    }
+
+    logger.info("Get jenis pengiriman success");
+    return result;
+}
+
 const create = async (pengiriman) => {
     logger.info('Create Jenis Pengiriman:', pengiriman)
     const validatePengiriman = validate(
@@ -70,7 +89,7 @@ const update = async (pengiriman) => {
         throw new ResponseError(400, "Validation error: ",validatePengiriman.error?.message );
     }
 
-    const result = await pengirimanRepository.update(pengiriman.ID_Jenis_Pengiriman, pengiriman)
+    const result = await pengirimanRepository.update(pengiriman)
     if (!result || result.length === 0) {
         logger.error("Failed to update jenis pengiriman");
         throw new ResponseError(404, "Failed to update jenis pengiriman");
@@ -100,6 +119,7 @@ const remove = async (id) => {
 export const pengirimanService = {
     getAll,
     get,
+    getByName,
     create,
     update,
     remove

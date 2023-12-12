@@ -32,10 +32,21 @@ const findById = async (id) => {
     }
 }
 
+const findByName = async (name) => {
+    try {
+        const result = await db.select().table('Jenis Pengiriman').where('Jenis_Pengiriman', name)
+        return result
+    } catch (error) {
+        logger.error(error)
+        throw new ResponseError(500, "Internal Server Error")
+    }
+}
+
 const create = async (data) => {
     try {
         const id = await incrementId('Jenis Pengiriman', 'ID_Jenis_Pengiriman', 'JP')
-        await db('Jenis Pengiriman').insert({ID_Jenis_Pengiriman:id, ...data})
+        await db.raw(`
+        EXEC TambahJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman, @Jenis_Pengiriman = :Jenis_Pengiriman;`,{ID_Jenis_Pengiriman: id, Jenis_Pengiriman: data.Jenis_Pengiriman})
         return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id)
     } catch (error) {
         logger.error(error)
@@ -43,10 +54,11 @@ const create = async (data) => {
     }
 }
 
-const update = async (id, data) => {
+const update = async (data) => {
     try {
-        await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id).update(data)
-        return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id)
+        await db.raw(`
+        EXEC UpdateJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman, @Jenis_Pengiriman = :Jenis_Pengiriman;`,{ID_Jenis_Pengiriman: data.ID_Jenis_Pengiriman, Jenis_Pengiriman: data.Jenis_Pengiriman})
+        return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', data.ID_Jenis_Pengiriman)
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -55,8 +67,10 @@ const update = async (id, data) => {
 
 const remove = async (id) => {
     try {
-        const result = await db('Jenis Pengiriman').del().where('ID_Jenis_Pengiriman', id)
-        return result
+        const result = await db.raw(`
+        EXEC HapusJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman;`,
+        {ID_Jenis_Pengiriman: id})
+        return (await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id) == false )
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error", error?.message)
@@ -83,6 +97,7 @@ export const pengirimanRepository = {
     getAll,
     search,
     findById,
+    findByName,
     create,
     update,
     remove

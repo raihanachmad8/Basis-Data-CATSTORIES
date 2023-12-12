@@ -26,7 +26,7 @@ const getAll = async () => {
     }
 };
 
-const seacrh = async (params) => {
+const search = async (params) => {
     try {
         const result = await db("Kucing")
             .whereLike(params.Nama_Kucing)
@@ -183,7 +183,7 @@ const formattedResult = (result) => {
 
 export const kucingRepository = {
     getAll,
-    seacrh,
+    search,
     findById,
     create,
     update,

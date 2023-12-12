@@ -11,6 +11,7 @@ import { getDirname } from "../config/directory.js";
 import { pembeliController } from "../controllers/pembeli-service.js";
 import { pengirimanController } from "../controllers/pengiriman-controller.js";
 import { pembayaranController } from "../controllers/pembayaran-controller.js";
+import { transaksiController } from "../controllers/transaksi-controller.js";
 
 
 const swaggerSpec = YAML.load(resolve(getDirname(), '../../docs/swagger.yaml'))
@@ -72,6 +73,13 @@ publicRouter.get('/api/v1/cat-stories/pembayaran/:id', pembayaranController.get)
 publicRouter.post('/api/v1/cat-stories/pembayaran/create', pembayaranController.create)
 publicRouter.put('/api/v1/cat-stories/pembayaran/update', pembayaranController.update)
 publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranController.remove)
+
+publicRouter.get('/api/v1/cat-stories/checkout/payment', transaksiController.getAllTransaksi)
+publicRouter.get('/api/v1/cat-stories/checkout/payment/details/:id', transaksiController.get)
+// publicRouter.get('/api/v1/cat-stories/pembayaran/:id', pembayaranController.get)
+// publicRouter.post('/api/v1/cat-stories/pembayaran/create', pembayaranController.create)
+// publicRouter.put('/api/v1/cat-stories/pembayaran/update', pembayaranController.update)
+// publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranController.remove)
 
 export {
     publicRouter
