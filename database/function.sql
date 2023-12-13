@@ -2,6 +2,10 @@ USE CATADOPT;
 
 -- DROP FUNCTION --------------------------------------------------------------------------
 
+--Drop Function JumlahTransaksiPivot
+DROP FUNCTION IF EXISTS JumlahTransaksiPivot;
+GO
+
 --Drop Function JumlahJenisKucing
 DROP FUNCTION IF EXISTS JumlahJenisKucing;
 GO
@@ -85,31 +89,41 @@ GO
 
 --FUNCTION------------------------------------------------------------------------------------
 
---Tampilkan Jumlah kucing setiap jenis
-CREATE FUNCTION JumlahJenisKucing()
+-- Function Pivoting Jumlah Transaksi
+CREATE FUNCTION JumlahTransaksiPivot()
 RETURNS TABLE
 AS
-RETURN(
-	SELECT
-		J.ID_Jenis, J.Jenis_Kucing, COUNT(K.ID_Kucing) 'Jumlah Kucing'
-	FROM Kucing K
-	JOIN Jenis J ON J.ID_Jenis = K.ID_Jenis
-	GROUP BY J.ID_Jenis, J.Jenis_Kucing
-);
-
---Tampilkan Detail Pembeli
-CREATE FUNCTION TampilDetailPembeli(@ID_Pembeli VARCHAR(50))
-RETURNS TABLE
-AS
-RETURN(
-	SELECT TOP(SELECT COUNT(*) FROM Detail_Transaksi)
-		T.ID_Transaksi, K.Nama_Kucing, J.Jenis_Kucing, T.Total_Biaya, T.Tanggal_Transaksi
-	FROM TRANSAKSI T
-	JOIN Detail_Transaksi DT ON DT.ID_Transaksi = T.ID_Transaksi
-	JOIN Kucing K ON K.ID_Kucing = DT.ID_Kucing
-	JOIN Jenis J ON J.ID_Jenis = K.ID_Jenis
-	WHERE T.ID_Pembeli = '@ID_Pembeli'
-	ORDER BY T.ID_Transaksi
+RETURN (
+    SELECT TOP 10
+        Tahun,
+        COALESCE([1], 0) as Januari, 
+        COALESCE([2], 0) as Februari, 
+        COALESCE([3], 0) as Maret, 
+        COALESCE([4], 0) as April, 
+        COALESCE([5], 0) as Mei, 
+        COALESCE([6], 0) as Juni, 
+        COALESCE([7], 0) as Juli, 
+        COALESCE([8], 0) as Agustus, 
+        COALESCE([9], 0) as September, 
+        COALESCE([10], 0) as Oktober, 
+        COALESCE([11], 0) as November, 
+        COALESCE([12], 0) as Desember
+    FROM (
+        SELECT
+            YEAR(Tanggal_Transaksi) AS Tahun,
+            MONTH(Tanggal_Transaksi) AS Bulan,
+            COUNT(ID_Transaksi) AS Jumlah_Transaksi
+        FROM
+            Transaksi
+        GROUP BY
+            YEAR(Tanggal_Transaksi),
+            MONTH(Tanggal_Transaksi)
+    ) AS PivotTransaksi
+    PIVOT (
+        SUM(Jumlah_Transaksi)
+        FOR Bulan IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+    ) AS PivotBulan
+    ORDER BY Tahun
 );
 
 --Cari dari Tabel Pembeli
