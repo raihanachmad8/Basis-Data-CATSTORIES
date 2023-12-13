@@ -21,7 +21,7 @@ export function up(knex) {
         @Jenis_Kelamin VARCHAR(6),
         @Tanggal_Masuk DATE,
         @Biaya DECIMAL,
-        @Status VARCHAR(10),
+        @Status VARCHAR(20),
         @Keterangan TEXT
     AS
     BEGIN
@@ -39,7 +39,7 @@ export function up(knex) {
         @Jenis_Kelamin VARCHAR(6),
         @Tanggal_Masuk DATE,
         @Biaya DECIMAL,
-        @Status VARCHAR(10),
+        @Status VARCHAR(20),
         @Keterangan TEXT
     AS
     BEGIN

@@ -57,7 +57,6 @@ const create = async (kucing, file) => {
         }
 
         const result = await kucingRepository.create({
-            ID_Jenis: kucing.Jenis_Kucing.ID_Jenis,
             Foto: foto,
             ...kucing,
         });
@@ -96,7 +95,7 @@ const update = async (kucing, file) => {
         );
         throw new ResponseError(400, validateKucing.error.message);
     }
-    const result = await kucingRepository.update({ID_Jenis: kucing.Jenis_Kucing.ID_Jenis,Foto: foto, ...kucing});
+    const result = await kucingRepository.update({Foto: foto, ...kucing});
     if (!result || result.length === 0) {
         logger.error("Failed to update kucing");
         throw new ResponseError(404, "Failed to update kucing");
