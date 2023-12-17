@@ -5,11 +5,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Auth from "./pages/auth";
 import Home from "./pages/user/home/landing";
 import Dashboard from "./pages/admin/default";
-import TableReports from "./pages/admin/tablereport";
 import DataTransaksi from "./pages/admin/datatransaksi";
-import DataPembeli from "./pages/admin/datapembeli";
 import DataKucing from "./pages/admin/datakucing";
-import DetailKucing from "./pages/user/detailkucing";
 
 const router = createBrowserRouter([
     {
@@ -25,24 +22,12 @@ const router = createBrowserRouter([
         element: <Dashboard />,
     },
     {
-        path: "/admin/table-reports",
-        element: <TableReports />,
-    },
-    {
         path: "/admin/data-transaksi",
         element: <DataTransaksi />,
     },
     {
-        path: "/admin/data-pembeli",
-        element: <DataPembeli />,
-    },
-    {
         path: "/admin/data-kucing",
         element: <DataKucing />,
-    },
-    {
-        path: "/detail-kucing",
-        element: <DetailKucing />,
     },
 ]);
 

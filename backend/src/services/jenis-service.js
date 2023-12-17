@@ -43,6 +43,7 @@ const create = async (jenis) => {
         logger.error("Failed to create jenis");
         throw new ResponseError(404, "Failed to create jenis");
     }
+    console.log('result: ' , result)
     return result;
 }
 
@@ -78,7 +79,7 @@ const remove = async (id) => {
 }
 
 
-export const jenisServce =  {
+export const jenisService =  {
     getAllJenis,
     get,
     create,

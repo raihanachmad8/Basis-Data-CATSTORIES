@@ -1,274 +1,222 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Admin from "../../../layouts/admin";
-import DatePicker from "tailwind-datepicker-react";
-import Select from "react-select";
-
-const options = {
-    title: "Kalender",
-    autoHide: true,
-    todayBtn: false,
-    clearBtn: true,
-    clearBtnText: "Clear",
-    maxDate: new Date("2030-01-01"),
-    minDate: new Date(),
-    theme: {
-        background: "bg-gray-300",
-        todayBtn: "",
-        clearBtn: "",
-        icons: "",
-        text: "text-black",
-        disabledText: "",
-        input: "",
-        inputIcon: "",
-        selected: "",
-    },
-    icons: {
-        // () => ReactElement | JSX.Element
-        prev: () => (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                id="Outline"
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-            >
-                <path d="M17.17,24a1,1,0,0,1-.71-.29L8.29,15.54a5,5,0,0,1,0-7.08L16.46.29a1,1,0,1,1,1.42,1.42L9.71,9.88a3,3,0,0,0,0,4.24l8.17,8.17a1,1,0,0,1,0,1.42A1,1,0,0,1,17.17,24Z" />
-            </svg>
-        ),
-        next: () => (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                id="Outline"
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-            >
-                <path d="M7,24a1,1,0,0,1-.71-.29,1,1,0,0,1,0-1.42l8.17-8.17a3,3,0,0,0,0-4.24L6.29,1.71A1,1,0,0,1,7.71.29l8.17,8.17a5,5,0,0,1,0,7.08L7.71,23.71A1,1,0,0,1,7,24Z" />
-            </svg>
-        ),
-    },
-    datepickerClassNames: "top-12 right-0",
-    defaultDate: new Date(),
-    language: "id",
-    disabledDates: [],
-    weekDays: ["Sen", "Sel", "Rab", "Kam", "Jum", "Sat", "Min"],
-    inputNameProp: "date",
-    inputIdProp: "date",
-    inputPlaceholderProp: "Select Date",
-    inputDateFormatProp: {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    },
-};
-
-const pembeli = [
-    { value: "Anang", label: "Anang" },
-    { value: "Budi", label: "Budi" },
-];
-
-const pengiriman = [
-    { value: "COD", label: "COD" },
-    { value: "Ambil ditoko", label: "Ambil ditoko" },
-    { value: "JNE", label: "JNE" },
-    { value: "JNT", label: "JNT" },
-    { value: "TIKI", label: "TIKI" },
-];
-
-const pembayaran = [
-    { value: "Cash", label: "Cash" },
-    { value: "BCA", label: "BCA" },
-    { value: "BRI", label: "BRI" },
-    { value: "Mandiri", label: "Mandiri" },
-    { value: "Bank Jago", label: "Bank Jago" },
-];
+import TableDataTransaksi from "./components/Transaksi/Table";
+import TabelDataPembeli from "./components/Pembeli/Table";
+import TabelJenisPengiriman from "./components/JenisPengiriman/Table";
+import TabelMetodePembayaran from "./components/MetodePembayaran/Table";
+import FormTambahDataPembeli from "./components/Pembeli/Form";
+import FormTambahDataJenisPengiriman from "./components/JenisPengiriman/Form";
+import FormTambahDataMetodePembayaran from "./components/MetodePembayaran/Form";
+import DetailPembeli from "./components/Pembeli/Detail";
+import { getAllTransaksi } from "../../../services/transaksi";
+import FormTambahDataTransaksi from "./components/Transaksi/Form";
+import { getKucingOption } from "../../../services/kucing";
+import { getAllJenisPengiriman } from "../../../services/jenisPengiriman";
+import { getAllMetodePembayaran } from "../../../services/metodePembayaran";
+import { getAllPembeli } from "../../../services/pembeli";
+import FormEditDataPembeli from "./components/Pembeli/Edit";
+import FormEditDataJenisPengiriman from "./components/JenisPengiriman/Edit";
+import FormEditDataMetodePembayaran from "./components/MetodePembayaran/Edit";
 
 const DataTransaksi = () => {
-    const [show, setShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState("");
-    const [formData, setFormData] = useState({
-        idTransaksi: "",
-        idPembeli: "",
-        idJenisPengiriman: "",
-        idMetodePembayaran: "",
-        totalBiaya: "",
-        nomorResi: "",
-        tanggalTransaksi: "",
-        pesan: "",
-    });
-    const [openForm, setOpenForm] = useState(false);
-    const [data, setData] = useState([]);
-    const formRef = useRef(null);
+    const [menu, setMenu] = useState("Tabel Data Transaksi");
+    const [tambahData, setTambahData] = useState(false);
+    const [openDetail, setOpenDetail] = useState(false);
+    const [editMenu, setEditMenu] = useState(false);
+    const [dataEdit, setDataEdit] = useState({});
+    const [dataPembeli, setDataPembeli] = useState([]);
+    const [dataTransaksi, setDataTransaksi] = useState([]);
+    const [dataKucing, setDataKucing] = useState([]);
+    const [jenisPengiriman, setJenisPengiriman] = useState([]);
+    const [metodePembayaran, setMetodePembayaran] = useState([]);
 
-    const handleChange = (selectedDate) => {
-        const day = selectedDate.getDate();
-        const month = selectedDate.getMonth() + 1;
-        const year = selectedDate.getFullYear();
-        const formattedDate = `${year}-${month}-${day}`;
-        setSelectedDate(formattedDate);
+    useEffect(() => {
+        getAllTransaksi((data) => {
+            setDataTransaksi(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        getKucingOption((data) => {
+            setDataKucing(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        getAllJenisPengiriman((data) => {
+            setJenisPengiriman(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        getAllMetodePembayaran((data) => {
+            setMetodePembayaran(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        getAllPembeli((data) => {
+            setDataPembeli(data);
+        });
+    }, []);
+
+    const handleTambahData = () => {
+        setTambahData(true);
     };
 
-    const handleClose = (state) => {
-        setShow(state);
-    };
-
-    const handleOpenForm = () => {
-        setOpenForm(true);
+    const handleChangeMenu = (menu) => {
+        setMenu(menu);
     };
 
     const handleCloseForm = () => {
-        setOpenForm(false);
+        setTambahData(false);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const form = formRef.current;
-        const formData = new FormData(form);
-        setFormData({
-            idTransaksi: formData.get("idTransaksi"),
-            idPembeli: formData.get("idPembeli"),
-            idJenisPengiriman: formData.get("idJenisPengiriman"),
-            idMetodePembayaran: formData.get("idMetodePembayaran"),
-            totalBiaya: formData.get("totalBiaya"),
-            nomorResi: formData.get("nomorResi"),
-            tanggalTransaksi: formData.get("tanggalTransaksi"),
-            pesan: formData.get("pesan"),
-        });
-
-        setData([...data, formData]);
-        console.log(data);
-    };
     return (
         <>
             <Admin title="Data Transaksi">
-                <div className="w-full min-h-screen py-10 ">
+                <div className="w-full min-h-screen py-10">
                     <div className="w-full h-full bg-white rounded-3xl p-5 flex flex-col gap-y-5">
                         <div className="w-full">
-                            <header className="flex justify-between">
-                                <h1 className="text-xl font-bold text-slate-800">
-                                    Tabel Data Transaksi
-                                </h1>
-                                <div className="flex justify-center items-center gap-x-7">
-                                    <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
-                                        <button
-                                            onClick={handleOpenForm}
-                                            className="text-base text-white"
-                                        >
-                                            Tambah Data
-                                        </button>
-                                    </div>
-                                    <div className=" bg-gray-100 px-3 py-2 rounded-md text-center">
-                                        <button className="text-base">
-                                            Filter By
-                                        </button>
-                                    </div>
-                                    <div className="px-3 py-2 bg-gray-100 rounded-md text-center">
-                                        <button className="text-base">
-                                            Sort By
-                                        </button>
+                            <header>
+                                <div className="flex justify-between">
+                                    <h1 className="text-xl font-bold text-slate-800">
+                                        {menu}
+                                    </h1>
+                                    <div className="flex justify-center items-center gap-x-7">
+                                        <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
+                                            <button
+                                                onClick={handleTambahData}
+                                                className="text-base text-white"
+                                            >
+                                                Tambah Data
+                                            </button>
+                                        </div>
+                                        <div className="relative mx-auto text-gray-600 w-[10rem]">
+                                            <input
+                                                className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
+                                                type="search"
+                                                name="search"
+                                                placeholder="Search"
+                                            />
+                                            <button
+                                                type="submit"
+                                                className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
+                                            >
+                                                <svg
+                                                    className="text-gray-600 h-4 w-4 fill-current"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                    version="1.1"
+                                                    id="Capa_1"
+                                                    x="0px"
+                                                    y="0px"
+                                                    viewBox="0 0 56.966 56.966"
+                                                    width="512px"
+                                                    height="512px"
+                                                >
+                                                    <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                                <nav className="flex gap-x-5">
+                                    <button
+                                        onClick={() =>
+                                            handleChangeMenu(
+                                                "Tabel Data Transaksi"
+                                            )
+                                        }
+                                        className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
+                                            menu === "Tabel Data Transaksi"
+                                                ? "border-opacity-100"
+                                                : ""
+                                        }`}
+                                    >
+                                        Tabel Data Transaksi
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleChangeMenu(
+                                                "Tabel Data Pembeli"
+                                            )
+                                        }
+                                        className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
+                                            menu === "Tabel Data Pembeli"
+                                                ? "border-opacity-100"
+                                                : ""
+                                        }`}
+                                    >
+                                        Tabel Data Pembeli
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleChangeMenu(
+                                                "Tabel Jenis Pengiriman"
+                                            )
+                                        }
+                                        className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
+                                            menu === "Tabel Jenis Pengiriman"
+                                                ? "border-opacity-100"
+                                                : ""
+                                        }`}
+                                    >
+                                        Tabel Jenis Pengiriman
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleChangeMenu(
+                                                "Tabel Metode Pembayaran"
+                                            )
+                                        }
+                                        className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
+                                            menu === "Tabel Metode Pembayaran"
+                                                ? "border-opacity-100"
+                                                : ""
+                                        }`}
+                                    >
+                                        Tabel Metode Pembayaran
+                                    </button>
+                                </nav>
                             </header>
                         </div>
                         <div className="w-full">
-                            <table className="w-full text-center">
-                                <thead>
-                                    <tr>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            ID_Transaksi
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Resi
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Pembeli
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Jenis Pengiriman
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Metode Pembayaran
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Total Biaya
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Tanggal Transaksi
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Pesan
-                                        </th>
-                                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
-                                            Aksi
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data && data.length > 0 ? (
-                                        data.map((item, index) => (
-                                            <tr key={index}>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get("idTransaksi")}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get("nomorResi")}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get("idPembeli")}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get(
-                                                        "idJenisPengiriman"
-                                                    )}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get(
-                                                        "idMetodePembayaran"
-                                                    )}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get("totalBiaya")}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get(
-                                                        "tanggalTransaksi"
-                                                    )}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    {item.get("pesan")}
-                                                </td>
-                                                <td className="border-b border-gray-200 py-5">
-                                                    <button>Detail</button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td
-                                                colSpan="9"
-                                                className="text-center py-5"
-                                            >
-                                                Tidak ada data
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                            {menu === "Tabel Data Transaksi" && (
+                                <TableDataTransaksi data={dataTransaksi} />
+                            )}
+                            {menu === "Tabel Data Pembeli" && (
+                                <TabelDataPembeli data={dataPembeli} />
+                            )}
+                            {menu === "Tabel Jenis Pengiriman" && (
+                                <TabelJenisPengiriman
+                                    data={jenisPengiriman}
+                                    setEditMenu={setEditMenu}
+                                    setDataEdit={setDataEdit}
+                                />
+                            )}
+                            {menu === "Tabel Metode Pembayaran" && (
+                                <TabelMetodePembayaran
+                                    data={metodePembayaran}
+                                    setEditMenu={setEditMenu}
+                                    setDataEdit={setDataEdit}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
             </Admin>
             <div
-                className={`fixed top-0 left-0 w-full h-screen flex flex-col justify-center items-center z-50  ${
-                    openForm ? "translate-x-0" : "translate-x-full"
+                className={`fixed top-0 left-0 w-full h-screen flex flex-col justify-center items-center z-50 overflow-y-scroll ${
+                    tambahData ? "translate-x-0" : "translate-x-full"
                 } duration-500`}
             >
                 <div
-                    className={`w-[25rem] h-full bg-gray-100 p-5 overflow-y-scroll flex flex-col gap-y-5 fixed top-0 right-0 z-50`}
+                    className={`w-[30rem] h-full bg-gray-100 p-5 overflow-y-scroll flex flex-col gap-y-5 fixed top-0 right-0 z-50`}
                 >
                     <div className="flex justify-between">
                         <h1 className="font-bold text-lg ">
-                            Tambah Data Kucing
+                            Tambah {menu.substring(5)}
                         </h1>
                         <button onClick={handleCloseForm}>
                             <svg
@@ -282,151 +230,80 @@ const DataTransaksi = () => {
                             </svg>
                         </button>
                     </div>
-                    <form
-                        ref={formRef}
-                        id="form"
-                        action=""
-                        onSubmit={handleSubmit}
-                    >
-                        <div className="w-full grid grid-cols-2 gap-5">
-                            <div>
-                                <label
-                                    htmlFor="idTransaksi"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Id Transaksi
-                                </label>
-                                <input
-                                    type="text"
-                                    id="idTransaksi"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                    placeholder="Id Transaksi"
-                                    name="idTransaksi"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="idPembeli"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Pembeli
-                                </label>
-                                <Select options={pembeli} name="idPembeli" />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="idJenisPengiriman"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Jenis Pengiriman
-                                </label>
-                                <Select
-                                    options={pengiriman}
-                                    name="idJenisPengiriman"
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="idMetodePembayaran"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Metode Pembayaran
-                                </label>
-                                <Select
-                                    options={pembayaran}
-                                    name="idMetodePembayaran"
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="totalBiaya"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Total Biaya
-                                </label>
-                                <input
-                                    type="text"
-                                    id="totalBiaya"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                    placeholder="Id Transaksi"
-                                    name="totalBiaya"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="nomorResi"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Resi
-                                </label>
-                                <input
-                                    type="text"
-                                    id="nomorResi"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                    placeholder="Id Transaksi"
-                                    name="nomorResi"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Tanggal Transaksi
-                                </label>
-                                <DatePicker
-                                    options={options}
-                                    onChange={handleChange}
-                                    show={show}
-                                    setShow={handleClose}
-                                >
-                                    <input
-                                        type="text"
-                                        id="date"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                        placeholder="Select Date"
-                                        name="tanggalTransaksi"
-                                        value={selectedDate}
-                                        onFocus={() => setShow(true)}
-                                        required
-                                        readOnly
-                                    />
-                                </DatePicker>
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="pesan"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Pesan
-                                </label>
-                                <input
-                                    type="text"
-                                    id="pesan"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                    placeholder="Id Transaksi"
-                                    name="pesan"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div className="flex justify-between mt-5">
-                            <button
-                                type="reset"
-                                onClick={handleCloseForm}
-                                className="text-red-500 border border-red-500 px-3 py-2 rounded-md"
+                    {menu === "Tabel Data Transaksi" && (
+                        <FormTambahDataTransaksi
+                            dataTransaksi={dataTransaksi}
+                            dataKucing={dataKucing}
+                        />
+                    )}
+                    {menu === "Tabel Data Pembeli" && <FormTambahDataPembeli />}
+                    {menu === "Tabel Jenis Pengiriman" && (
+                        <FormTambahDataJenisPengiriman />
+                    )}
+                    {menu === "Tabel Metode Pembayaran" && (
+                        <FormTambahDataMetodePembayaran />
+                    )}
+                </div>
+            </div>
+            <div
+                className={`fixed top-0 left-0 w-full h-screen flex flex-col justify-center items-center z-50 duration-500 ${
+                    openDetail ? "translate-x-0" : "translate-x-full"
+                }`}
+            >
+                <div
+                    className={`w-[80vw] h-full bg-gray-100 p-5 overflow-y-scroll flex flex-col gap-y-5 fixed top-0 right-0 z-50 `}
+                >
+                    <div className="flex justify-between">
+                        <h1 className="font-bold text-lg ">
+                            Detail {menu.substring(10)}
+                        </h1>
+                        <button onClick={handleCloseForm}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                id="Bold"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                height="24"
                             >
-                                Batalkan
-                            </button>
-                            <button
-                                type="submit"
-                                className="text-white bg-green-500 px-3 py-2 rounded-md"
-                                onClick={handleSubmit}
+                                <path d="M14.121,12,18,8.117A1.5,1.5,0,0,0,15.883,6L12,9.879,8.11,5.988A1.5,1.5,0,1,0,5.988,8.11L9.879,12,6,15.882A1.5,1.5,0,1,0,8.118,18L12,14.121,15.878,18A1.5,1.5,0,0,0,18,15.878Z" />
+                            </svg>
+                        </button>
+                    </div>
+                    {menu === "Tabel Data Transaksi" && <DetailPembeli />}
+                    {menu === "Tabel Data Pembeli" && <DetailPembeli />}
+                </div>
+            </div>
+            <div
+                className={`fixed top-0 left-0 w-full h-screen flex flex-col justify-center items-center z-50 overflow-y-scroll ${
+                    editMenu ? "translate-x-0" : "translate-x-full"
+                } duration-500`}
+            >
+                <div
+                    className={`w-[30rem] h-full bg-gray-100 p-5 overflow-y-scroll flex flex-col gap-y-5 fixed top-0 right-0 z-50`}
+                >
+                    <div className="flex justify-between">
+                        <h1 className="font-bold text-lg ">
+                            Edit {menu.substring(5)}
+                        </h1>
+                        <button onClick={handleCloseForm}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                id="Bold"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                height="24"
                             >
-                                Submit
-                            </button>
-                        </div>
-                    </form>
+                                <path d="M14.121,12,18,8.117A1.5,1.5,0,0,0,15.883,6L12,9.879,8.11,5.988A1.5,1.5,0,1,0,5.988,8.11L9.879,12,6,15.882A1.5,1.5,0,1,0,8.118,18L12,14.121,15.878,18A1.5,1.5,0,0,0,18,15.878Z" />
+                            </svg>
+                        </button>
+                    </div>
+                    {menu === "Tabel Data Pembeli" && <FormEditDataPembeli />}
+                    {menu === "Tabel Jenis Pengiriman" && (
+                        <FormEditDataJenisPengiriman data={dataEdit} />
+                    )}
+                    {menu === "Tabel Metode Pembayaran" && (
+                        <FormEditDataMetodePembayaran data={dataEdit} />
+                    )}
                 </div>
             </div>
         </>

@@ -4,8 +4,8 @@ import { ResponseError } from "../errors/response-error.js";
 import { kucingRepository } from "../repository/kucing-repository.js";
 import { kucingValidation } from "../validations/kucing-validation.js";
 import { validate } from "../validations/validate.js";
-import {resolve} from 'path';
-import * as fs from 'fs';   
+import { resolve } from 'path';
+import * as fs from 'fs';
 
 const getAll = async () => {
     const result = await kucingRepository.getAll();
@@ -37,6 +37,7 @@ const get = async (id) => {
 
 const create = async (kucing, file) => {
     try {
+        console.log(kucing)
         logger.info("Create kucing:", kucing);
         const validateKucing = validate(
             kucingValidation.createKucingValdation,
@@ -47,17 +48,17 @@ const create = async (kucing, file) => {
             await handleImage(file);
             foto = "http://localhost:3000/storage/kucing/" + file.filename;
         }
-        
+
         if (validateKucing.error) {
             logger.error(
                 "Error while validating kucing:",
                 validateKucing.error?.message
-                );
+            );
             throw new ResponseError(400, "Validation error");
         }
 
         const result = await kucingRepository.create({
-            ID_Jenis: kucing.Jenis_Kucing.ID_Jenis,
+            ID_Jenis: kucing.ID_Jenis,
             Foto: foto,
             ...kucing,
         });
@@ -96,7 +97,7 @@ const update = async (kucing, file) => {
         );
         throw new ResponseError(400, validateKucing.error.message);
     }
-    const result = await kucingRepository.update({ID_Jenis: kucing.Jenis_Kucing.ID_Jenis,Foto: foto, ...kucing});
+    const result = await kucingRepository.update({ Foto: foto, ...kucing });
     if (!result || result.length === 0) {
         logger.error("Failed to update kucing");
         throw new ResponseError(404, "Failed to update kucing");
@@ -129,11 +130,11 @@ const handleImage = async (file) => {
             mimetype: file.mimetype,
             size: file.size,
         });
-        
+
     } catch (validationError) {
         logger.error("Error while validating kucing or Foto:", validationError.message);
         handleDelete(file)
-        throw new ResponseError(400, "Validation error file not allowed: "  + validationError.message); 
+        throw new ResponseError(400, "Validation error file not allowed: " + validationError.message);
     }
 }
 

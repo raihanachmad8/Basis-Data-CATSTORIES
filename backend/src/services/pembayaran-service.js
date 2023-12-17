@@ -72,7 +72,7 @@ const update = async (pembayaran) => {
         throw new ResponseError(400, "Validation error: ",validatePembayaran.error?.message );
     }
 
-    const result = await pembayaranRepository.update(pembayaran.ID_Metode_Pembayaran, pembayaran)
+    const result = await pembayaranRepository.update(pembayaran);
     if (!result || result.length === 0) {
         logger.error("Failed to update pembayaran");
         throw new ResponseError(500, "Failed to update pembayaran");

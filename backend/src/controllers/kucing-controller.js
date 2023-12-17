@@ -47,6 +47,8 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
+        console.log(req.file)
+        console.log(req.body)
         const result = await kucingService.update(req.body, req.file)
         logger.info('Update kucing success')
         res.status(201).json({
@@ -61,6 +63,7 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
+        console.log(req.body)
         const result = await kucingService.remove(req.params.id)
         logger.info('Delete kucing success')
         res.status(201).json({

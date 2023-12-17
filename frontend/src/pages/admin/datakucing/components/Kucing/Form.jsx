@@ -1,5 +1,9 @@
-import { useState } from "react";
+import PropType from "prop-types";
 import Datepicker from "tailwind-datepicker-react";
+import Select from "react-select";
+import { useEffect, useRef, useState } from "react";
+import { createKucing } from "../../../../../services/kucing";
+import { getOptionKucing } from "../../../../../services/jenisKucing";
 
 const options = {
     title: "Kalender",
@@ -21,7 +25,6 @@ const options = {
         selected: "",
     },
     icons: {
-        // () => ReactElement | JSX.Element
         prev: () => (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +48,7 @@ const options = {
             </svg>
         ),
     },
-    datepickerClassNames: "top-12",
+    datepickerClassNames: "top-12 right-0",
     defaultDate: new Date(),
     language: "id",
     disabledDates: [],
@@ -59,9 +62,43 @@ const options = {
         year: "numeric",
     },
 };
-const FormInputData = ({ open }) => {
+
+const FormTambahDataKucing = ({ updateDataKucing, setTambahData }) => {
     const [show, setShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedDate, setSelectedDate] = useState(
+        new Date().toISOString().split("T")[0]
+    );
+    const formRef = useRef(null);
+    const [dataJenisKucing, setDataJenisKucing] = useState([]);
+
+    const handleClose = (state) => {
+        setShow(state);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const form = formRef.current;
+
+        const formData = new FormData(form);
+
+        createKucing(formData, (status) => {
+            if (status) {
+                updateDataKucing();
+                setTambahData(false);
+                form.reset();
+                alert("Data Kucing Berhasil Di Tambahkan");
+            } else {
+                alert("Gagal Tambah Data Kucing");
+            }
+        });
+    };
+
+    useEffect(() => {
+        getOptionKucing((data) => {
+            setDataJenisKucing(data);
+        });
+    }, []);
+
     const handleChange = (selectedDate) => {
         const day = selectedDate.getDate();
         const month = selectedDate.getMonth() + 1;
@@ -69,48 +106,11 @@ const FormInputData = ({ open }) => {
         const formattedDate = `${year}-${month}-${day}`;
         setSelectedDate(formattedDate);
     };
-    const handleClose = (state) => {
-        setShow(state);
-    };
 
     return (
         <>
-            <form
-                action=""
-                className={`w-[25rem] h-full bg-gray-100 p-5 overflow-y-scroll flex flex-col gap-y-5 fixed top-0 right-0 z-50 ${
-                    open ? "translate-x-0" : "translate-x-full"
-                } transition-all`}
-            >
-                <div className="flex justify-between items-center mb-5">
-                    <h1 className="font-bold text-lg ">Tambah Data Kucing</h1>
-                    <button>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            id="Bold"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            height="24"
-                        >
-                            <path d="M14.121,12,18,8.117A1.5,1.5,0,0,0,15.883,6L12,9.879,8.11,5.988A1.5,1.5,0,1,0,5.988,8.11L9.879,12,6,15.882A1.5,1.5,0,1,0,8.118,18L12,14.121,15.878,18A1.5,1.5,0,0,0,18,15.878Z" />
-                        </svg>
-                    </button>
-                </div>
+            <form ref={formRef} id="form" action="" onSubmit={handleSubmit}>
                 <div className="w-full grid grid-cols-2 gap-5">
-                    <div>
-                        <label
-                            htmlFor="idKucing"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Id
-                        </label>
-                        <input
-                            type="text"
-                            id="idKucing"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Id Kucing"
-                            required
-                        />
-                    </div>
                     <div>
                         <label
                             htmlFor="namaKucing"
@@ -123,6 +123,7 @@ const FormInputData = ({ open }) => {
                             id="namaKucing"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg hover:border-gray-500 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Nama Kucing"
+                            name="Nama_Kucing"
                             required
                         />
                     </div>
@@ -131,9 +132,13 @@ const FormInputData = ({ open }) => {
                             Jenis Kelamin
                         </label>
                         <div className="inline-block relative w-full">
-                            <select className="block appearance-none w-full bg-gray-50 border border-gray-300 hover:border-gray-500 p-2.5 pr-8 rounded-lg text-sm leading-tight focus:ring-blue-500 focus:border-blue-500">
-                                <option>Jantan</option>
-                                <option>Betina</option>
+                            <select
+                                id="genderKucing"
+                                name="Jenis_Kelamin"
+                                className="block appearance-none w-full bg-gray-50 border border-gray-300 hover:border-gray-500 p-2.5 pr-8 rounded-lg text-sm leading-tight focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value="Jantan">Jantan</option>
+                                <option value="Betina">Betina</option>
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <svg
@@ -158,6 +163,7 @@ const FormInputData = ({ open }) => {
                             id="umurKucing"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Umur Kucing"
+                            name="Umur"
                             required
                         />
                     </div>
@@ -166,9 +172,15 @@ const FormInputData = ({ open }) => {
                             Status
                         </label>
                         <div className="inline-block relative w-full">
-                            <select className="block appearance-none w-full bg-gray-50 border border-gray-300 hover:border-gray-500 p-2.5 pr-8 rounded-lg text-sm leading-tight focus:ring-blue-500 focus:border-blue-500">
-                                <option>Tersedia</option>
-                                <option>Tidak Tersedia</option>
+                            <select
+                                id="statusKucing"
+                                name="Status"
+                                className="block appearance-none w-full bg-gray-50 border border-gray-300 hover:border-gray-500 p-2.5 pr-8 rounded-lg text-sm leading-tight focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value="Tersedia">Tersedia</option>
+                                <option value="Tidak Tersedia">
+                                    Tidak Tersedia
+                                </option>
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <svg
@@ -183,20 +195,21 @@ const FormInputData = ({ open }) => {
                     </div>
                     <div>
                         <label
-                            htmlFor="jumlahKucing"
+                            htmlFor="biayaAdopsi"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Biaya
                         </label>
                         <input
                             type="text"
-                            id="jumlahKucing"
+                            id="biayaAdopsi"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Biaya Adopsi"
+                            name="Biaya"
                             required
                         />
                     </div>
-                    <div className="col-span-2">
+                    <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Tanggal Masuk
                         </label>
@@ -213,10 +226,21 @@ const FormInputData = ({ open }) => {
                                 placeholder="Select Date"
                                 value={selectedDate}
                                 onFocus={() => setShow(true)}
+                                name="Tanggal_Masuk"
                                 required
                                 readOnly
                             />
                         </Datepicker>
+                    </div>
+                    <div className="col-span-2">
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Jenis
+                        </label>
+                        <Select
+                            options={dataJenisKucing}
+                            name="ID_Jenis"
+                            required
+                        />
                     </div>
                     <div className=" w-full col-span-2">
                         <p>Gambar</p>
@@ -234,9 +258,9 @@ const FormInputData = ({ open }) => {
                                 >
                                     <path
                                         stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                     />
                                 </svg>
@@ -254,6 +278,8 @@ const FormInputData = ({ open }) => {
                                 id="dropzone-file"
                                 type="file"
                                 className="hidden"
+                                name="Foto"
+                                required
                             />
                         </label>
                     </div>
@@ -269,15 +295,17 @@ const FormInputData = ({ open }) => {
                             rows="4"
                             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
                             placeholder="Tentang Kucing"
+                            name="Keterangan"
                             required
                         ></textarea>
                     </div>
                 </div>
-                <div className="flex justify-between">
-                    <button className="text-red-500 border border-red-500 px-3 py-2 rounded-md">
-                        Batalkan
-                    </button>
-                    <button className="text-white bg-green-500 px-3 py-2 rounded-md">
+                <div className="flex justify-end mt-5">
+                    <button
+                        type="submit"
+                        className="text-white bg-green-500 px-3 py-2 rounded-md"
+                        onClick={handleSubmit}
+                    >
                         Submit
                     </button>
                 </div>
@@ -286,4 +314,9 @@ const FormInputData = ({ open }) => {
     );
 };
 
-export default FormInputData;
+FormTambahDataKucing.propTypes = {
+    updateDataKucing: PropType.func.isRequired,
+    setTambahData: PropType.func.isRequired,
+};
+
+export default FormTambahDataKucing;

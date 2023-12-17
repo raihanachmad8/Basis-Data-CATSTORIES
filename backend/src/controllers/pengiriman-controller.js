@@ -33,6 +33,7 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
     try {
+        console.log(req.body)
         const result = await pengirimanService.create(req.body)
         logger.info("Create pengiriman success")
         res.status(201).json({
@@ -47,6 +48,7 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
+        console.log(req.body)
         const result = await pengirimanService.update(req.body)
         logger.info('Update pengiriman success')
         res.status(201).json({

@@ -9,7 +9,7 @@ export function up(knex) {
         @Jenis_Pengiriman VARCHAR(20)
     AS
     BEGIN
-        INSERT INTO Jenis_Pengiriman (ID_Jenis_Pengiriman, Jenis_Pengiriman)
+        INSERT INTO [Jenis Pengiriman] (ID_Jenis_Pengiriman, Jenis_Pengiriman)
         VALUES (@ID_Jenis_Pengiriman, @Jenis_Pengiriman);
     END;
     `)
@@ -19,7 +19,7 @@ export function up(knex) {
         @Jenis_Pengiriman VARCHAR(20)
     AS
     BEGIN
-        UPDATE Jenis_Pengiriman
+        UPDATE [Jenis Pengiriman]
         SET 
             Jenis_Pengiriman = @Jenis_Pengiriman
         WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman;
@@ -30,7 +30,7 @@ export function up(knex) {
         @ID_Jenis_Pengiriman VARCHAR(50)
     AS
     BEGIN
-        DELETE FROM Jenis_Pengiriman
+        DELETE FROM [Jenis Pengiriman]
         WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman;
     END;
     `)

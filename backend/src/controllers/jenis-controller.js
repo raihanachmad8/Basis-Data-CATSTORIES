@@ -1,10 +1,10 @@
 import { logger } from "../app/logging.js"
-import { jenisServce } from "../services/jenis-service.js"
+import {  jenisService} from "../services/jenis-service.js"
 
 
 const getAllJenis = async (req, res, next) => {
     try {
-        const result = await jenisServce.getAllJenis()
+        const result = await jenisService.getAllJenis()
         logger.info("Get all jenis success")
         res.status(201).json({
             status: 201,
@@ -18,7 +18,7 @@ const getAllJenis = async (req, res, next) => {
 
 const get = async (req, res, next) => {
     try {
-    const result = await jenisServce.get(req.params.id)
+    const result = await jenisService.get(req.params.id)
     logger.info("Get jenis success")
     res.status(201).json({
         status: 201,
@@ -33,7 +33,8 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
     try {
-        const result = await jenisServce.create(req.body)
+        console.log(req.body)
+        const result = await jenisService.create(req.body)
         logger.info("Create jenis success")
         res.status(201).json({
             status: 201,
@@ -47,7 +48,8 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
-        const result = await jenisServce.update(req.body)
+        console.log(req.body)
+        const result = await jenisService.update(req.body)
         logger.info("Update jenis success")
         res.status(201).json({
             status: 201,
@@ -61,7 +63,7 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
-        await jenisServce.remove(req.params.id)
+        await jenisService.remove(req.params.id)
         logger.info("Delete jenis success")
         res.status(201).json({
             status: 201,

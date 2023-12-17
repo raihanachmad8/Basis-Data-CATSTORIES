@@ -4,20 +4,17 @@ const jenis = ["Jantan", "Betina"];
 const status = ["Tersedia", "Tidak Tersedia"];
 const getKucingValidation = Joi.string().required();
 
-const validateImageFile =  Joi.object({
-        mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/jpg")
-            .required(),
-        size: Joi.number().max(5 * 1024 * 1024).required(),
-    }).required()
+const validateImageFile = Joi.object({
+    mimetype: Joi.string()
+        .valid("image/jpeg", "image/png", "image/jpg")
+        .required(),
+    size: Joi.number().max(5 * 1024 * 1024).required(),
+}).required()
 
-    
+
 
 const createKucingValdation = Joi.object({
-    Jenis_Kucing: Joi.object({
-        ID_Jenis: Joi.string().required(),
-        Jenis_Kucing: Joi.string().required(),
-    }),
+    ID_Jenis: Joi.string().required(),
     Nama_Kucing: Joi.string().min(3).max(50).required(),
     Umur: Joi.number().integer().min(0).required(),
     Jenis_Kelamin: Joi.string()
@@ -37,10 +34,7 @@ const createKucingValdation = Joi.object({
 
 const updateKucingValdation = Joi.object({
     ID_Kucing: Joi.string().required(),
-    Jenis_Kucing: Joi.object({
-        ID_Jenis: Joi.string().required(),
-        Jenis_Kucing: Joi.string().required(),
-    }),
+    ID_Jenis: Joi.string().required(),
     Nama_Kucing: Joi.string().min(3).max(50).required(),
     Umur: Joi.number().integer().min(0).required(),
     Jenis_Kelamin: Joi.string()

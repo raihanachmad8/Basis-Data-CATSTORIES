@@ -37,8 +37,8 @@ const get = async (id) => {
             throw new ResponseError(404, "Transaksi not found")
         }
 
-        
-        const resultWithDetails = Object.assign(result, {Detail_Transaksi: await detailTransaksiService.get(id)})
+
+        const resultWithDetails = Object.assign(result, { Detail_Transaksi: await detailTransaksiService.get(id) })
         return resultWithDetails
     } catch (error) {
         logger.error(error)
@@ -46,7 +46,7 @@ const get = async (id) => {
     }
 }
 
-            
+
 
 const create = async (data) => {
     try {
@@ -60,21 +60,21 @@ const create = async (data) => {
             throw new ResponseError(400, validateTransaction.error.message)
         }
 
-        const {Pembeli, Jenis_Pengiriman, Detail_Transaksi} = data
-        
+        const { Pembeli, Jenis_Pengiriman, Detail_Transaksi } = data
+
         const pembeli = pembeliService.create(Pembeli)
         const pengiriman = pengirimanService.getByName(Jenis_Pengiriman)
         const pembayaran = pembayaranService.getByName(Metode_Pembayaran)
         const transaksi = transaksiRepository.create({
-            ID_Pembeli: pembeli.ID_Pembeli, 
-            ID_Jenis_Pengiriman: pengiriman.ID_Jenis_Pengiriman, 
+            ID_Pembeli: pembeli.ID_Pembeli,
+            ID_Jenis_Pengiriman: pengiriman.ID_Jenis_Pengiriman,
             ID_Metode_Pembayaran: pembayaran.ID_Metode_Pembayaran,
             Total_Biaya: data.Total_Biaya,
             Nomor_Resi: data.Nomor_Resi,
             Tanggal_Transaksi: data.Tanggal_Transaksi,
             Pesan: data.Pesan
         })
-        
+
         const detail_transaksi = detailTransaksiService.create({
             ID_Transaksi: transaksi.ID_Transaksi,
             ID_Kucing: data.ID_Kucing
