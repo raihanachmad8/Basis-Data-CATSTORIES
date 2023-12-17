@@ -9,20 +9,17 @@ const createTransaksiSchema = Joi.object({
         No_Telp: Joi.string().min(10).max(15).required(),
         Alamat: Joi.string().required(),
     }),
-    Jenis_Pengiriman: Joi.string().max(20).required(),
-    Metode_Pembayaran: Joi.string().max(20).required(),
+    ID_Jenis_Pengiriman: Joi.string().max(50).required(),
+    ID_Metode_Pembayaran: Joi.string().max(50).required(),
     Tanggal_Transaksi: Joi.date().required(),
+    Total_Biaya: Joi.number().required(),
+    Nomor_Resi: Joi.string().required(),
     Pesan: Joi.string().required(),
-    Detail_Transaksi: Joi.array().items(Joi.object({
-        Kucing: Joi.object({
-            Nama_Kucing: Joi.string().max(50).required(),
-            Umur: Joi.number().integer().min(0).required(),
-            Jenis_Kelamin: Joi.string().max(6).required(),
-            Tanggal_Masuk: Joi.date().required(),
-            Biaya: Joi.number().required(),
-            Keterangan: Joi.string(),
-        }),
-    })),
+    Detail_Transaksi: Joi.array().items(
+        Joi.object({
+            ID_Kucing: Joi.string().max(50).required(),
+        })
+    ),
 });
 
 const updateTransaksiSchema = Joi.object({
@@ -33,20 +30,17 @@ const updateTransaksiSchema = Joi.object({
         No_Telp: Joi.string().min(10).max(15).required(),
         Alamat: Joi.string().required(),
     }),
-    Jenis_Pengiriman: Joi.string().max(20).required(),
-    Metode_Pembayaran: Joi.string().max(20).required(),
+    ID_Jenis_Pengiriman: Joi.string().max(50).required(),
+    ID_Metode_Pembayaran: Joi.string().max(50).required(),
     Tanggal_Transaksi: Joi.date().required(),
+    Total_Biaya: Joi.number().required(),
+    Nomor_Resi: Joi.string().required(),
     Pesan: Joi.string().required(),
-    Detail_Transaksi: Joi.array().items(Joi.object({
-        Kucing: Joi.object({
-            Nama_Kucing: Joi.string().max(50).required(),
-            Umur: Joi.number().integer().min(0).required(),
-            Jenis_Kelamin: Joi.string().max(6).required(),
-            Tanggal_Masuk: Joi.date().required(),
-            Biaya: Joi.number().required(),
-            Keterangan: Joi.string(),
-        }),
-    })),
+    Detail_Transaksi: Joi.array().items(
+        Joi.object({
+            ID_Kucing: Joi.string().max(50).required(),
+        })
+    ),
 });
 
 export const transaksiValidation ={

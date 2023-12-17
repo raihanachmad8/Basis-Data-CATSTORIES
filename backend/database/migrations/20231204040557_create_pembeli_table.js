@@ -45,6 +45,42 @@ export function up(knex) {
         DELETE FROM Pembeli WHERE ID_Pembeli = @ID_Pembeli;
     END;
     `)
+    .raw(`
+    CREATE FUNCTION CariPembeli(@key VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN(
+        SELECT 
+        *
+        FROM Pembeli
+        WHERE ID_Pembeli LIKE '%' + @key + '%'
+        OR Nama_Pembeli LIKE '%' + @key + '%'
+        OR Email LIKE '%' + @key + '%'
+        OR No_Telp LIKE '%' + @key + '%'
+        OR Alamat LIKE '%' + @key + '%'
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION TampilPembeli ()
+    RETURNS TABLE
+    AS 
+    RETURN
+    (
+        SELECT *
+        FROM Pembeli
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION TampilPembeliById (@ID_Pembeli VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN
+    (
+        SELECT *
+        FROM Pembeli
+        WHERE ID_Pembeli = @ID_Pembeli
+    );
+    `)
 }
 
 export function down(knex) {
@@ -53,4 +89,7 @@ export function down(knex) {
     .raw('DROP PROCEDURE IF EXISTS TambahPembeli')
     .raw('DROP PROCEDURE IF EXISTS UpdatePembeli')
     .raw('DROP PROCEDURE IF EXISTS HapusPembeli')
+    .raw('DROP FUNCTION IF EXISTS CariPembeli')
+    .raw('DROP FUNCTION IF EXISTS TampilPembeli')
+    .raw('DROP FUNCTION IF EXISTS TampilPembeliById')
 }

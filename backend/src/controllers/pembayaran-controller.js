@@ -3,7 +3,8 @@ import { pembayaranService } from "../services/pembayaran-service.js"
 
 const getAllPembayaran = async (req, res, next) => {
     try {
-        const result = await pembayaranService.getAll()
+        const { search, sort, orderBy, groupBy } = req.query
+        const result = await pembayaranService.getAll(search, sort, orderBy, groupBy)
         logger.info("Get all pembayaran success")
 
         res.status(200).json({

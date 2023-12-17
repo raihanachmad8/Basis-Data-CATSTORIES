@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker"
 
 export async function seed(knex) {
-    return await knex('Jenis Pengiriman').del().then(async () => {
+    return await knex('Jenis_Pengiriman').del().then(async () => {
         const Pengiriman = await Promise.all([
             {ID_Jenis_Pengiriman:'JP1', Jenis_Pengiriman: 'Ambil Toko'},
             {ID_Jenis_Pengiriman:'JP2', Jenis_Pengiriman: 'Kirim JNT'},
@@ -10,7 +10,7 @@ export async function seed(knex) {
             {ID_Jenis_Pengiriman:'JP5', Jenis_Pengiriman: 'Kirim GoSend'},
             {ID_Jenis_Pengiriman:'JP6', Jenis_Pengiriman: 'COD'},
         ])
-        await knex('Jenis Pengiriman').insert(Pengiriman)
+        await knex('Jenis_Pengiriman').insert(Pengiriman)
         console.log('seed Pengiriman success')
         return 
     })

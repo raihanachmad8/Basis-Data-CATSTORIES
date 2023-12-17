@@ -4,22 +4,8 @@ import { ResponseError } from "../errors/response-error.js";
 
 const getAll = async () => {
     try {
-        const result = await db("Kucing")
-            .select(
-                "Kucing.ID_Kucing",
-                "Kucing.Nama_Kucing",
-                "Kucing.Foto",
-                "Kucing.Umur",
-                "Kucing.Jenis_Kelamin",
-                "Kucing.Tanggal_Masuk",
-                "Kucing.Biaya",
-                "Kucing.Status",
-                "Kucing.Keterangan",
-                "Jenis.ID_Jenis",
-                "Jenis.Jenis_Kucing"
-            )
-            .join("Jenis", "Kucing.ID_Jenis", "Jenis.ID_Jenis");
-        return await result.map((result) => formattedResult(result))
+        const result = await db.raw(`SELECT * FROM TampilKucing()`);
+        return await result
     } catch (error) {
         logger.error("Error while getting all Kucing", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -28,14 +14,7 @@ const getAll = async () => {
 
 const search = async (params) => {
     try {
-        const result = await db("Kucing")
-            .whereLike(params.Nama_Kucing)
-            .orWhereLike(params.Jenis_Kucing)
-            .orWhereLike(params.Umur)
-            .orWhereLike(params.Jenis_Kelamin)
-            .orWhereLike(params.Biaya)
-            .orWhereLike(params.Status)
-            .select("*");
+        const result = await db.raw(`SELECT * FROM CariKucing(:Nama_Kucing)`, { Nama_Kucing: params });
         return result;
     } catch (error) {
         logger.error("Error while searching Kucing", error);
@@ -45,23 +24,8 @@ const search = async (params) => {
 
 const findById = async (id) => {
     try {
-        const result = await db("Kucing")
-        .select(
-            "Kucing.ID_Kucing",
-            "Kucing.Nama_Kucing",
-            "Kucing.Foto",
-            "Kucing.Umur",
-            "Kucing.Jenis_Kelamin",
-            "Kucing.Tanggal_Masuk",
-            "Kucing.Biaya",
-            "Kucing.Status",
-            "Kucing.Keterangan",
-            "Jenis.ID_Jenis",
-            "Jenis.Jenis_Kucing"
-        )
-        .join("Jenis", "Kucing.ID_Jenis", "Jenis.ID_Jenis")
-        .where({ ID_Kucing: id });
-        return await formattedResult(result[0])
+        const result = await db.raw(`SELECT * FROM TampilKucingByID(:ID_Kucing)`, { ID_Kucing: id });
+        return await result[0]
     } catch (error) {
         logger.error("Error while finding Kucing by id: ", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -96,7 +60,7 @@ const create = async (kucing) => {
             Status: kucing.Status,
             Keterangan: kucing.Keterangan,
         })
-        return await db("Kucing").select("*").where({ ID_Kucing: id });
+        return await db("Kucing").select("*").where({ ID_Kucing: id }).first();
     } catch (error) {
         logger.error("Error while creating kucing:", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -129,7 +93,7 @@ const update = async (kucing) => {
             Status: kucing.Status,
             Keterangan: kucing.Keterangan,
         })
-        return db("Kucing").select("*").where({ ID_Kucing: kucing.ID_Kucing });
+        return db("Kucing").select("*").where({ ID_Kucing: kucing.ID_Kucing }).first()
     } catch (error) {
         logger.error("Error while updating kucing:", error);
         throw new ResponseError(500, "Internal Server Error");
@@ -163,22 +127,25 @@ const incrementId = async (table, column, prefix = '') => {
     }
 }
 
-const formattedResult = (result) => {
-    return {
-        ID_Kucing: result.ID_Kucing,
-        Jenis_Kucing: {
-        ID_Jenis: result.ID_Jenis,
-        Jenis_Kucing: result.Jenis_Kucing,
-        },
-        Nama_Kucing: result.Nama_Kucing,
-        Foto: result.Foto,
-        Umur: result.Umur,
-        Jenis_Kelamin: result.Jenis_Kelamin,
-        Tanggal_Masuk: result.Tanggal_Masuk,
-        Biaya: result.Biaya,
-        Status: result.Status,
-        Keterangan: result.Keterangan,
-    };
+const countKucing = async () => {
+    try {
+        const result = await db.raw(`
+        SELECT
+            J.Jenis_Kucing,
+            COUNT(CASE WHEN K.Status = 'Tersedia' THEN 1 ELSE NULL END) AS Tersedia,
+            COUNT(CASE WHEN K.Status = 'Tidak Tersedia' THEN 1 ELSE NULL END) AS TidakTersedia
+        FROM
+            Kucing K
+        JOIN
+            Jenis J ON K.ID_Jenis = J.ID_Jenis
+        GROUP BY
+            J.Jenis_Kucing;
+        `);
+        return result;
+    } catch (error) {
+        logger.error("Error while counting Kucing", error);
+        throw new ResponseError(500, "Internal Server Error");
+    }
 }
 
 export const kucingRepository = {
@@ -188,4 +155,5 @@ export const kucingRepository = {
     create,
     update,
     remove,
+    countKucing
 };

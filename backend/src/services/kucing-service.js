@@ -5,15 +5,52 @@ import { kucingRepository } from "../repository/kucing-repository.js";
 import { kucingValidation } from "../validations/kucing-validation.js";
 import { validate } from "../validations/validate.js";
 import {resolve} from 'path';
-import * as fs from 'fs';   
+import * as fs from 'fs';  
+import { jenisServce } from "./jenis-service.js";
 
-const getAll = async () => {
-    const result = await kucingRepository.getAll();
+const getAll = async (search, sort, orderBy, groupBy) => {
+    let result = (search) ? await kucingRepository.search(search) : await kucingRepository.getAll();
+    result = await Promise.all(result.map(async (kucing) => {
+        (kucing.ID_Jenis != null) ? kucing.Jenis_Kucing = (await jenisServce.get(kucing.ID_Jenis))[0].Jenis_Kucing : kucing.Jenis_Kucing = null
+        return formattedResult(kucing);
+    }))
+
+    logger.info("Get all kucing success");
+    
+    // Sort
+    if (sort) {
+        const sortFields = sort.split(',');
+        const sortOrder = orderBy === 'desc' ? -1 : 1;
+    
+        result.sort((a, b) => {
+            for (const field of sortFields) {
+                const aValue = a[field];
+                const bValue = b[field];
+    
+                if (aValue > bValue) return sortOrder;
+                if (aValue < bValue) return -sortOrder;
+            }
+    
+            return 0;
+        });
+    }
+    
+    // Group
+    if (groupBy) {
+        const groupedResults = {};
+        result.forEach(item => {
+            const groupValue = item[groupBy];
+            if (!groupedResults[groupValue]) {
+                groupedResults[groupValue] = [];
+            }
+            groupedResults[groupValue].push(item);
+        });
+        result = Object.values(groupedResults);
+    }
     if (!result || result.length === 0) {
         logger.error("Kucing not found");
         throw new ResponseError(404, "Kucing not found");
     }
-    logger.info("Get all kucing success");
     return result;
 };
 
@@ -25,7 +62,10 @@ const get = async (id) => {
         throw new ResponseError(400, validateId.error?.message);
     }
 
-    const result = await kucingRepository.findById(id);
+    let result = await kucingRepository.findById(id);
+    (result.ID_Jenis != null) ? result.Jenis_Kucing = (await jenisServce.get(result.ID_Jenis))[0].Jenis_Kucing : result.Jenis_Kucing = null
+    result = formattedResult(result);
+
 
     if (!result || result.length === 0) {
         logger.error("Kucing not found");
@@ -122,6 +162,16 @@ const remove = async (id) => {
     return result;
 };
 
+const count = async () => {
+    const result = await kucingRepository.countKucing();
+    if (!result || result == false) {
+        logger.error("Failed to delete kucing");
+        throw new ResponseError(404, "Failed to delete kucing");
+    }
+    logger.info("Count kucing success")
+    return result;
+};
+
 const handleImage = async (file) => {
     try {
         await kucingValidation.validateImageFile.validateAsync({
@@ -148,10 +198,30 @@ const handleDelete = async (file) => {
 }
 
 
+const formattedResult = (result) => {
+    return {
+        ID_Kucing: result.ID_Kucing,
+        Jenis_Kucing: {
+            ID_Jenis: result.ID_Jenis,
+            Jenis_Kucing: result.Jenis_Kucing,
+        },
+        Nama_Kucing: result.Nama_Kucing,
+        Foto: result.Foto,
+        Umur: result.Umur,
+        Jenis_Kelamin: result.Jenis_Kelamin,
+        Tanggal_Masuk: result.Tanggal_Masuk,
+        Biaya: result.Biaya,
+        Status: result.Status,
+        Keterangan: result.Keterangan,
+    };
+}
+
+
 export const kucingService = {
     getAll,
     get,
     create,
     update,
     remove,
+    count
 };
