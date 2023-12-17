@@ -34,7 +34,39 @@ export function up(knex) {
         DELETE FROM Jenis WHERE ID_Jenis = @ID_Jenis;
     END;
     `)
-    ;
+    .raw(`
+    CREATE FUNCTION TampilJenisKucing ()
+    RETURNS TABLE
+    AS 
+    RETURN
+    (
+        SELECT *
+        FROM Jenis
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION TampilJenisKucingById (@ID_Jenis VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN
+    (
+        SELECT *
+        FROM Jenis
+        WHERE ID_Jenis = @ID_Jenis
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION CariJenisKucing(@key VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN(
+        SELECT
+            *
+        FROM Jenis
+        WHERE ID_Jenis LIKE '%' + @key + '%'
+            OR Jenis_Kucing LIKE '%' + @key + '%'
+    );
+    `)
 }
 
 export function down(knex) {
@@ -43,4 +75,7 @@ export function down(knex) {
     .raw('DROP PROCEDURE IF EXISTS TambahJenis')
     .raw('DROP PROCEDURE IF EXISTS UpdateJenis')
     .raw('DROP PROCEDURE IF EXISTS HapusJenisKucing')
+    .raw('DROP FUNCTION IF EXISTS TampilJenisKucing')
+    .raw('DROP FUNCTION IF EXISTS TampilJenisKucingById')
+    .raw('DROP FUNCTION IF EXISTS CariJenisKucing')
 }

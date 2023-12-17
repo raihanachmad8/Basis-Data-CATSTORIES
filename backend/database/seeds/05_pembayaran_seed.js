@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker"
 
 export async function seed(knex) {
-    return await knex('Metode Pembayaran').del().then(async () => {
+    return await knex('Metode_Pembayaran').del().then(async () => {
         const Pembayaran = await Promise.all([
                 {ID_Metode_Pembayaran: 'MPB1', Metode_Pembayaran:'Cash'},
                 {ID_Metode_Pembayaran: 'MPB2', Metode_Pembayaran:'Transfer Mandiri'},
@@ -11,7 +11,7 @@ export async function seed(knex) {
                 {ID_Metode_Pembayaran: 'MPB6', Metode_Pembayaran:'OVO'},
                 {ID_Metode_Pembayaran: 'MPB7', Metode_Pembayaran:'GoPay'},
         ])
-        await knex('Metode Pembayaran').insert(Pembayaran)
+        await knex('Metode_Pembayaran').insert(Pembayaran)
         console.log('seed Pembayaran success')
         return 
     })

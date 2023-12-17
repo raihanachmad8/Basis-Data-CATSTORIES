@@ -4,7 +4,7 @@ import { ResponseError } from "../errors/response-error.js";
 
 const getAll = async () => {
     try {
-        const result = await db.select().table('Pembeli')
+        const result = await db.raw(`SELECT * FROM TampilPembeli()`)
         return result
     } catch (error) {
         logger.error(error)
@@ -14,7 +14,7 @@ const getAll = async () => {
 
 const search = async (params) => {
     try {
-        const result = await db.select().table('Pembeli').whereLike(params)
+        const result = await db.raw(`SELECT * FROM CariPembeli(:Nama_Pembeli)`, { Nama_Pembeli: params })
         return result
     } catch (error) {
         logger.error(error)
@@ -24,7 +24,7 @@ const search = async (params) => {
 
 const findById = async (id) => {
     try {
-        const result = await db.select().table('Pembeli').where('ID_Pembeli', id)
+        const result = await db.raw(`SELECT * FROM TampilPembeliByID(:ID_Pembeli)`, { ID_Pembeli: id })
         return result
     } catch (error) {
         logger.error(error)
@@ -36,9 +36,9 @@ const create = async (data) => {
     try {
         const id = await incrementId('Pembeli', 'ID_Pembeli', 'P')
         await db.raw(`
-        EXEC TambahPembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telepon = :No_Telepon, @Alamat_Pembeli = :Alamat_Pembeli;`,
-        { ID_Pembeli: id, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telepon: data.No_Telepon, Alamat_Pembeli: data.Alamat_Pembeli })
-        return await db('Pembeli').where('ID_Pembeli', id)
+        EXEC TambahPembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telp = :No_Telp, @Alamat = :Alamat;`,
+        { ID_Pembeli: id, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telp: data.No_Telp, Alamat: data.Alamat })
+        return await db('Pembeli').where('ID_Pembeli', id).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -47,9 +47,9 @@ const create = async (data) => {
 
 const update = async (data) => {
     try {
-        await db.raw(`EXEC UpdatePembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telepon = :No_Telepon, @Alamat_Pembeli = :Alamat_Pembeli;`, 
-        { ID_Pembeli: data.ID_Pembeli, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telepon: data.No_Telepon, Alamat_Pembeli: data.Alamat_Pembeli })
-        return await db('Pembeli').where('ID_Pembeli', id)
+        await db.raw(`EXEC UpdatePembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telp = :No_Telp, @Alamat = :Alamat;`, 
+        { ID_Pembeli: data.ID_Pembeli, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telp: data.No_Telp, Alamat: data.Alamat })
+        return await db('Pembeli').where('ID_Pembeli', id).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")

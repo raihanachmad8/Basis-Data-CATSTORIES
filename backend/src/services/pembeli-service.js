@@ -5,14 +5,48 @@ import { pembeliRepository } from "../repository/pembeli-repository.js"
 import { pembeliValidation } from "../validations/pembeli-validation.js"
 import { validate } from "../validations/validate.js"
 
-const getAll = async () => {
-    const result = await pembeliRepository.getAll()
+const getAll = async (search, sort, orderBy, groupBy) => {
+    const result = (search) ? await pembeliRepository.search(search) : await pembeliRepository.getAll()
     if (!result || result.length === 0) {
         logger.error('Pembeli not found')
         throw new ResponseError('404', 'Pembeli not found')
     }
 
     logger.info('Get all pembeli success')
+    // Sort
+    if (sort) {
+        const sortFields = sort.split(',');
+        const sortOrder = orderBy === 'desc' ? -1 : 1;
+    
+        result.sort((a, b) => {
+            for (const field of sortFields) {
+                const aValue = a[field];
+                const bValue = b[field];
+    
+                if (aValue > bValue) return sortOrder;
+                if (aValue < bValue) return -sortOrder;
+            }
+    
+            return 0;
+        });
+    }
+    
+    // Group
+    if (groupBy) {
+        const groupedResults = {};
+        result.forEach(item => {
+            const groupValue = item[groupBy];
+            if (!groupedResults[groupValue]) {
+                groupedResults[groupValue] = [];
+            }
+            groupedResults[groupValue].push(item);
+        });
+        result = Object.values(groupedResults);
+    }
+    if (!result || result.length === 0) {
+        logger.error("Pembeli not found");
+        throw new ResponseError(404, "Pembeli not found");
+    }
     return result
 }
 

@@ -15,7 +15,7 @@ export async function seed(knex) {
                     Jenis_Kelamin: "Jantan",
                     Tanggal_Masuk: "2023-01-01",
                     Biaya: 200000.0,
-                    Status: "Tersedia",
+                    Status: "Tidak Tersedia",
                     Keterangan: "Deskripsi Fluufy",
                 },
                 {
@@ -39,7 +39,7 @@ export async function seed(knex) {
                     Jenis_Kelamin: "Jantan",
                     Tanggal_Masuk: "2023-02-11",
                     Biaya: 150000.0,
-                    Status: "Tersedia",
+                    Status: "Tidak Tersedia",
                     Keterangan: "Deskripsi Whiskers",
                 },
                 {

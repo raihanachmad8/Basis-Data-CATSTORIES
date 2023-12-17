@@ -4,7 +4,8 @@ import { jenisServce } from "../services/jenis-service.js"
 
 const getAllJenis = async (req, res, next) => {
     try {
-        const result = await jenisServce.getAllJenis()
+        const { search, sort, orderBy, groupBy } = req.query
+        const result = await jenisServce.getAllJenis(search, sort, orderBy, groupBy)
         logger.info("Get all jenis success")
         res.status(201).json({
             status: 201,

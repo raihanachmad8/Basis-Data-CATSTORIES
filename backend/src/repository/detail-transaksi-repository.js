@@ -56,7 +56,7 @@ const create = async (data) => {
             ID_Transaksi: data.ID_Transaksi,
             ID_Kucing: data.ID_Kucing,
         })
-        return await db('Detail_Transaksi').select().where('ID_Detail_Transaksi', id)
+        return await db('Detail_Transaksi').select().where('ID_Detail_Transaksi',id).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -65,7 +65,7 @@ const create = async (data) => {
 
 const update = async (data) => {
     try {
-        const result = await db('Detail_Transaksi').update(data).where('ID_Detail_Transaksi', data.ID_Detail_Transaksi)
+        const result = await db('Detail_Transaksi').update(data).where('ID_Detail_Transaksi', id)
         return result
     } catch (error) {
         logger.error(error)
@@ -118,4 +118,5 @@ export const detailTransaksiRepository = {
     search,
     create,
     update,
+    incrementId 
 }

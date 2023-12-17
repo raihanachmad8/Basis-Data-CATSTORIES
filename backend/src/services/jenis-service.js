@@ -5,11 +5,42 @@ import { jenisRepository } from "../repository/jenis-repository.js"
 import { jenisValidation } from "../validations/jenis-validation.js"
 import { validate } from "../validations/validate.js"
 
-const getAllJenis = async () => {
-    const result = await jenisRepository.getAllJenis()
+const getAllJenis = async (search, sort, orderBy, groupBy) => {
+    const result = (search) ? await jenisRepository.search(search) : await jenisRepository.getAll()
+
+    // Sort
+    if (sort) {
+        const sortFields = sort.split(',');
+        const sortOrder = orderBy === 'desc' ? -1 : 1;
+    
+        result.sort((a, b) => {
+            for (const field of sortFields) {
+                const aValue = a[field];
+                const bValue = b[field];
+    
+                if (aValue > bValue) return sortOrder;
+                if (aValue < bValue) return -sortOrder;
+            }
+    
+            return 0;
+        });
+    }
+    
+    // Group
+    if (groupBy) {
+        const groupedResults = {};
+        result.forEach(item => {
+            const groupValue = item[groupBy];
+            if (!groupedResults[groupValue]) {
+                groupedResults[groupValue] = [];
+            }
+            groupedResults[groupValue].push(item);
+        });
+        result = Object.values(groupedResults);
+    }
     if (!result || result.length === 0) {
-        logger.error("Jenis not found")
-        throw new ResponseError(404, "Jenis not found")
+        logger.error("Jenis not found");
+        throw new ResponseError(404, "Jenis not found");
     }
     return result
 } 
