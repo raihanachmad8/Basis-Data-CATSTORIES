@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { updateMetodePembayaran } from "../../../../../services/metodePembayaran";
+import PropTypes from "prop-types";
 
 const FormEditDataMetodePembayaran = ({ data }) => {
     const formRef = useRef(null);
@@ -11,7 +12,6 @@ const FormEditDataMetodePembayaran = ({ data }) => {
 
         formData.append("ID_Metode_Pembayaran", data.ID_Metode_Pembayaran);
 
-        console.log(formData);
         updateMetodePembayaran(formData, (res) => {
             console.log(res);
         });
@@ -50,6 +50,10 @@ const FormEditDataMetodePembayaran = ({ data }) => {
             </form>
         </>
     );
+};
+
+FormEditDataMetodePembayaran.propTypes = {
+    data: PropTypes.object.isRequired,
 };
 
 export default FormEditDataMetodePembayaran;

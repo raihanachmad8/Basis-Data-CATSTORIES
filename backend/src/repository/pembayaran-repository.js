@@ -4,12 +4,8 @@ import { ResponseError } from "../errors/response-error.js"
 
 const getAll = async () => {
     try {
-        const result = await db.select().table('Metode Pembayaran')
-        if (result.length > 0) {
-            return result
-        } else {
-            throw new ResponseError(404, "Record not found");
-        }
+        const result = await db.raw(`SELECT * FROM TampilMetodePembayaran()`)
+        return result
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -18,7 +14,7 @@ const getAll = async () => {
 
 const search = async (params) => {
     try {
-        const result = await db.select().table('Metode Pembayaran').whereLike(params)
+        const result = await db.raw(`SELECT * FROM CariMetodePembayaran(:Metode_Pembayaran)`, { Metode_Pembayaran: params })
         return result
     } catch (error) {
         logger.error(error)
@@ -28,7 +24,17 @@ const search = async (params) => {
 
 const findById = async (id) => {
     try {
-        const result = await db.select().table('Metode Pembayaran').where('ID_Metode_Pembayaran', id)
+        const result = await db.raw(`SELECT * FROM TampilMetodePembayaranByID(:ID_Metode_Pembayaran)`, { ID_Metode_Pembayaran: id })
+        return result
+    } catch (error) {
+        logger.error(error)
+        throw new ResponseError(500, "Internal Server Error")
+    }
+}
+
+const findByName = async (name) => {
+    try {
+        const result = await db.raw(`SELECT * FROM TampilMetodePembayaranByName(:Metode_Pembayaran)`, { Metode_Pembayaran: name })
         return result
     } catch (error) {
         logger.error(error)
@@ -38,11 +44,11 @@ const findById = async (id) => {
 
 const create = async (data) => {
     try {
-        const id = await incrementId('Metode Pembayaran', 'ID_Metode_Pembayaran', 'MPB')
+        const id = await incrementId('Metode_Pembayaran', 'ID_Metode_Pembayaran', 'MPB')
         await db.raw(`
         EXEC TambahMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran, @Metode_Pembayaran = :Metode_Pembayaran;`,
-            { ID_Metode_Pembayaran: id, Metode_Pembayaran: data.Metode_Pembayaran })
-        return await db('Metode Pembayaran').where('ID_Metode_Pembayaran', id)
+        {ID_Metode_Pembayaran: id, Metode_Pembayaran: data.Metode_Pembayaran})
+        return await db('Metode_Pembayaran').where('ID_Metode_Pembayaran',id).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -51,11 +57,10 @@ const create = async (data) => {
 
 const update = async (data) => {
     try {
-        console.log(data)
         await db.raw(`
         EXEC UpdateMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran, @Metode_Pembayaran = :Metode_Pembayaran;`,
-            { ID_Metode_Pembayaran: data.ID_Metode_Pembayaran, Metode_Pembayaran: data.Metode_Pembayaran })
-        return await db('Metode_Pembayaran').where('ID_Metode_Pembayaran', id)
+        {ID_Metode_Pembayaran: data.ID_Metode_Pembayaran, Metode_Pembayaran: data.Metode_Pembayaran})
+        return await db('Metode_Pembayaran').where('ID_Metode_Pembayaran', data.ID_Metode_Pembayaran).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -66,8 +71,8 @@ const remove = async (id) => {
     try {
         const result = await db.raw(`
         EXEC HapusMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran;`,
-            { ID_Metode_Pembayaran: id })
-        return (await db('Metode Pembayaran').where('ID_Metode_Pembayaran', id) == false)
+        {ID_Metode_Pembayaran: id})
+        return (await db('Metode_Pembayaran').where('ID_Metode_Pembayaran', id) == false )
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -77,10 +82,10 @@ const remove = async (id) => {
 const incrementId = async (table, column, prefix = '') => {
     try {
         const result = await db
-            .raw(`
+        .raw(`
         SELECT TOP 1 ${column}
         FROM ${table}
-        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length + 1}, LEN(${column})) AS INT) DESC
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
         `)
         const newId = result[0][column].substring(prefix.length)
         return prefix + (parseInt(newId) + 1)
@@ -94,9 +99,8 @@ export const pembayaranRepository = {
     getAll,
     search,
     findById,
+    findByName,
     create,
     update,
     remove
 }
-
-

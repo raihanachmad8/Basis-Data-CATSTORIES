@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { updateJenisPengiriman } from "../../../../../services/jenisPengiriman";
+import PropTypes from "prop-types";
 
 const FormEditDataJenisPengiriman = ({ data }) => {
     const formRef = useRef(null);
@@ -48,6 +49,10 @@ const FormEditDataJenisPengiriman = ({ data }) => {
             </form>
         </>
     );
+};
+
+FormEditDataJenisPengiriman.propTypes = {
+    data: PropTypes.object.isRequired,
 };
 
 export default FormEditDataJenisPengiriman;

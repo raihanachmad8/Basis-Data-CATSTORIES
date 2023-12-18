@@ -51,6 +51,7 @@ publicRouter.put('/api/v1/cat-stories/jenis/update', jenisController.update)
 publicRouter.delete('/api/v1/cat-stories/jenis/delete/:id', jenisController.remove)
 
 publicRouter.get('/api/v1/cat-stories/kucing', kucingController.getAllKucing)
+publicRouter.get('/api/v1/cat-stories/kucing/count', kucingController.count)
 publicRouter.get('/api/v1/cat-stories/kucing/:id', kucingController.get)
 publicRouter.post('/api/v1/cat-stories/kucing/create', upload.single('Foto'), kucingController.create)
 publicRouter.put('/api/v1/cat-stories/kucing/update', upload.single('Foto'), kucingController.update)
@@ -76,7 +77,7 @@ publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranContr
 
 publicRouter.get('/api/v1/cat-stories/checkout/payment', transaksiController.getAllTransaksi)
 publicRouter.get('/api/v1/cat-stories/checkout/payment/details/:id', transaksiController.get)
-// publicRouter.get('/api/v1/cat-stories/pembayaran/:id', pembayaranController.get)
+publicRouter.post('/api/v1/cat-stories/checkout/payment/create', transaksiController.create)
 // publicRouter.post('/api/v1/cat-stories/pembayaran/create', pembayaranController.create)
 // publicRouter.put('/api/v1/cat-stories/pembayaran/update', pembayaranController.update)
 // publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranController.remove)

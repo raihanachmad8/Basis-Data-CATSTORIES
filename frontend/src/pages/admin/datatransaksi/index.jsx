@@ -17,18 +17,28 @@ import { getAllPembeli } from "../../../services/pembeli";
 import FormEditDataPembeli from "./components/Pembeli/Edit";
 import FormEditDataJenisPengiriman from "./components/JenisPengiriman/Edit";
 import FormEditDataMetodePembayaran from "./components/MetodePembayaran/Edit";
+import DetailTransaksi from "./components/Transaksi/Detail";
 
 const DataTransaksi = () => {
     const [menu, setMenu] = useState("Tabel Data Transaksi");
     const [tambahData, setTambahData] = useState(false);
     const [openDetail, setOpenDetail] = useState(false);
     const [editMenu, setEditMenu] = useState(false);
+    const [idDetail, setIdDetail] = useState("");
     const [dataEdit, setDataEdit] = useState({});
+    const [dataDetail, setDataDetail] = useState({});
     const [dataPembeli, setDataPembeli] = useState([]);
     const [dataTransaksi, setDataTransaksi] = useState([]);
     const [dataKucing, setDataKucing] = useState([]);
     const [jenisPengiriman, setJenisPengiriman] = useState([]);
     const [metodePembayaran, setMetodePembayaran] = useState([]);
+
+    useEffect(() => {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/admin/";
+        } 
+    }, []);
 
     useEffect(() => {
         getAllTransaksi((data) => {
@@ -72,6 +82,14 @@ const DataTransaksi = () => {
         setTambahData(false);
     };
 
+    const handleCloseDetail = () => {
+        setOpenDetail(false);
+    };
+
+    const handleCloseEdit = () => {
+        setEditMenu(false);
+    };
+
     return (
         <>
             <Admin title="Data Transaksi">
@@ -84,14 +102,17 @@ const DataTransaksi = () => {
                                         {menu}
                                     </h1>
                                     <div className="flex justify-center items-center gap-x-7">
-                                        <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
-                                            <button
-                                                onClick={handleTambahData}
-                                                className="text-base text-white"
-                                            >
-                                                Tambah Data
-                                            </button>
-                                        </div>
+                                        {menu !== "Tabel Data Pembeli" && (
+                                            <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
+                                                <button
+                                                    onClick={handleTambahData}
+                                                    className="text-base text-white"
+                                                >
+                                                    Tambah Data
+                                                </button>
+                                            </div>
+                                        )}
+
                                         <div className="relative mx-auto text-gray-600 w-[10rem]">
                                             <input
                                                 className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
@@ -183,10 +204,18 @@ const DataTransaksi = () => {
                         </div>
                         <div className="w-full">
                             {menu === "Tabel Data Transaksi" && (
-                                <TableDataTransaksi data={dataTransaksi} />
+                                <TableDataTransaksi
+                                    data={dataTransaksi}
+                                    setOpenDetail={setOpenDetail}
+                                    setIdDetail={setIdDetail}
+                                />
                             )}
                             {menu === "Tabel Data Pembeli" && (
-                                <TabelDataPembeli data={dataPembeli} />
+                                <TabelDataPembeli
+                                    data={dataPembeli}
+                                    setOpenDetail={setOpenDetail}
+                                    setDataDetail={setDataDetail}
+                                />
                             )}
                             {menu === "Tabel Jenis Pengiriman" && (
                                 <TabelJenisPengiriman
@@ -234,6 +263,8 @@ const DataTransaksi = () => {
                         <FormTambahDataTransaksi
                             dataTransaksi={dataTransaksi}
                             dataKucing={dataKucing}
+                            dataMetodePembayaran={metodePembayaran}
+                            dataJenisPengiriman={jenisPengiriman}
                         />
                     )}
                     {menu === "Tabel Data Pembeli" && <FormTambahDataPembeli />}
@@ -257,7 +288,7 @@ const DataTransaksi = () => {
                         <h1 className="font-bold text-lg ">
                             Detail {menu.substring(10)}
                         </h1>
-                        <button onClick={handleCloseForm}>
+                        <button onClick={handleCloseDetail}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 id="Bold"
@@ -269,8 +300,12 @@ const DataTransaksi = () => {
                             </svg>
                         </button>
                     </div>
-                    {menu === "Tabel Data Transaksi" && <DetailPembeli />}
-                    {menu === "Tabel Data Pembeli" && <DetailPembeli />}
+                    {menu === "Tabel Data Transaksi" && (
+                        <DetailTransaksi id={idDetail} />
+                    )}
+                    {menu === "Tabel Data Pembeli" && (
+                        <DetailPembeli data={dataDetail} />
+                    )}
                 </div>
             </div>
             <div
@@ -285,7 +320,7 @@ const DataTransaksi = () => {
                         <h1 className="font-bold text-lg ">
                             Edit {menu.substring(5)}
                         </h1>
-                        <button onClick={handleCloseForm}>
+                        <button onClick={handleCloseEdit}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 id="Bold"

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-const TabelDataPembeli = ({ data }) => {
+const TabelDataPembeli = ({ data, setOpenDetail, setDataDetail }) => {
     return (
         <>
             <table className="w-full text-center">
@@ -11,7 +11,7 @@ const TabelDataPembeli = ({ data }) => {
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase flex justify-center items-center">
                             <button className="relative flex justify-center items-center gap-x-2">
                                 Nama
-                                <svg
+                                {/* <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     id="Outline"
                                     viewBox="0 0 24 24"
@@ -19,7 +19,7 @@ const TabelDataPembeli = ({ data }) => {
                                     height="18"
                                 >
                                     <path d="M18.71,8.21a1,1,0,0,0-1.42,0l-4.58,4.58a1,1,0,0,1-1.42,0L6.71,8.21a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.41l4.59,4.59a3,3,0,0,0,4.24,0l4.59-4.59A1,1,0,0,0,18.71,8.21Z" />
-                                </svg>
+                                </svg> */}
                             </button>
                         </th>
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase">
@@ -56,8 +56,14 @@ const TabelDataPembeli = ({ data }) => {
                                     {item.Alamat}
                                 </td>
                                 <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
-                                    <button className="px-3 py-2 bg-green-500 text-white rounded-md">
-                                        Edit
+                                    <button
+                                        onClick={() => {
+                                            setOpenDetail(true);
+                                            setDataDetail(item);
+                                        }}
+                                        className="px-3 py-2 bg-blue-500 text-white rounded-md"
+                                    >
+                                        Detail
                                     </button>
                                     <button className="px-3 py-2 bg-red-500 text-white rounded-md ml-2">
                                         Delete
@@ -83,6 +89,8 @@ const TabelDataPembeli = ({ data }) => {
 
 TabelDataPembeli.propTypes = {
     data: PropTypes.array.isRequired,
+    setOpenDetail: PropTypes.func.isRequired,
+    setDataDetail: PropTypes.func.isRequired,
 };
 
 export default TabelDataPembeli;

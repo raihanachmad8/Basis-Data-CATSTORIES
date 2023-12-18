@@ -1,6 +1,5 @@
 import Datepicker from "tailwind-datepicker-react";
-import Select from "react-select";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import FormTambahDataPembeli from "../Pembeli/Form";
@@ -9,6 +8,7 @@ import SelectCat from "./SelectCat";
 import { ButtonNext } from "./components/SwiperNextButton";
 import { ButtonPrev } from "./components/SwiperPrevButton";
 import PropTypes from "prop-types";
+import { createTransaksi } from "../../../../../services/transaksi";
 
 const options = {
     title: "Kalender",
@@ -68,12 +68,32 @@ const options = {
     },
 };
 
-const FormTambahDataTransaksi = ({ dataKucing }) => {
+const FormTambahDataTransaksi = ({
+    dataKucing,
+    dataMetodePembayaran,
+    dataJenisPengiriman,
+}) => {
     const formRef = useRef(null);
     const [show, setShow] = useState(false);
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().split("T")[0]
     );
+    const [formKucing, setFormKucing] = useState([]);
+    const [total, setTotal] = useState(0);
+
+    useEffect(() => {
+        console.log(total);
+    }, [total]);
+
+    const optionMetodePembayaran = dataMetodePembayaran.map((item) => ({
+        value: item.ID_Metode_Pembayaran,
+        label: item.Metode_Pembayaran,
+    }));
+
+    const optionJenisPengiriman = dataJenisPengiriman.map((item) => ({
+        value: item.ID_Jenis_Pengiriman,
+        label: item.Jenis_Pengiriman,
+    }));
 
     const handleClose = (state) => {
         setShow(state);
@@ -87,9 +107,25 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
         setSelectedDate(formattedDate);
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const form = e.target;
+
+        const detailTransaksi = formKucing.map((item) => ({
+            ID_Kucing: item.ID_Kucing,
+        }));
+
+        const formData = new FormData(form);
+        formData.append("Detail_Transaksi", JSON.stringify(detailTransaksi));
+
+        createTransaksi(formData, (res) => {
+            console.log(res);
+        });
+    };
+
     return (
         <>
-            <form ref={formRef} id="form" action="">
+            <form ref={formRef} id="form" action="" onSubmit={handleSubmit}>
                 <Swiper
                     spaceBetween={50}
                     slidesPerView={1}
@@ -111,7 +147,12 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                     </SwiperSlide>
                     <SwiperSlide>
                         <div className="h-[36rem] w-full overflow-y-scroll">
-                            <SelectCat dataKucing={dataKucing} />
+                            <SelectCat
+                                dataKucing={dataKucing}
+                                setFormKucing={setFormKucing}
+                                formKucing={formKucing}
+                                setTotal={setTotal}
+                            />
                             <div className="fixed bg-gray-100 w-full bottom-0 p-5 flex justify-between z-50">
                                 <ButtonPrev
                                     className={
@@ -136,7 +177,16 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Metode Pembayaran
                                 </label>
-                                <Select name="metodePembayaran" required />
+                                <select name="ID_Metode_Pembayaran" id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    {optionMetodePembayaran.map((item) => (
+                                        <option
+                                            key={item.value}
+                                            value={item.value}
+                                        >
+                                            {item.label}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div>
                                 <label
@@ -150,7 +200,8 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                                     id="totalBiaya"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                     placeholder="Total Biaya"
-                                    name="totalBiaya"
+                                    name="Biaya"
+                                    value={total}
                                     required
                                     readOnly
                                 />
@@ -167,7 +218,7 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                                     id="nomorResi"
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                     placeholder="Nomor Resi"
-                                    name="nomorResi"
+                                    name="Nomor_Resi"
                                     required
                                 />
                             </div>
@@ -175,7 +226,24 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Jenis Pengiriman
                                 </label>
-                                <Select name="jenisPengiriman" required />
+                                <select name="ID_Jenis_Pengiriman" id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="">
+                                        Pilih Jenis Pengiriman
+                                    </option>
+                                    {optionJenisPengiriman.map((item) => (
+                                        <option
+                                            key={item.value}
+                                            value={item.value}
+                                        >
+                                            {item.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                {/* <Select
+                                    options={optionJenisPengiriman}
+                                    name="ID_Jenis_Pengiriman"
+                                    required
+                                /> */}
                             </div>
                             <div className="col-span-2">
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -194,7 +262,7 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                                         placeholder="Select Date"
                                         value={selectedDate}
                                         onFocus={() => setShow(true)}
-                                        name="Tanggal_Masuk"
+                                        name="Tanggal_Transaksi"
                                         required
                                         readOnly
                                     />
@@ -212,7 +280,7 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
                                     rows="4"
                                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
                                     placeholder="Pesan"
-                                    name="pesan"
+                                    name="Pesan"
                                     required
                                 ></textarea>
                             </div>
@@ -241,6 +309,8 @@ const FormTambahDataTransaksi = ({ dataKucing }) => {
 
 FormTambahDataTransaksi.propTypes = {
     dataKucing: PropTypes.array.isRequired,
+    dataJenisPengiriman: PropTypes.array.isRequired,
+    dataMetodePembayaran: PropTypes.array.isRequired,
 };
 
 export default FormTambahDataTransaksi;

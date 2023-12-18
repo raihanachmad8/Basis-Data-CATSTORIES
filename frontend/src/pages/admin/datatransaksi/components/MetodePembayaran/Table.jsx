@@ -74,6 +74,8 @@ const TabelMetodePembayaran = ({ data, setEditMenu, setDataEdit }) => {
 
 TabelMetodePembayaran.propTypes = {
     data: PropTypes.array.isRequired,
+    setEditMenu: PropTypes.func.isRequired,
+    setDataEdit: PropTypes.func.isRequired,
 };
 
 export default TabelMetodePembayaran;

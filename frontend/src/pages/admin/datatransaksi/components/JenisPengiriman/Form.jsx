@@ -8,9 +8,7 @@ const FormTambahDataJenisPengiriman = () => {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-
-        console.log(formData);
-
+        
         createJenisPengiriman(formData, (res) => {
             console.log(res);
         });

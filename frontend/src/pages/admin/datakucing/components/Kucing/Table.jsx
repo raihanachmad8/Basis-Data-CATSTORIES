@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import { deleteKucing } from "../../../../../services/kucing";
+import { useEffect, useState } from "react";
 
-const TableDataKucing = ({ dataSource, setData, setOpenDetail }) => {
+const TableDataKucing = ({ dataSource, setData, setOpenDetail, filter }) => {
+    const [filteredData, setFilteredData] = useState(dataSource);
     const handleDetail = (data) => {
         setData(data);
         setOpenDetail(true);
@@ -18,6 +20,15 @@ const TableDataKucing = ({ dataSource, setData, setOpenDetail }) => {
         });
     };
 
+    useEffect(() => {
+        let filtered = dataSource;
+        filter === "All"
+            ? setFilteredData(dataSource)
+            : (filtered = dataSource.filter((data) => data.Status === filter));
+
+        setFilteredData(filtered);
+    }, [dataSource, filter]);
+
     return (
         <>
             <table className="w-full text-center">
@@ -29,15 +40,6 @@ const TableDataKucing = ({ dataSource, setData, setOpenDetail }) => {
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase flex justify-center items-center">
                             <button className="relative flex justify-center items-center gap-x-2">
                                 Nama
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    id="Outline"
-                                    viewBox="0 0 24 24"
-                                    width="18"
-                                    height="18"
-                                >
-                                    <path d="M18.71,8.21a1,1,0,0,0-1.42,0l-4.58,4.58a1,1,0,0,1-1.42,0L6.71,8.21a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.41l4.59,4.59a3,3,0,0,0,4.24,0l4.59-4.59A1,1,0,0,0,18.71,8.21Z" />
-                                </svg>
                             </button>
                         </th>
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase">
@@ -47,30 +49,12 @@ const TableDataKucing = ({ dataSource, setData, setOpenDetail }) => {
                             <div className="flex justify-center">
                                 <button className="relative flex justify-center items-center gap-x-2">
                                     Jenis Kucing
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        id="Outline"
-                                        viewBox="0 0 24 24"
-                                        width="18"
-                                        height="18"
-                                    >
-                                        <path d="M18.71,8.21a1,1,0,0,0-1.42,0l-4.58,4.58a1,1,0,0,1-1.42,0L6.71,8.21a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.41l4.59,4.59a3,3,0,0,0,4.24,0l4.59-4.59A1,1,0,0,0,18.71,8.21Z" />
-                                    </svg>
                                 </button>
                             </div>
                         </th>
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase flex justify-center items-center">
                             <button className="relative flex justify-center items-center gap-x-2">
                                 Umur
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    id="Outline"
-                                    viewBox="0 0 24 24"
-                                    width="18"
-                                    height="18"
-                                >
-                                    <path d="M18.71,8.21a1,1,0,0,0-1.42,0l-4.58,4.58a1,1,0,0,1-1.42,0L6.71,8.21a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.41l4.59,4.59a3,3,0,0,0,4.24,0l4.59-4.59A1,1,0,0,0,18.71,8.21Z" />
-                                </svg>
                             </button>
                         </th>
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase">
@@ -82,8 +66,8 @@ const TableDataKucing = ({ dataSource, setData, setOpenDetail }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {dataSource && dataSource.length > 0 ? (
-                        dataSource.map((data, index) => (
+                    {filteredData && filteredData.length > 0 ? (
+                        filteredData.map((data, index) => (
                             <tr key={index}>
                                 <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
                                     {data.ID_Kucing}
@@ -95,11 +79,15 @@ const TableDataKucing = ({ dataSource, setData, setOpenDetail }) => {
                                     {data.Jenis_Kelamin}
                                 </td>
                                 <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
-                                    {data.Jenis_Kucing.Jenis_Kucing}
+                                    {data.Jenis_Kucing?.Jenis_Kucing}
                                 </td>
                                 <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
                                     {data.Umur >= 12
-                                        ? `${Math.round(data.Umur / 12)} Tahun`
+                                        ? data.Umur % 12 === 0
+                                            ? `${data.Umur / 12} Tahun`
+                                            : `${(data.Umur / 12).toFixed(
+                                                  1
+                                              )} Tahun`
                                         : `${data.Umur} Bulan`}
                                 </td>
                                 <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
@@ -143,6 +131,7 @@ TableDataKucing.propTypes = {
     dataSource: PropTypes.array.isRequired,
     setData: PropTypes.func.isRequired,
     setOpenDetail: PropTypes.func.isRequired,
+    filter: PropTypes.string.isRequired,
 };
 
 export default TableDataKucing;

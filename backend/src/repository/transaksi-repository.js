@@ -4,27 +4,8 @@ import { ResponseError } from "../errors/response-error.js"
 
 const getAll = async () => {
     try {
-        const result = await db('Transaksi as t')
-        .select(
-            't.ID_Transaksi',
-            'p.ID_Pembeli',
-            'p.Nama_Pembeli',
-            'p.Email',
-            'p.No_Telp',
-            'p.Alamat',
-            'jp.ID_Jenis_Pengiriman',
-            'jp.Jenis_Pengiriman',
-            'mp.ID_Metode_Pembayaran',
-            'mp.Metode_Pembayaran',
-            't.Total_Biaya',
-            't.Nomor_Resi',
-            't.Tanggal_Transaksi',
-            't.Pesan'
-        )
-        .leftJoin('pembeli as p', 't.ID_Pembeli', 'p.ID_Pembeli')
-        .leftJoin('jenis pengiriman as jp', 't.ID_Jenis_Pengiriman', 'jp.ID_Jenis_Pengiriman')
-        .leftJoin('metode pembayaran as mp', 't.ID_Metode_Pembayaran', 'mp.ID_Metode_Pembayaran')
-        return result.map((result) => formattedResult(result))
+        const result = await db.raw(`SELECT * FROM TampilTransaksi()`)
+        return result
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -33,8 +14,8 @@ const getAll = async () => {
 
 const search = async (params) => {
     try {
-        const result = await db.select().table('Transaksi').whereLike(params)
-        return result.map((result) => formattedResult(result))
+        const result = await db.raw(`SELECT * FROM CariTransaksi(:ID_Transaksi)`, { ID_Transaksi: params })
+        return result
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -43,28 +24,8 @@ const search = async (params) => {
 
 const findById = async (id) => {
     try {
-        const result = await db('Transaksi as t')
-        .select(
-            't.ID_Transaksi',
-            'p.ID_Pembeli',
-            'p.Nama_Pembeli',
-            'p.Email',
-            'p.No_Telp',
-            'p.Alamat',
-            'jp.ID_Jenis_Pengiriman',
-            'jp.Jenis_Pengiriman',
-            'mp.ID_Metode_Pembayaran',
-            'mp.Metode_Pembayaran',
-            't.Total_Biaya',
-            't.Nomor_Resi',
-            't.Tanggal_Transaksi',
-            't.Pesan'
-        )
-        .leftJoin('pembeli as p', 't.ID_Pembeli', 'p.ID_Pembeli')
-        .leftJoin('jenis pengiriman as jp', 't.ID_Jenis_Pengiriman', 'jp.ID_Jenis_Pengiriman')
-        .leftJoin('metode pembayaran as mp', 't.ID_Metode_Pembayaran', 'mp.ID_Metode_Pembayaran')
-        .where('ID_Transaksi', id)
-        return formattedResult(result[0])
+        const result = await db.raw(`SELECT * FROM TampilTransaksiByID(:ID_Transaksi)`, { ID_Transaksi: id })
+        return result[0]
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -85,7 +46,7 @@ const create = async (data) => {
             @Tanggal_Transaksi = :Tanggal_Transaksi,
             @Pesan = :Pesan;
         `, {
-            ID_Transaksi: data.ID_Transaksi,
+            ID_Transaksi: id,
             ID_Pembeli: data.ID_Pembeli,
             ID_Jenis_Pengiriman: data.ID_Jenis_Pengiriman,
             ID_Metode_Pembayaran: data.ID_Metode_Pembayaran,
@@ -94,7 +55,7 @@ const create = async (data) => {
             Tanggal_Transaksi: data.Tanggal_Transaksi,
             Pesan: data.Pesan
         })
-        return await db('Transaksi').select().where('ID_Transaksi', data.ID_Transaksi)
+        return await db('Transaksi').select().where('ID_Transaksi', id).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -124,7 +85,7 @@ const update = async (data) => {
             Pesan: data.Pesan
         })
 
-        return await db('Transaksi').select().where('ID_Transaksi', data.ID_Transaksi)
+        return await db('Transaksi').select().where('ID_Transaksi', data.ID_Transaksi).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -158,28 +119,13 @@ const incrementId = async (table, column, prefix = '') => {
     }
 }
 
-const formattedResult = (result) => {
-    return {
-        ID_Transaksi: result.ID_Transaksi,
-        Pembeli: {
-            ID_Pembeli: result.ID_Pembeli,
-            Nama_Pembeli: result.Nama_Pembeli,
-            Email: result.Email,
-            No_Telepon: result.No_Telepon,
-            Alamat_Pembeli: result.Alamat_Pembeli,
-        },
-        Jenis_Pengiriman: {
-            ID_Jenis_Pengiriman: result.ID_Jenis_Pengiriman,
-            Jenis_Pengiriman: result.Jenis_Pengiriman
-        },
-        Metode_Pembayaran: {
-            ID_Metode_Pembayaran: result.ID_Metode_Pembayaran,
-            Metode_Pembayaran: result.Metode_Pembayaran
-        },
-        Total_Biaya: result.Total_Biaya,
-        Nomor_Resi: result.Nomor_Resi,
-        Tanggal_Transaksi: result.Tanggal_Transaksi,
-        Pesan: result.Pesan
+const countTransaksi = async () => {
+    try {
+        const result = await db.raw(`SELECT * FROM JumlahTransaksiPivot()`)
+        return result
+    } catch (error) {
+        logger.error(error)
+        throw new ResponseError(500, "Internal Server Error")
     }
 }
 

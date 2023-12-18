@@ -3,7 +3,8 @@ import { pembeliService } from "../services/pembeli-service.js"
 
 const getAllPembeli = async (req, res, next) => {
     try {
-        const result = await pembeliService.getAll()
+        const { search, sort, orderBy, groupBy } = req.query
+        const result = await pembeliService.getAll(search, sort, orderBy, groupBy)
         logger.info("Get all pembeli success")
 
         res.status(200).json({

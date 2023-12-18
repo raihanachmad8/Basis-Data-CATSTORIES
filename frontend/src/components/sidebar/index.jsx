@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
     const path = window.location.pathname;
 
+    const handleLogout = () => {
+        sessionStorage.removeItem("token");
+        window.location.href = "/admin";
+    };
+
     return (
         <div
             className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800  md:!z-50 lg:!z-50 xl:!z-0 `}
@@ -18,43 +23,6 @@ const Sidebar = () => {
             {/* Nav item */}
 
             <ul className="mb-auto pt-1 flex flex-col px-5 gap-y-10">
-                <Link
-                    to={"/admin/dashboard"}
-                    className={`${
-                        path === "/admin/dashboard" ? "text-[#FAD16F]" : ""
-                    }`}
-                >
-                    <li className="my-[3px] mb-3 flex cursor-pointer items-center px-8 ">
-                        <span className="font-bold  w-[1.3rem] h-[1.3rem]">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                id="Layer_1"
-                                data-name="Layer 1"
-                                viewBox="0 0 24 24"
-                                width="25"
-                                height="25"
-                            >
-                                <path
-                                    fill={`${
-                                        path === "/admin/dashboard"
-                                            ? "#FAD16F"
-                                            : "gray"
-                                    }`}
-                                    d="M23.9,11.437A12,12,0,0,0,0,13a11.878,11.878,0,0,0,3.759,8.712A4.84,4.84,0,0,0,7.113,23H16.88a4.994,4.994,0,0,0,3.509-1.429A11.944,11.944,0,0,0,23.9,11.437Zm-4.909,8.7A3,3,0,0,1,16.88,21H7.113a2.862,2.862,0,0,1-1.981-.741A9.9,9.9,0,0,1,2,13,10.014,10.014,0,0,1,5.338,5.543,9.881,9.881,0,0,1,11.986,3a10.553,10.553,0,0,1,1.174.066,9.994,9.994,0,0,1,5.831,17.076ZM7.807,17.285a1,1,0,0,1-1.4,1.43A8,8,0,0,1,12,5a8.072,8.072,0,0,1,1.143.081,1,1,0,0,1,.847,1.133.989.989,0,0,1-1.133.848,6,6,0,0,0-5.05,10.223Zm12.112-5.428A8.072,8.072,0,0,1,20,13a7.931,7.931,0,0,1-2.408,5.716,1,1,0,0,1-1.4-1.432,5.98,5.98,0,0,0,1.744-5.141,1,1,0,0,1,1.981-.286Zm-5.993.631a2.033,2.033,0,1,1-1.414-1.414l3.781-3.781a1,1,0,1,1,1.414,1.414Z"
-                                />
-                            </svg>
-                        </span>
-                        <p
-                            className={`leading-1 ml-4 flex font-bold ${
-                                path === "/admin/dashboard"
-                                    ? "text-[#FAD16F] text-[18px]"
-                                    : "text-gray-500"
-                            }`}
-                        >
-                            Dashboard
-                        </p>
-                    </li>
-                </Link>
                 <Link
                     to={"/admin/data-kucing"}
                     className={`${
@@ -147,6 +115,34 @@ const Sidebar = () => {
                             }`}
                         >
                             Data Transaksi
+                        </p>
+                    </li>
+                </Link>
+                <Link onClick={handleLogout}>
+                    <li className="my-[3px] mb-3 flex cursor-pointer items-center px-8">
+                        <span className="font-bold text-[#FAD16F]  w-[1.3rem] h-[1.3rem]">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                id="Layer_1"
+                                data-name="Layer 1"
+                                viewBox="0 0 24 24"
+                                width="25"
+                                height="25"
+                            >
+                                <path
+                                    fill="gray"
+                                    d="M11.476,15a1,1,0,0,0-1,1v3a3,3,0,0,1-3,3H5a3,3,0,0,1-3-3V5A3,3,0,0,1,5,2H7.476a3,3,0,0,1,3,3V8a1,1,0,0,0,2,0V5a5.006,5.006,0,0,0-5-5H5A5.006,5.006,0,0,0,0,5V19a5.006,5.006,0,0,0,5,5H7.476a5.006,5.006,0,0,0,5-5V16A1,1,0,0,0,11.476,15Z"
+                                />
+                                <path
+                                    fill="gray"
+                                    d="M22.867,9.879,18.281,5.293a1,1,0,1,0-1.414,1.414l4.262,4.263L6,11a1,1,0,0,0,0,2H6l15.188-.031-4.323,4.324a1,1,0,1,0,1.414,1.414l4.586-4.586A3,3,0,0,0,22.867,9.879Z"
+                                />
+                            </svg>
+                        </span>
+                        <p
+                            className={`leading-1 ml-4 flex font-bold text-gray-500 `}
+                        >
+                            Logout
                         </p>
                     </li>
                 </Link>

@@ -1,6 +1,7 @@
 import axios from "axios";
-export const getAllKucing = async (ref, callback) => {
-  const URL = "http://localhost:3000/api/v1/cat-stories/kucing"
+import { useEffect } from "react";
+export const getAllKucing = async (ref, name, callback) => {
+  const URL = `http://localhost:3000/api/v1/cat-stories/kucing?search=${name}&sort=Jenis_Kucing,Umur&orderBy=desc`;
 
 
   await fetch(URL)
@@ -82,3 +83,15 @@ export const deleteKucing = ((id, callback) => {
     callback(false, err)
   })
 })
+
+
+export const getCountJenisKucing = async (callback) => {
+  const URL = "http://localhost:3000/api/v1/cat-stories/kucing/count";
+  await axios.get(URL)
+    .then((response) => {
+      callback(response.data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}

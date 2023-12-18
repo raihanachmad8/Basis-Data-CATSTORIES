@@ -20,6 +20,15 @@ const DataKucing = () => {
     const [detailKucing, setDetailKucing] = useState({});
     const [editMenu, setEditMenu] = useState(false);
     const ref = useRef(null);
+    const [filter, setFilter] = useState("All");
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "/admin/";
+        }
+    }, []);
 
     const handleChangeMenu = (menu) => {
         setMenu(menu);
@@ -44,10 +53,10 @@ const DataKucing = () => {
     }, []);
 
     useEffect(() => {
-        getAllKucing(ref, (data) => {
+        getAllKucing(ref, search, (data) => {
             setDataKucing(data);
         });
-    }, []);
+    },[search]);
 
     const updateDataKucing = () => {
         getAllKucing(ref, (data) => {
@@ -81,50 +90,64 @@ const DataKucing = () => {
                                     <div className="flex justify-center items-center gap-x-7">
                                         {(menu === "Tabel Data Kucing" ||
                                             menu === "Tabel Jenis Kucing") && (
-                                            <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
-                                                <button
-                                                    onClick={handleTambahData}
-                                                    className="text-base text-white"
-                                                >
-                                                    Tambah Data
-                                                </button>
-                                            </div>
+                                            <>
+                                                <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
+                                                    <button
+                                                        onClick={
+                                                            handleTambahData
+                                                        }
+                                                        className="text-base text-white"
+                                                    >
+                                                        Tambah Data
+                                                    </button>
+                                                </div>
+                                                <div className="relative mx-auto text-gray-600 w-[10rem]">
+                                                    <input
+                                                        className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
+                                                        type="search"
+                                                        name="search"
+                                                        placeholder="Search"
+                                                        onChange={(e) =>
+                                                            setSearch(e.target.value)
+                                                        }
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
+                                                    >
+                                                        <svg
+                                                            className="text-gray-600 h-4 w-4 fill-current"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                            version="1.1"
+                                                            id="Capa_1"
+                                                            x="0px"
+                                                            y="0px"
+                                                            viewBox="0 0 56.966 56.966"
+                                                            width="512px"
+                                                            height="512px"
+                                                        >
+                                                            <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </>
                                         )}
-                                        <div className="relative mx-auto text-gray-600 w-[10rem]">
-                                            <input
-                                                className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
-                                                type="search"
-                                                name="search"
-                                                placeholder="Search"
-                                            />
-                                            <button
-                                                type="submit"
-                                                className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
-                                            >
-                                                <svg
-                                                    className="text-gray-600 h-4 w-4 fill-current"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                    version="1.1"
-                                                    id="Capa_1"
-                                                    x="0px"
-                                                    y="0px"
-                                                    viewBox="0 0 56.966 56.966"
-                                                    width="512px"
-                                                    height="512px"
-                                                >
-                                                    <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                                                </svg>
-                                            </button>
-                                        </div>
                                         {menu === "Tabel Data Kucing" && (
                                             <div className="inline-block relative w-[7rem]">
                                                 <select
                                                     id="filterBy"
                                                     name="filterBy"
+                                                    onChange={(e) =>
+                                                        setFilter(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                     className="block appearance-none w-full bg-gray-50 border border-gray-300 hover:border-gray-500 p-2.5 pr-8 rounded-lg text-sm leading-tight focus:ring-blue-500 focus:border-blue-500"
                                                 >
-                                                    <option>Filter By</option>
+                                                    <option value="All">
+                                                        Filter By
+                                                    </option>
                                                     <option value="Tersedia">
                                                         Tersedia
                                                     </option>
@@ -197,6 +220,7 @@ const DataKucing = () => {
                                     dataSource={dataKucing}
                                     setOpenDetail={setOpenDetail}
                                     setData={setDetailKucing}
+                                    filter={filter}
                                 />
                             )}
                             {menu === "Tabel Jenis Kucing" && (
@@ -206,7 +230,9 @@ const DataKucing = () => {
                                     setDataEditJenisKucing={
                                         setDataEditJenisKucing
                                     }
-                                    updateDataJenisKucing={updateDataJenisKucing}
+                                    updateDataJenisKucing={
+                                        updateDataJenisKucing
+                                    }
                                 />
                             )}
                             {menu === "Tabel Jumlah Kucing" && (

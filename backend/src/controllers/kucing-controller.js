@@ -4,7 +4,9 @@ import { kucingService } from "../services/kucing-service.js"
 
 const getAllKucing = async (req, res, next) => {
     try {
-        const result = await kucingService.getAll()
+        const { search, sort, orderBy, groupBy } = req.query
+        console.log(req.query)
+        const result = await kucingService.getAll(search, sort, orderBy, groupBy)
         logger.info("Get all kucing success")
 
         res.status(200).json({
@@ -47,8 +49,6 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
-        console.log(req.file)
-        console.log(req.body)
         const result = await kucingService.update(req.body, req.file)
         logger.info('Update kucing success')
         res.status(201).json({
@@ -63,7 +63,6 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
-        console.log(req.body)
         const result = await kucingService.remove(req.params.id)
         logger.info('Delete kucing success')
         res.status(201).json({
@@ -76,10 +75,25 @@ const remove = async (req, res, next) => {
     }
 }
 
+const count = async (req, res, next) => {
+    try {
+        const result = await kucingService.count()
+        logger.info('Count kucing success')
+        res.status(200).json({
+            status: 200,
+            message: "Count kucing success",
+            data: result
+        })
+    } catch (e) {
+        next(e)
+    }
+}
+
 export const kucingController = {
     getAllKucing,
     get,
     create,
     update,
-    remove
+    remove,
+    count
 }

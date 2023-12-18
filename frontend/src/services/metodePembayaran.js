@@ -41,3 +41,18 @@ export const deleteMetodePembayaran = async (id, callback) => {
     })
 }
 
+export const createMetodePembayaran = async (data, callback) => {
+  const URL = "http://localhost:3000/api/v1/cat-stories/pembayaran/create"
+
+  await axios
+    .post(URL, {
+      Metode_Pembayaran: data.get("Metode_Pembayaran"),
+    })
+    .then((response) => {
+      callback(response)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+

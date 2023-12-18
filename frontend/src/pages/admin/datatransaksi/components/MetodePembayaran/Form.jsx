@@ -1,11 +1,26 @@
 import { useRef } from "react";
+import { createMetodePembayaran } from "../../../../../services/metodePembayaran";
 
 const FormTambahDataMetodePembayaran = () => {
     const formRef = useRef(null);
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        console.log(formData);
+
+        createMetodePembayaran(formData, (res) => {
+            console.log(res);
+        });
+
+        form.reset();
+    };
+
     return (
         <>
-            <form ref={formRef} id="form" action="">
+            <form ref={formRef} id="form" action="" onSubmit={handleSubmit}>
                 <div className="w-full grid grid-cols-2 gap-5">
                     <div className="col-span-2">
                         <label
@@ -19,7 +34,7 @@ const FormTambahDataMetodePembayaran = () => {
                             id="metodePembayaran"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="Metode Pembayaran"
-                            name="metodePembayaran"
+                            name="Metode_Pembayaran"
                             required
                         />
                     </div>

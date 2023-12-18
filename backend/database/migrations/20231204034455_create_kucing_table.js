@@ -65,6 +65,48 @@ export function up(knex) {
         DELETE FROM Kucing WHERE ID_Kucing = @ID_Kucing;
     END;
     `)
+    .raw(`
+    CREATE FUNCTION TampilKucing ()
+    RETURNS TABLE
+    AS 
+    RETURN
+    (
+        SELECT
+            *
+        FROM Kucing
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION TampilKucingById (@ID_Kucing VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN
+    (
+        SELECT
+            *
+        FROM Kucing
+        WHERE ID_Kucing = @ID_Kucing
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION CariKucing(@key VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN(
+        SELECT 
+            K.ID_Kucing, K.Nama_Kucing, K.Jenis_Kelamin, J.Jenis_Kucing, K.Umur, K.Status, K.Tanggal_Masuk
+        FROM Kucing K
+        JOIN Jenis J ON J.ID_Jenis = K.ID_Jenis
+        WHERE K.Nama_Kucing LIKE '%' + @key + '%'
+        OR K.ID_Kucing LIKE '%' + @key + '%'
+        OR K.Umur LIKE '%' + @key + '%'
+        OR J.Jenis_Kucing LIKE '%' + @key + '%'
+        OR K.Jenis_Kelamin LIKE '%' + @key + '%'
+        OR K.Biaya LIKE '%' + @key + '%'
+        OR CAST(K.Tanggal_Masuk AS VARCHAR(50)) LIKE '%' + @key + '%'
+    );
+    `)
+
 }
 
 export function down(knex) {
@@ -73,4 +115,7 @@ export function down(knex) {
     .raw('DROP PROCEDURE IF EXISTS TambahKucing')
     .raw('DROP PROCEDURE IF EXISTS UpdateKucing')
     .raw('DROP PROCEDURE IF EXISTS HapusKucing')
+    .raw('DROP FUNCTION IF EXISTS TampilKucing')
+    .raw('DROP FUNCTION IF EXISTS TampilKucingById')
+    .raw('DROP FUNCTION IF EXISTS CariKucing')
 }

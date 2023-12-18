@@ -1,88 +1,110 @@
 import { useRef } from "react";
+import PropTypes from "prop-types";
+import { updatePembeli } from "../../../../../services/pembeli";
 
-const FormEditDataPembeli = () => {
+const FormEditDataPembeli = ({ setEditMenu, dataEdit }) => {
     const formRef = useRef(null);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        formData.append("ID_Pembeli", dataEdit && dataEdit.ID_Pembeli);
+
+        console.log("FORM DATA", formData);
+
+        updatePembeli(formData, (res) => {
+            console.log(res);
+        });
+
+        setEditMenu(false);
+    };
 
     return (
         <>
-            <form ref={formRef} id="form" action="">
-                <div className="w-full grid grid-cols-2 gap-5">
-                    <div>
-                        <label
-                            htmlFor="namaPembeli"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Nama
-                        </label>
-                        <input
-                            type="text"
-                            id="namaPembeli"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Nama"
-                            name="namaPembeli"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="nomorTeleponPembeli"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Nomor Telepon
-                        </label>
-                        <input
-                            type="text"
-                            id="nomorTeleponPembeli"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Nomor Telepon"
-                            name="nomorTeleponPembeli"
-                            required
-                        />
-                    </div>
-                    <div className="col-span-2">
-                        <label
-                            htmlFor="emailPembeli"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="emailPembeli"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Email"
-                            name="emailPembeli"
-                            required
-                        />
-                    </div>
-                    <div className="col-span-2">
-                        <label
-                            htmlFor="alamat"
-                            className="block mb-2 text-sm font-medium text-gray-900"
-                        >
-                            Alamat
-                        </label>
-                        <textarea
-                            id="alamat"
-                            rows="4"
-                            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                            placeholder="Alamat"
-                            name="alamat"
-                            required
-                        ></textarea>
-                    </div>
-                </div>
-                <div className="flex justify-end mt-5">
-                    <button
-                        type="submit"
-                        className="text-white bg-green-500 px-3 py-2 rounded-md"
-                    >
+            <form ref={formRef} id="form" action="" onSubmit={handleSubmit}>
+                <table className="w-3/6">
+                    <tr>
+                        <td>
+                            <label htmlFor="Nama_Pembeli">Nama</label>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <input
+                                type="text"
+                                id="Nama_Pembeli"
+                                name="Nama_Pembeli"
+                                defaultValue={dataEdit && dataEdit.Nama_Pembeli}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label htmlFor="Email">Email</label>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <input
+                                type="text"
+                                id="Email"
+                                name="Email"
+                                defaultValue={dataEdit && dataEdit.Email}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label htmlFor="No_Telp">Nomor Telepon</label>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <input
+                                type="text"
+                                id="No_Telp"
+                                name="No_Telp"
+                                defaultValue={dataEdit && dataEdit.No_Telp}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label htmlFor="Alamat">Alamat</label>
+                        </td>
+                        <td>:</td>
+                        <td>
+                            <input
+                                type="text"
+                                id="Alamat"
+                                name="Alamat"
+                                defaultValue={dataEdit && dataEdit.Alamat}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                            />
+                        </td>
+                    </tr>
+                </table>
+                <div className="absolute top-0 right-0 flex flex-col gap-y-5">
+                    <button className="bg-green-500 px-3 py-1 rounded-md text-white">
                         Submit
+                    </button>
+                    <button
+                        onClick={() => setEditMenu(false)}
+                        className="bg-red-500 px-3 py-1 rounded-md text-white"
+                    >
+                        Cancel
                     </button>
                 </div>
             </form>
         </>
     );
+};
+
+FormEditDataPembeli.propTypes = {
+    dataEdit: PropTypes.object.isRequired,
+    setEditMenu: PropTypes.func.isRequired,
 };
 
 export default FormEditDataPembeli;

@@ -59,7 +59,93 @@ export function up(knex) {
         DELETE FROM Detail_Transaksi WHERE ID_Transaksi = @ID_Transaksi;
     END;
     `)
-
+    .raw(`
+    CREATE FUNCTION CariTransaksi(@key VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN (
+        SELECT 
+        T.ID_Transaksi,
+        T.Tanggal_Transaksi,
+        T.Total_Biaya,
+        T.Nomor_Resi,
+        P.Nama_Pembeli AS Nama_Pembeli_Transaksi,
+        JP.Jenis_Pengiriman,
+        MP.Metode_Pembayaran
+    FROM Transaksi T
+    JOIN Pembeli P ON P.ID_Pembeli = T.ID_Pembeli
+    JOIN Jenis_Pengiriman JP ON JP.ID_Jenis_Pengiriman = T.ID_Jenis_Pengiriman
+    JOIN Metode_Pembayaran MP ON MP.ID_Metode_Pembayaran = T.ID_Metode_Pembayaran
+    WHERE P.Nama_Pembeli LIKE '%' + @key + '%'
+        OR JP.Jenis_Pengiriman LIKE '%' + @key + '%'
+        OR MP.Metode_Pembayaran LIKE '%' + @key + '%'
+        OR CAST(T.Total_Biaya AS VARCHAR(50)) LIKE '%' + @key + '%'
+        OR T.ID_Transaksi LIKE '%' + @key + '%'
+        OR T.Nomor_Resi LIKE '%' + @key + '%'
+        OR CAST(T.Tanggal_Transaksi AS VARCHAR(50)) LIKE '%' + @key + '%'
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION TampilTransaksi()
+    RETURNS TABLE
+    AS
+    RETURN (
+        SELECT
+            *
+        FROM
+            Transaksi
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION TampilTransaksiById(@ID_Transaksi VARCHAR(50))
+    RETURNS TABLE
+    AS
+    RETURN (
+        SELECT
+            *
+        FROM
+            Transaksi
+        WHERE
+            ID_Transaksi = @ID_Transaksi
+    );
+    `)
+    .raw(`
+    CREATE FUNCTION JumlahTransaksiPivot()
+    RETURNS TABLE
+    AS
+    RETURN (
+        SELECT TOP 10
+            Tahun,
+            COALESCE([1], 0) as Januari, 
+            COALESCE([2], 0) as Februari, 
+            COALESCE([3], 0) as Maret, 
+            COALESCE([4], 0) as April, 
+            COALESCE([5], 0) as Mei, 
+            COALESCE([6], 0) as Juni, 
+            COALESCE([7], 0) as Juli, 
+            COALESCE([8], 0) as Agustus, 
+            COALESCE([9], 0) as September, 
+            COALESCE([10], 0) as Oktober, 
+            COALESCE([11], 0) as November, 
+            COALESCE([12], 0) as Desember
+        FROM (
+            SELECT
+                YEAR(Tanggal_Transaksi) AS Tahun,
+                MONTH(Tanggal_Transaksi) AS Bulan,
+                COUNT(ID_Transaksi) AS Jumlah_Transaksi
+            FROM
+                Transaksi
+            GROUP BY
+                YEAR(Tanggal_Transaksi),
+                MONTH(Tanggal_Transaksi)
+        ) AS PivotTransaksi
+        PIVOT (
+            SUM(Jumlah_Transaksi)
+            FOR Bulan IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+        ) AS PivotBulan
+        ORDER BY Tahun
+    );
+    `)
 }
 
 export function down(knex) {
@@ -68,4 +154,8 @@ export function down(knex) {
     .raw('DROP PROCEDURE IF EXISTS tambahTransaksi')
     .raw('DROP PROCEDURE IF EXISTS updateTransaksi')
     .raw('DROP PROCEDURE IF EXISTS HapusTransaksi')
+    .raw('DROP FUNCTION IF EXISTS CariTransaksi')
+    .raw('DROP FUNCTION IF EXISTS TampilTransaksi')
+    .raw('DROP FUNCTION IF EXISTS TampilTransaksiById')
+    .raw('DROP FUNCTION IF EXISTS JumlahTransaksiPivot')
 }

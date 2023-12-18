@@ -20,7 +20,7 @@
     "jest": {
         "transform": {
             "^.+\\.[t|j]sx?$": "babel-jest"
-        }
+        }   
     },
     "dependencies": {
         "@types/jsonwebtoken": "^9.0.5",

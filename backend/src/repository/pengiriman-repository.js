@@ -4,7 +4,7 @@ import { ResponseError } from "../errors/response-error.js"
 
 const getAll = async () => {
     try {
-        const result = await db.select().table('Jenis Pengiriman')
+        const result = await db.raw(`SELECT * FROM TampilJenisPengiriman()`)
         return result
     } catch (error) {
         logger.error(error)
@@ -14,7 +14,7 @@ const getAll = async () => {
 
 const search = async (params) => {
     try {
-        const result = await db.select().table('Jenis Pengiriman').whereLike(params)
+        const result = await db.raw(`SELECT * FROM CariJenisPengiriman(:Jenis_Pengiriman)`, { Jenis_Pengiriman: params })
         return result
     } catch (error) {
         logger.error(error)
@@ -24,7 +24,7 @@ const search = async (params) => {
 
 const findById = async (id) => {
     try {
-        const result = await db.select().table('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id)
+        const result = await db.raw(`SELECT * FROM TampilJenisPengirimanByID(:ID_Jenis_Pengiriman)`, { ID_Jenis_Pengiriman: id })
         return result
     } catch (error) {
         logger.error(error)
@@ -34,7 +34,7 @@ const findById = async (id) => {
 
 const findByName = async (name) => {
     try {
-        const result = await db.select().table('Jenis Pengiriman').where('Jenis_Pengiriman', name)
+        const result = await db.raw(`SELECT * FROM TampilJenisPengirimanByName(:Jenis_Pengiriman)`, { Jenis_Pengiriman: name })
         return result
     } catch (error) {
         logger.error(error)
@@ -44,10 +44,10 @@ const findByName = async (name) => {
 
 const create = async (data) => {
     try {
-        const id = await incrementId('Jenis Pengiriman', 'ID_Jenis_Pengiriman', 'JP')
+        const id = await incrementId('Jenis_Pengiriman', 'ID_Jenis_Pengiriman', 'JP')
         await db.raw(`
-        EXEC TambahJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman, @Jenis_Pengiriman = :Jenis_Pengiriman;`, { ID_Jenis_Pengiriman: id, Jenis_Pengiriman: data.Jenis_Pengiriman })
-        return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id)
+        EXEC TambahJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman, @Jenis_Pengiriman = :Jenis_Pengiriman;`,{ID_Jenis_Pengiriman: id, Jenis_Pengiriman: data.Jenis_Pengiriman})
+        return await db('Jenis_Pengiriman').where('ID_Jenis_Pengiriman', id).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -57,8 +57,8 @@ const create = async (data) => {
 const update = async (data) => {
     try {
         await db.raw(`
-        EXEC UpdateJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman, @Jenis_Pengiriman = :Jenis_Pengiriman;`, { ID_Jenis_Pengiriman: data.ID_Jenis_Pengiriman, Jenis_Pengiriman: data.Jenis_Pengiriman })
-        return await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', data.ID_Jenis_Pengiriman)
+        EXEC UpdateJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman, @Jenis_Pengiriman = :Jenis_Pengiriman;`,{ID_Jenis_Pengiriman: data.ID_Jenis_Pengiriman, Jenis_Pengiriman: data.Jenis_Pengiriman})
+        return await db('Jenis_Pengiriman').where('ID_Jenis_Pengiriman', data.ID_Jenis_Pengiriman).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -69,8 +69,8 @@ const remove = async (id) => {
     try {
         const result = await db.raw(`
         EXEC HapusJenisPengiriman @ID_Jenis_Pengiriman = :ID_Jenis_Pengiriman;`,
-            { ID_Jenis_Pengiriman: id })
-        return (await db('Jenis Pengiriman').where('ID_Jenis_Pengiriman', id) == false)
+        {ID_Jenis_Pengiriman: id})
+        return (await db('Jenis_Pengiriman').where('ID_Jenis_Pengiriman', id) == false )
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error", error?.message)

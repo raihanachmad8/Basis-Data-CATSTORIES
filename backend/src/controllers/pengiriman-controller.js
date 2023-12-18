@@ -3,7 +3,8 @@ import { pengirimanService } from "../services/pengiriman-service.js"
 
 const getAllPengiriman = async (req, res) => {
     try {
-        const result = await pengirimanService.getAll()
+        const { search, sort, orderBy, groupBy } = req.query
+        const result = await pengirimanService.getAll(search, sort, orderBy, groupBy)
         logger.info("Get all pengiriman success")
 
         res.status(200).json({
@@ -33,7 +34,6 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
     try {
-        console.log(req.body)
         const result = await pengirimanService.create(req.body)
         logger.info("Create pengiriman success")
         res.status(201).json({

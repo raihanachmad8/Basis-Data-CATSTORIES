@@ -65,6 +65,8 @@ const TabelJenisPengiriman = ({ data, setEditMenu, setDataEdit }) => {
 
 TabelJenisPengiriman.propTypes = {
     data: PropTypes.array.isRequired,
+    setEditMenu: PropTypes.func.isRequired,
+    setDataEdit: PropTypes.func.isRequired,
 };
 
 export default TabelJenisPengiriman;
