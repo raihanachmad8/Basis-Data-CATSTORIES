@@ -5,11 +5,8 @@ import { ResponseError } from "../errors/response-error.js"
 const getAll = async () => {
     try {
         const result = await db('Detail_Transaksi').select()
-        .join('Kucing', 'Detail_Transaksi.ID_Kucing', 'Kucing.ID_Kucing')
-        .join('Jenis', 'Kucing.ID_Jenis', 'Jenis.ID_Jenis')
-        .groupBy('Detail_Transaksi.ID_Transaksi')
         
-        return result.map((result) => formattedResult(result))
+        return result
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -18,13 +15,8 @@ const getAll = async () => {
 
 const findById = async (id) => {
     try {
-        const result = await db('Kucing as k')
-        .select('j.ID_Jenis', 'j.Jenis_Kucing', 'k.ID_Kucing', 'k.Nama_Kucing', 'k.Foto', 'k.Umur', 'k.Jenis_Kelamin', 'k.Tanggal_Masuk', 'k.Biaya', 'k.Status', 'k.Keterangan')
-        .leftJoin('detail_transaksi as d', 'k.ID_Kucing', 'd.ID_Kucing')
-        .leftJoin('jenis as j', 'j.ID_Jenis', 'k.ID_Jenis')
-        .where('d.ID_Transaksi', 'T1');
-        
-        return result.map((result) => formattedResult(result))
+        const result = await db('Detail_Transaksi').select().where('ID_Transaksi', id)
+        return result
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -89,28 +81,7 @@ const incrementId = async (table, column, prefix = '') => {
     }
 }
 
-const formattedResult =  (result) => {
-    return {
-        ID_Detail_Transaksi: result.ID_Detail_Transaksi,
-        Kucing: {
-            ID_Kucing: result.ID_Kucing,
-            Jenis_Kucing: {
-                ID_Jenis: result.ID_Jenis,
-                Jenis_Kucing: result.Jenis_Kucing,
-            },
-            Nama_Kucing: result.Nama_Kucing,
-            Foto: result.Foto,
-            Umur: result.Umur,
-            Jenis_Kelamin: result.Jenis_Kelamin,
-            Tanggal_Masuk: result.Tanggal_Masuk,
-            Biaya: result.Biaya,
-            Status: result.Status,
-            Keterangan: result.Keterangan,
-        },
 
-    }
-
-}
 
 export const detailTransaksiRepository = {
     getAll,

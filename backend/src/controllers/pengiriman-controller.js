@@ -48,6 +48,7 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
+        console.log(req.body)
         const result = await pengirimanService.update(req.body)
         logger.info('Update pengiriman success')
         res.status(201).json({

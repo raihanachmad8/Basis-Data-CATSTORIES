@@ -6,7 +6,7 @@ import { jenisValidation } from "../validations/jenis-validation.js"
 import { validate } from "../validations/validate.js"
 
 const getAllJenis = async (search, sort, orderBy, groupBy) => {
-    const result = (search) ? await jenisRepository.search(search) : await jenisRepository.getAll()
+    const result = (search) ? await jenisRepository.search(search) : await jenisRepository.getAllJenis()
 
     // Sort
     if (sort) {
@@ -74,6 +74,7 @@ const create = async (jenis) => {
         logger.error("Failed to create jenis");
         throw new ResponseError(404, "Failed to create jenis");
     }
+    console.log('result: ' , result)
     return result;
 }
 
@@ -109,7 +110,7 @@ const remove = async (id) => {
 }
 
 
-export const jenisServce =  {
+export const jenisService =  {
     getAllJenis,
     get,
     create,

@@ -3,7 +3,7 @@ export function up(knex) {
         table.string("ID_Jenis_Pengiriman", 50).primary();
         table.string("Jenis_Pengiriman", 20);
     })
-    .raw(`
+        .raw(`
     CREATE PROCEDURE TambahJenisPengiriman
         @ID_Jenis_Pengiriman VARCHAR(50),
         @Jenis_Pengiriman VARCHAR(20)
@@ -13,7 +13,7 @@ export function up(knex) {
         VALUES (@ID_Jenis_Pengiriman, @Jenis_Pengiriman);
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE PROCEDURE UpdateJenisPengiriman
         @ID_Jenis_Pengiriman VARCHAR(50),
         @Jenis_Pengiriman VARCHAR(20)
@@ -25,7 +25,7 @@ export function up(knex) {
         WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman;
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE PROCEDURE HapusJenisPengiriman
         @ID_Jenis_Pengiriman VARCHAR(50)
     AS
@@ -34,7 +34,7 @@ export function up(knex) {
         WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman;
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION CariJenisPengiriman(@key VARCHAR(50))
     RETURNS TABLE
     AS
@@ -46,7 +46,7 @@ export function up(knex) {
         OR Jenis_Pengiriman LIKE '%' + @key + '%'
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilJenisPengiriman()
     RETURNS TABLE
     AS
@@ -56,7 +56,7 @@ export function up(knex) {
         FROM Jenis_Pengiriman
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilJenisPengirimanByID(@ID_Jenis_Pengiriman VARCHAR(50))
     RETURNS TABLE
     AS
@@ -67,7 +67,7 @@ export function up(knex) {
         WHERE ID_Jenis_Pengiriman = @ID_Jenis_Pengiriman
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilJenisPengirimanByName(@Jenis_Pengiriman VARCHAR(20))
     RETURNS TABLE
     AS
@@ -83,12 +83,12 @@ export function up(knex) {
 
 export function down(knex) {
     return knex.schema
-    .dropTable("Jenis_Pengiriman")
-    .raw('DROP PROCEDURE IF EXISTS TambahJenisPengiriman')
-    .raw('DROP PROCEDURE IF EXISTS UpdateJenisPengiriman')
-    .raw('DROP PROCEDURE IF EXISTS HapusJenisPengiriman')
-    .raw('DROP FUNCTION IF EXISTS CariJenisPengiriman')
-    .raw('DROP FUNCTION IF EXISTS TampilJenisPengiriman')
-    .raw('DROP FUNCTION IF EXISTS TampilJenisPengirimanByID')
-    .raw('DROP FUNCTION IF EXISTS TampilJenisPengirimanByName')
+        .dropTable("Jenis_Pengiriman")
+        .raw('DROP PROCEDURE IF EXISTS TambahJenisPengiriman')
+        .raw('DROP PROCEDURE IF EXISTS UpdateJenisPengiriman')
+        .raw('DROP PROCEDURE IF EXISTS HapusJenisPengiriman')
+        .raw('DROP FUNCTION IF EXISTS CariJenisPengiriman')
+        .raw('DROP FUNCTION IF EXISTS TampilJenisPengiriman')
+        .raw('DROP FUNCTION IF EXISTS TampilJenisPengirimanByID')
+        .raw('DROP FUNCTION IF EXISTS TampilJenisPengirimanByName')
 }

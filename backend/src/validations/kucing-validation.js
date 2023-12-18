@@ -4,14 +4,14 @@ const jenis = ["Jantan", "Betina"];
 const status = ["Tersedia", "Tidak Tersedia"];
 const getKucingValidation = Joi.string().required();
 
-const validateImageFile =  Joi.object({
-        mimetype: Joi.string()
-            .valid("image/jpeg", "image/png", "image/jpg")
-            .required(),
-        size: Joi.number().max(5 * 1024 * 1024).required(),
-    }).required()
+const validateImageFile = Joi.object({
+    mimetype: Joi.string()
+        .valid("image/jpeg", "image/png", "image/jpg")
+        .required(),
+    size: Joi.number().max(5 * 1024 * 1024).required(),
+}).required()
 
-    
+
 
 const createKucingValdation = Joi.object({
     ID_Jenis: Joi.string().required(),

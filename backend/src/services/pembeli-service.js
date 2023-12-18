@@ -94,6 +94,7 @@ const create = async (pembeli) => {
 }
 
 const update = async (pembeli) => {
+    console.log(pembeli)
     logger.info('Create Pembeli:', pembeli)
     const validatePembeli = validate(
         pembeliValidation.updatePembeliSchema,
@@ -107,8 +108,7 @@ const update = async (pembeli) => {
             );
         throw new ResponseError(400, "Validation error: ",validatePembeli.error?.message );
     }
-
-    const result = await pembeliRepository.update(pembeli.ID_Pembeli, pembeli)
+    const result = await pembeliRepository.update(pembeli)
     if (!result || result.length === 0) {
         logger.error("Failed to update pembeli");
         throw new ResponseError(404, "Failed to update pembeli");

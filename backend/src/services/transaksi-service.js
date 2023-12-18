@@ -12,12 +12,15 @@ import { pengirimanService } from "./pengiriman-service.js"
 const getAll = async (search, sort, orderBy, groupBy) => {
     try {
         const result = (search) ? await transaksiRepository.search(search) : await transaksiRepository.getAll()
+
         const resultWithDetails = await Promise.all(result.map(async (item) => {
             item.Pembeli = await pembeliService.get(item.ID_Pembeli);
-            item.Jenis_Pengiriman = await pengirimanService.get(item.ID_Jenis_Pengiriman);
-            item.Metode_Pembayaran = await pembayaranService.get(item.ID_Metode_Pembayaran);
+            item.Jenis_Pengiriman = (item.Jenis_Pengiriman !== undefined) ? await pengirimanService.get(item.ID_Jenis_Pengiriman) : null
+            item.Metode_Pembayaran = (item.Metode_Pembayaran !== undefined) ? await pembayaranService.get(item.ID_Metode_Pembayaran) : null
+            item.Detail_Transaksi = await detailTransaksiService.get(item.ID_Transaksi);
             return formattedResult(item);
         }));
+        console.log(resultWithDetails);
         return resultWithDetails
     } catch (error) {
         logger.error(error)
@@ -34,11 +37,10 @@ const get = async (id) => {
         }
 
         let result = await transaksiRepository.findById(id)
-        result.Pembeli = (await pembeliService.get(result.ID_Pembeli))[0];
-        result.Jenis_Pengiriman = (await pengirimanService.get(result.ID_Jenis_Pengiriman))[0];
-        result.Metode_Pembayaran = (await pembayaranService.get(result.ID_Metode_Pembayaran))[0];
+        result.Pembeli = (await pembeliService.get(result.ID_Pembeli));
+        result.Jenis_Pengiriman = (result.Jenis_Pengiriman) ? (await pengirimanService.get(result.ID_Jenis_Pengiriman)) :  null;
+        result.Metode_Pembayaran = (result.Metode_Pembayaran) ? (await pembayaranService.get(result.ID_Metode_Pembayaran)) : null;
         result.Detail_Transaksi = await detailTransaksiService.get(result.ID_Transaksi);
-        console.log(result);
         result = formattedResult(result);
 
         if (!result || result.length === 0) {
@@ -53,7 +55,7 @@ const get = async (id) => {
     }
 }
 
-            
+
 
 const create = async (data) => {
     try {

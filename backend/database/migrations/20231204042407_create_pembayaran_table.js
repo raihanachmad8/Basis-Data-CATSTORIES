@@ -3,7 +3,7 @@ export function up(knex) {
         table.string("ID_Metode_Pembayaran", 50).primary();
         table.string("Metode_Pembayaran", 20).notNullable()
     })
-    .raw(`
+        .raw(`
     CREATE PROCEDURE TambahMetodePembayaran
         @ID_Metode_Pembayaran VARCHAR(50),
         @Metode_Pembayaran VARCHAR(20)
@@ -13,7 +13,7 @@ export function up(knex) {
         VALUES (@ID_Metode_Pembayaran, @Metode_Pembayaran);
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE PROCEDURE UpdateMetodePembayaran
         @ID_Metode_Pembayaran VARCHAR(50),
         @Metode_Pembayaran VARCHAR(20)
@@ -25,7 +25,7 @@ export function up(knex) {
         WHERE ID_Metode_Pembayaran = @ID_Metode_Pembayaran;
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE PROCEDURE HapusMetodePembayaran
         @ID_Metode_Pembayaran VARCHAR(50)
     AS
@@ -34,7 +34,7 @@ export function up(knex) {
         WHERE ID_Metode_Pembayaran = @ID_Metode_Pembayaran;
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION CariMetodePembayaran(@key VARCHAR(50))
     RETURNS TABLE
     AS
@@ -46,7 +46,7 @@ export function up(knex) {
         OR Metode_Pembayaran LIKE '%' + @key + '%'
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilMetodePembayaran()
     RETURNS TABLE
     AS
@@ -56,7 +56,7 @@ export function up(knex) {
         FROM Metode_Pembayaran
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilMetodePembayaranByID(@ID_Metode_Pembayaran VARCHAR(50))
     RETURNS TABLE
     AS
@@ -67,7 +67,7 @@ export function up(knex) {
         WHERE ID_Metode_Pembayaran = @ID_Metode_Pembayaran
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilMetodePembayaranByName(@Metode_Pembayaran VARCHAR(20))
     RETURNS TABLE
     AS
@@ -84,12 +84,12 @@ export function up(knex) {
 
 export function down(knex) {
     return knex.schema
-    .dropTable("Metode_Pembayaran")
-    .raw('DROP PROCEDURE IF EXISTS TambahMetodePembayaran')
-    .raw('DROP PROCEDURE IF EXISTS UpdateMetodePembayaran')
-    .raw('DROP PROCEDURE IF EXISTS HapusMetodePembayaran')
-    .raw('DROP FUNCTION IF EXISTS CariMetodePembayaran')
-    .raw('DROP FUNCTION IF EXISTS TampilMetodePembayaran')
-    .raw('DROP FUNCTION IF EXISTS TampilMetodePembayaranByID')
-    .raw('DROP FUNCTION IF EXISTS TampilMetodePembayaranByName')
+        .dropTable("Metode_Pembayaran")
+        .raw('DROP PROCEDURE IF EXISTS TambahMetodePembayaran')
+        .raw('DROP PROCEDURE IF EXISTS UpdateMetodePembayaran')
+        .raw('DROP PROCEDURE IF EXISTS HapusMetodePembayaran')
+        .raw('DROP FUNCTION IF EXISTS CariMetodePembayaran')
+        .raw('DROP FUNCTION IF EXISTS TampilMetodePembayaran')
+        .raw('DROP FUNCTION IF EXISTS TampilMetodePembayaranByID')
+        .raw('DROP FUNCTION IF EXISTS TampilMetodePembayaranByName')
 }

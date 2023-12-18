@@ -80,10 +80,10 @@ const remove = async (id) => {
 const incrementId = async (table, column, prefix = '') => {
     try {
         const result = await db
-        .raw(`
+            .raw(`
         SELECT TOP 1 ${column}
-        FROM ${table}
-        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        FROM [${table}]
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length + 1}, LEN(${column})) AS INT) DESC
         `)
         const newId = result[0][column].substring(prefix.length)
         return prefix + (parseInt(newId) + 1)

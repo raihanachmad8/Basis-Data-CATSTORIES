@@ -60,7 +60,7 @@ const update = async (data) => {
         await db.raw(`
         EXEC UpdateMetodePembayaran @ID_Metode_Pembayaran = :ID_Metode_Pembayaran, @Metode_Pembayaran = :Metode_Pembayaran;`,
         {ID_Metode_Pembayaran: data.ID_Metode_Pembayaran, Metode_Pembayaran: data.Metode_Pembayaran})
-        return await db('Metode_Pembayaran').where('ID_Metode_Pembayaran', id).first()
+        return await db('Metode_Pembayaran').where('ID_Metode_Pembayaran', data.ID_Metode_Pembayaran).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -104,5 +104,3 @@ export const pembayaranRepository = {
     update,
     remove
 }
-
-

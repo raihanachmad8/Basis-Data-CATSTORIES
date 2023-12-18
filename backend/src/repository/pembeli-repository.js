@@ -49,7 +49,7 @@ const update = async (data) => {
     try {
         await db.raw(`EXEC UpdatePembeli @ID_Pembeli = :ID_Pembeli, @Nama_Pembeli = :Nama_Pembeli, @Email = :Email, @No_Telp = :No_Telp, @Alamat = :Alamat;`, 
         { ID_Pembeli: data.ID_Pembeli, Nama_Pembeli: data.Nama_Pembeli, Email: data.Email, No_Telp: data.No_Telp, Alamat: data.Alamat })
-        return await db('Pembeli').where('ID_Pembeli', id).first()
+        return await db('Pembeli').where('ID_Pembeli', data.ID_Pembeli).first()
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
