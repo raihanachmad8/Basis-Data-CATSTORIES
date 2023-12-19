@@ -4,7 +4,7 @@ const Sidebar = () => {
     const path = window.location.pathname;
 
     const handleLogout = () => {
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         window.location.href = "/admin";
     };
 

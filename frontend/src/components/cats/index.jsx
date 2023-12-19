@@ -4,7 +4,7 @@ import newCat from "./Data/newCat.json";
 const OurCatsSection = () => {
     return (
         <>
-            <div className="w-full flex flex-col justify-center items-center">
+            <divz className="w-full flex flex-col justify-center items-center">
                 <h1 className="text-center font-bold text-5xl">
                     <span className="text-[#007FDB]">Meet</span>{" "}
                     <span className="text-[#E16C40]">Our Cat</span>
@@ -20,7 +20,7 @@ const OurCatsSection = () => {
                         />
                     ))}
                 </div>
-            </div>
+            </divz>
         </>
     );
 };

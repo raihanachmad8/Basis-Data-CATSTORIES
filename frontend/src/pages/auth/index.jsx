@@ -15,7 +15,7 @@ const Auth = () => {
 
         login(data, (status, response) => {
             if (status) {
-                sessionStorage.setItem("token", response.data.token);
+                localStorage.setItem("token", response.data.token);
                 window.location.href = "/admin/data-kucing";
             } else {
                 console.log(response);

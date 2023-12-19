@@ -94,7 +94,7 @@ export function up(knex) {
     AS
     RETURN(
         SELECT 
-            K.ID_Kucing, K.Nama_Kucing, K.Jenis_Kelamin, J.Jenis_Kucing, K.Umur, K.Status, K.Tanggal_Masuk
+            K.ID_Kucing, K.Nama_Kucing, K.Jenis_Kelamin, K.ID_Jenis, J.Jenis_Kucing, K.Umur, K.Status, K.Tanggal_Masuk
         FROM Kucing K
         JOIN Jenis J ON J.ID_Jenis = K.ID_Jenis
         WHERE K.Nama_Kucing LIKE '%' + @key + '%'

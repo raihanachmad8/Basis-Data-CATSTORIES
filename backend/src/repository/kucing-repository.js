@@ -132,12 +132,12 @@ const countKucing = async () => {
         const result = await db.raw(`
         SELECT
             J.Jenis_Kucing,
-            COUNT(CASE WHEN K.Status = 'Tersedia' THEN 1 ELSE NULL END) AS Tersedia,
-            COUNT(CASE WHEN K.Status = 'Tidak Tersedia' THEN 1 ELSE NULL END) AS TidakTersedia
+            COALESCE(COUNT(CASE WHEN K.Status = 'Tersedia' THEN 1 END), 0) AS Tersedia,
+            COALESCE(COUNT(CASE WHEN K.Status = 'Tidak Tersedia' THEN 1 END), 0) AS TidakTersedia
         FROM
-            Kucing K
-        JOIN
-            Jenis J ON K.ID_Jenis = J.ID_Jenis
+            Jenis J
+        LEFT JOIN
+            Kucing K ON J.ID_Jenis = K.ID_Jenis
         GROUP BY
             J.Jenis_Kucing;
         `);

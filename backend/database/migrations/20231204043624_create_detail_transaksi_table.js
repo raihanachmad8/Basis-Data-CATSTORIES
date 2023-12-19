@@ -45,5 +45,6 @@ export function up(knex) {
 export function down(knex) {
     return knex.schema
     .dropTable("Detail_Transaksi")
+    .raw('DROP FUNCTION IF EXISTS HitungTotal')
     .raw('DROP PROCEDURE IF EXISTS tambahDetailTransaksi')
 }

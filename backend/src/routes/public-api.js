@@ -78,9 +78,6 @@ publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranContr
 publicRouter.get('/api/v1/cat-stories/checkout/payment', transaksiController.getAllTransaksi)
 publicRouter.get('/api/v1/cat-stories/checkout/payment/details/:id', transaksiController.get)
 publicRouter.post('/api/v1/cat-stories/checkout/payment/create', transaksiController.create)
-// publicRouter.post('/api/v1/cat-stories/pembayaran/create', pembayaranController.create)
-// publicRouter.put('/api/v1/cat-stories/pembayaran/update', pembayaranController.update)
-// publicRouter.delete('/api/v1/cat-stories/pembayaran/delete/:id', pembayaranController.remove)
 
 export {
     publicRouter
