@@ -1,6 +1,6 @@
 import Datepicker from "tailwind-datepicker-react";
-import { useEffect, useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useRef, useState } from "react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import "swiper/css";
 import FormTambahDataPembeli from "../Pembeli/Form";
 import { Navigation } from "swiper/modules";
@@ -9,6 +9,7 @@ import { ButtonNext } from "./components/SwiperNextButton";
 import { ButtonPrev } from "./components/SwiperPrevButton";
 import PropTypes from "prop-types";
 import { createTransaksi } from "../../../../../services/transaksi";
+import Swal from "sweetalert2";
 
 const options = {
     title: "Kalender",
@@ -72,18 +73,19 @@ const FormTambahDataTransaksi = ({
     dataKucing,
     dataMetodePembayaran,
     dataJenisPengiriman,
+    updateDataTransaksi,
+    closeForm,
 }) => {
     const formRef = useRef(null);
+    const swiperRef = useRef(null);
+    const swiper = useSwiper(swiperRef.current);
     const [show, setShow] = useState(false);
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().split("T")[0]
     );
     const [formKucing, setFormKucing] = useState([]);
     const [total, setTotal] = useState(0);
-
-    useEffect(() => {
-        console.log(total);
-    }, [total]);
+    const [selectJenisPengiriman, setSelectJenisPengiriman] = useState(null);
 
     const optionMetodePembayaran = dataMetodePembayaran.map((item) => ({
         value: item.ID_Metode_Pembayaran,
@@ -118,8 +120,21 @@ const FormTambahDataTransaksi = ({
         const formData = new FormData(form);
         formData.append("Detail_Transaksi", JSON.stringify(detailTransaksi));
 
-        createTransaksi(formData, (res) => {
-            console.log(res);
+        createTransaksi(formData, (status, res) => {
+            if (status) {
+                updateDataTransaksi();
+                Swal.fire("Success", res.message, "success");
+                form.reset();
+                setFormKucing([]);
+                setTotal(0);
+                closeForm();
+
+                if (swiper) {
+                    swiper.slideTo(0);
+                }
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
     };
 
@@ -132,6 +147,7 @@ const FormTambahDataTransaksi = ({
                     allowTouchMove={false}
                     navigation
                     modules={[Navigation]}
+                    ref={swiperRef}
                 >
                     <SwiperSlide>
                         <FormTambahDataPembeli />
@@ -177,7 +193,11 @@ const FormTambahDataTransaksi = ({
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Metode Pembayaran
                                 </label>
-                                <select name="ID_Metode_Pembayaran" id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <select
+                                    name="ID_Metode_Pembayaran"
+                                    id=""
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                >
                                     {optionMetodePembayaran.map((item) => (
                                         <option
                                             key={item.value}
@@ -213,20 +233,38 @@ const FormTambahDataTransaksi = ({
                                 >
                                     Nomor Resi
                                 </label>
-                                <input
-                                    type="text"
-                                    id="nomorResi"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                    placeholder="Nomor Resi"
-                                    name="Nomor_Resi"
-                                    required
-                                />
+                                {selectJenisPengiriman !== "JP1" ? (
+                                    <input
+                                        type="text"
+                                        id="nomorResi"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        placeholder="Nomor Resi"
+                                        name="Nomor_Resi"
+                                        required
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        id="nomorResi"
+                                        className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        placeholder="Nomor Resi"
+                                        name="Nomor_Resi"
+                                        disabled
+                                    />
+                                )}
                             </div>
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Jenis Pengiriman
                                 </label>
-                                <select name="ID_Jenis_Pengiriman" id="" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <select
+                                    name="ID_Jenis_Pengiriman"
+                                    id=""
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    onChange={(e) =>
+                                        setSelectJenisPengiriman(e.target.value)
+                                    }
+                                >
                                     <option value="">
                                         Pilih Jenis Pengiriman
                                     </option>
@@ -311,6 +349,8 @@ FormTambahDataTransaksi.propTypes = {
     dataKucing: PropTypes.array.isRequired,
     dataJenisPengiriman: PropTypes.array.isRequired,
     dataMetodePembayaran: PropTypes.array.isRequired,
+    closeForm: PropTypes.func.isRequired,
+    updateDataTransaksi: PropTypes.func.isRequired,
 };
 
 export default FormTambahDataTransaksi;

@@ -12,20 +12,20 @@ const getAllJenis = async (search, sort, orderBy, groupBy) => {
     if (sort) {
         const sortFields = sort.split(',');
         const sortOrder = orderBy === 'desc' ? -1 : 1;
-    
+
         result.sort((a, b) => {
             for (const field of sortFields) {
                 const aValue = a[field];
                 const bValue = b[field];
-    
+
                 if (aValue > bValue) return sortOrder;
                 if (aValue < bValue) return -sortOrder;
             }
-    
+
             return 0;
         });
     }
-    
+
     // Group
     if (groupBy) {
         const groupedResults = {};
@@ -43,7 +43,7 @@ const getAllJenis = async (search, sort, orderBy, groupBy) => {
         throw new ResponseError(404, "Jenis not found");
     }
     return result
-} 
+}
 
 const get = async (id) => {
     const validateId = validate(jenisValidation.getJenisValidation, id);
@@ -74,7 +74,6 @@ const create = async (jenis) => {
         logger.error("Failed to create jenis");
         throw new ResponseError(404, "Failed to create jenis");
     }
-    console.log('result: ' , result)
     return result;
 }
 
@@ -110,7 +109,7 @@ const remove = async (id) => {
 }
 
 
-export const jenisService =  {
+export const jenisService = {
     getAllJenis,
     get,
     create,

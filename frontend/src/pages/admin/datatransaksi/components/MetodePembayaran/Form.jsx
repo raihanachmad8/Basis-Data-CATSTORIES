@@ -1,7 +1,12 @@
 import { useRef } from "react";
 import { createMetodePembayaran } from "../../../../../services/metodePembayaran";
+import Swal from "sweetalert2";
+import PropTypes from "prop-types";
 
-const FormTambahDataMetodePembayaran = () => {
+const FormTambahDataMetodePembayaran = ({
+    updateMetodePembayaran,
+    closeForm,
+}) => {
     const formRef = useRef(null);
 
     const handleSubmit = (event) => {
@@ -9,13 +14,16 @@ const FormTambahDataMetodePembayaran = () => {
         const form = event.target;
         const formData = new FormData(form);
 
-        console.log(formData);
-
-        createMetodePembayaran(formData, (res) => {
-            console.log(res);
+        createMetodePembayaran(formData, (status, res) => {
+            if (status) {
+                updateMetodePembayaran();
+                closeForm();
+                Swal.fire("Success", res.message, "success");
+                form.reset();
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
-
-        form.reset();
     };
 
     return (
@@ -50,6 +58,11 @@ const FormTambahDataMetodePembayaran = () => {
             </form>
         </>
     );
+};
+
+FormTambahDataMetodePembayaran.propTypes = {
+    updateMetodePembayaran: PropTypes.func.isRequired,
+    closeForm: PropTypes.func.isRequired,
 };
 
 export default FormTambahDataMetodePembayaran;

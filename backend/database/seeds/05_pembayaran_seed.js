@@ -12,7 +12,6 @@ export async function seed(knex) {
                 {ID_Metode_Pembayaran: 'MPB7', Metode_Pembayaran:'GoPay'},
         ])
         await knex('Metode_Pembayaran').insert(Pembayaran)
-        console.log('seed Pembayaran success')
         return 
     })
 }

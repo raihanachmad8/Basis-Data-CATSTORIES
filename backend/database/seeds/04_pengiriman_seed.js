@@ -11,7 +11,6 @@ export async function seed(knex) {
             {ID_Jenis_Pengiriman:'JP6', Jenis_Pengiriman: 'COD'},
         ])
         await knex('Jenis_Pengiriman').insert(Pengiriman)
-        console.log('seed Pengiriman success')
         return 
     })
 }

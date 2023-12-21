@@ -13,7 +13,7 @@ const createTransaksiSchema = Joi.object({
     ID_Metode_Pembayaran: Joi.string().max(50).required(),
     Tanggal_Transaksi: Joi.date().required(),
     Total_Biaya: Joi.number().required(),
-    Nomor_Resi: Joi.string().required(),
+    Nomor_Resi: Joi.optional(),
     Pesan: Joi.string().required(),
     Detail_Transaksi: Joi.array().items(
         Joi.object({
@@ -34,7 +34,7 @@ const updateTransaksiSchema = Joi.object({
     ID_Metode_Pembayaran: Joi.string().max(50).required(),
     Tanggal_Transaksi: Joi.date().required(),
     Total_Biaya: Joi.number().required(),
-    Nomor_Resi: Joi.string().required(),
+    Nomor_Resi: Joi.optional(),
     Pesan: Joi.string().required(),
     Detail_Transaksi: Joi.array().items(
         Joi.object({
@@ -43,7 +43,7 @@ const updateTransaksiSchema = Joi.object({
     ),
 });
 
-export const transaksiValidation ={
+export const transaksiValidation = {
     getTransaksiSchema,
     createTransaksiSchema,
     updateTransaksiSchema,

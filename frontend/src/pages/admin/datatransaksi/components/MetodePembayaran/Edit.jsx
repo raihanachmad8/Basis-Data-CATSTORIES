@@ -1,8 +1,13 @@
 import { useRef } from "react";
 import { updateMetodePembayaran } from "../../../../../services/metodePembayaran";
 import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 
-const FormEditDataMetodePembayaran = ({ data }) => {
+const FormEditDataMetodePembayaran = ({
+    data,
+    closeForm,
+    updatePembayaran,
+}) => {
     const formRef = useRef(null);
 
     const handleSubmit = (event) => {
@@ -12,8 +17,15 @@ const FormEditDataMetodePembayaran = ({ data }) => {
 
         formData.append("ID_Metode_Pembayaran", data.ID_Metode_Pembayaran);
 
-        updateMetodePembayaran(formData, (res) => {
-            console.log(res);
+        updateMetodePembayaran(formData, (status, res) => {
+            if (status) {
+                updatePembayaran();
+                closeForm();
+                Swal.fire("Success", res.message, "success");
+                form.reset();
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
     };
 
@@ -54,6 +66,8 @@ const FormEditDataMetodePembayaran = ({ data }) => {
 
 FormEditDataMetodePembayaran.propTypes = {
     data: PropTypes.object.isRequired,
+    closeForm: PropTypes.func.isRequired,
+    updatePembayaran: PropTypes.func.isRequired,
 };
 
 export default FormEditDataMetodePembayaran;

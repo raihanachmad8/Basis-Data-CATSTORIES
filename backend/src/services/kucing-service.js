@@ -77,7 +77,6 @@ const get = async (id) => {
 
 const create = async (kucing, file) => {
     try {
-        console.log(kucing)
         logger.info("Create kucing:", kucing);
         const validateKucing = validate(
             kucingValidation.createKucingValdation,

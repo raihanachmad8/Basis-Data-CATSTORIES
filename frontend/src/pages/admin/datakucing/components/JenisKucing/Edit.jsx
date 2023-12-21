@@ -1,6 +1,7 @@
 import PropType from "prop-types";
 import { useRef } from "react";
 import { editJenisKucing } from "../../../../../services/jenisKucing";
+import Swal from "sweetalert2";
 
 const FormEditJenisKucing = ({ data, updateDataJenisKucing, setEditMenu }) => {
     const formRef = useRef(null);
@@ -15,11 +16,19 @@ const FormEditJenisKucing = ({ data, updateDataJenisKucing, setEditMenu }) => {
         editJenisKucing(formData, (status) => {
             if (status) {
                 updateDataJenisKucing();
+                Swal.fire({
+                    title: "Data Jenis Kucing Berhasil Di Update",
+                    text: "Data Jenis Kucing Berhasil Di Update",
+                    icon: "success",
+                });
                 setEditMenu(false);
                 form.reset();
-                alert("Data Jenis Kucing Berhasil Di Update");
             } else {
-                alert("Gagal Update Data Jenis Kucing");
+                Swal.fire({
+                    title: "Gagal Update Data Jenis Kucing",
+                    text: "Gagal Update Data Jenis Kucing",
+                    icon: "error",
+                });
             }
         });
     };

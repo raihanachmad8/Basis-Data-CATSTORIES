@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { deleteJenisKucing } from "../../../../../services/jenisKucing";
+import Swal from "sweetalert2";
 
 const TableDataJenisKucing = ({
     dataSource,
@@ -15,10 +16,18 @@ const TableDataJenisKucing = ({
     const handleDelete = (data) => {
         deleteJenisKucing(data, (status, res) => {
             if (status) {
-                alert(`Data Jenis Kucing Berhasil Di Hapus : ${res.message}`);
                 updateDataJenisKucing();
+                Swal.fire({
+                    title: "Data Jenis Kucing Berhasil Di Hapus",
+                    text: res.message,
+                    icon: "success",
+                });
             } else {
-                alert("Gagal Menghapus Data Jenis Kucing");
+                Swal.fire({
+                    title: "Gagal Menghapus Data Jenis Kucing",
+                    text: res.message,
+                    icon: "error",
+                });
             }
         });
     };

@@ -68,14 +68,6 @@ const FormTambahDataPembeli = () => {
                         ></textarea>
                     </div>
                 </div>
-                {/* <div className="flex justify-between mt-5">
-                    <button
-                        type="submit"
-                        className="text-white bg-green-500 px-3 py-2 rounded-md"
-                    >
-                        Submit
-                    </button>
-                </div> */}
             </div>
         </>
     );

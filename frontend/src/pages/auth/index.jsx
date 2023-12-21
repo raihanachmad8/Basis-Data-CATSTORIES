@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { Link } from "react-router-dom";
 import { login } from "../../services/auth";
 
 const Auth = () => {
@@ -18,7 +17,7 @@ const Auth = () => {
                 localStorage.setItem("token", response.data.token);
                 window.location.href = "/admin/data-kucing";
             } else {
-                console.log(response);
+                alert(response.message);
             }
         });
     };
@@ -67,14 +66,6 @@ const Auth = () => {
                                 ref={passwordRef}
                                 className="p-[1rem] border rounded-lg w-full"
                             />
-                            <div className="p-2 w-full">
-                                <Link
-                                    to={"/"}
-                                    className="text-blue-500 hover:underline float-right"
-                                >
-                                    Forgot Password
-                                </Link>
-                            </div>
                         </div>
                         <div className="w-[70%]">
                             <button

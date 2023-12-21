@@ -1,10 +1,21 @@
 import PropTypes from "prop-types";
 import { deleteJenisPengiriman } from "../../../../../services/jenisPengiriman";
+import Swal from "sweetalert2";
 
-const TabelJenisPengiriman = ({ data, setEditMenu, setDataEdit }) => {
+const TabelJenisPengiriman = ({
+    data,
+    setEditMenu,
+    setDataEdit,
+    updateJenisPengiriman,
+}) => {
     const hanldeDelete = (id) => {
-        deleteJenisPengiriman(id, (res) => {
-            console.log(res);
+        deleteJenisPengiriman(id, (status, res) => {
+            if (status) {
+                updateJenisPengiriman();
+                Swal.fire("Success", res.message, "success");
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
     };
 
@@ -67,6 +78,7 @@ TabelJenisPengiriman.propTypes = {
     data: PropTypes.array.isRequired,
     setEditMenu: PropTypes.func.isRequired,
     setDataEdit: PropTypes.func.isRequired,
+    updateJenisPengiriman: PropTypes.func.isRequired,
 };
 
 export default TabelJenisPengiriman;

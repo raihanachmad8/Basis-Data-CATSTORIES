@@ -92,7 +92,6 @@ export async function seed(knex) {
                 },
             ]);
             await knex("Kucing").insert(Kucing);
-            console.log("seed Kucing success");
             return;
         });
 }

@@ -8,23 +8,14 @@ const Footer = () => {
                 <div className="flex justify-center items-center gap-x-1">
                     <p>Powered By:</p>
                     <Link to={"https://vitejs.dev"} className="font-semibold">
-                        ReactJS
+                        ReactJS,
                     </Link>
-                    ,
                     <Link
                         to={"https://tailwindcss.com"}
                         className="font-semibold"
                     >
-                        TailwindCSS
+                        TailwindCSS,
                     </Link>
-                    ,
-                    <Link
-                        to={"https://chakra-ui.com"}
-                        className="font-semibold"
-                    >
-                        ChakraUI
-                    </Link>
-                    ,
                     <Link
                         to={"https://expressjs.com"}
                         className="font-semibold"

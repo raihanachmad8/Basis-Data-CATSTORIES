@@ -4,6 +4,7 @@ import Select from "react-select";
 import { useEffect, useRef, useState } from "react";
 import { updateKucing } from "../../../../../services/kucing";
 import { getOptionKucing } from "../../../../../services/jenisKucing";
+import Swal from "sweetalert2";
 
 const options = {
     title: "Kalender",
@@ -105,7 +106,6 @@ const FormEditDataKucing = ({
 
     const handleOnChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value);
         if (name === "Foto") {
             const file = event.target.files[0];
             const reader = new FileReader();
@@ -139,12 +139,20 @@ const FormEditDataKucing = ({
 
         updateKucing(formData, (status) => {
             if (status) {
+                Swal.fire({
+                    title: "Data Kucing Berhasil Di Update",
+                    text: "Data Kucing Berhasil Di Update",
+                    icon: "success",
+                });
                 setEditData(false);
                 setOpen(false);
-                alert("Data Kucing Berhasil Di Update");
                 updateDataKucing();
             } else {
-                alert("Gagal Update Data Kucing");
+                Swal.fire({
+                    title: "Gagal Update Data Kucing",
+                    text: "Gagal Update Data Kucing",
+                    icon: "error",
+                });
             }
         });
     };

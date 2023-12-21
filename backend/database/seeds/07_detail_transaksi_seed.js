@@ -9,7 +9,6 @@ export async function seed(knex) {
             {ID_Detail_Transaksi: 'DT4', ID_Transaksi: 'T2', ID_Kucing: 'K5'},
         ])
         await knex('Detail_Transaksi').insert(Detail_Transaksi)
-        console.log('seed Detail_Transaksi success')
         return 
     })
 }

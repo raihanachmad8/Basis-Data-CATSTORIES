@@ -4,6 +4,7 @@ import Select from "react-select";
 import { useEffect, useRef, useState } from "react";
 import { createKucing } from "../../../../../services/kucing";
 import { getOptionKucing } from "../../../../../services/jenisKucing";
+import Swal from "sweetalert2";
 
 const options = {
     title: "Kalender",
@@ -80,18 +81,33 @@ const FormTambahDataKucing = ({ updateDataKucing, setTambahData }) => {
         const form = formRef.current;
 
         const formData = new FormData(form);
+        formData.set(
+            "Nama_Kucing",
+            capitalizeEachWord(formData.get("Nama_Kucing"))
+        );
 
         createKucing(formData, (status) => {
             if (status) {
+                Swal.fire({
+                    title: "Data Kucing Berhasil Di Tambahkan",
+                    text: "Data Kucing Berhasil Di Tambahkan",
+                    icon: "success",
+                });
                 updateDataKucing();
                 setTambahData(false);
                 form.reset();
-                alert("Data Kucing Berhasil Di Tambahkan");
             } else {
-                alert("Gagal Tambah Data Kucing");
+                Swal.fire({
+                    title: "Gagal Menambahkan Data Kucing",
+                    text: "Gagal Menambahkan Data Kucing",
+                    icon: "error",
+                });
             }
         });
     };
+    function capitalizeEachWord(string) {
+        return string.replace(/\b\w/g, (char) => char.toUpperCase());
+    }
 
     useEffect(() => {
         getOptionKucing((data) => {

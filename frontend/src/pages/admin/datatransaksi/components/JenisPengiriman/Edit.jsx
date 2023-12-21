@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { updateJenisPengiriman } from "../../../../../services/jenisPengiriman";
 import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 
-const FormEditDataJenisPengiriman = ({ data }) => {
+const FormEditDataJenisPengiriman = ({ data, updatePengiriman, closeForm }) => {
     const formRef = useRef(null);
 
     const handleSubmit = (event) => {
@@ -11,8 +12,15 @@ const FormEditDataJenisPengiriman = ({ data }) => {
         const formData = new FormData(form);
         formData.append("ID_Jenis_Pengiriman", data.ID_Jenis_Pengiriman);
 
-        updateJenisPengiriman(formData, (res) => {
-            console.log(res);
+        updateJenisPengiriman(formData, (status, res) => {
+            if (status) {
+                updatePengiriman();
+                Swal.fire("Success", res.message, "success");
+                form.reset();
+                closeForm();
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
     };
 
@@ -53,6 +61,8 @@ const FormEditDataJenisPengiriman = ({ data }) => {
 
 FormEditDataJenisPengiriman.propTypes = {
     data: PropTypes.object.isRequired,
+    updatePengiriman: PropTypes.func.isRequired,
+    closeForm: PropTypes.func.isRequired,
 };
 
 export default FormEditDataJenisPengiriman;

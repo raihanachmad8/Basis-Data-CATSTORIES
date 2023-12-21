@@ -1,16 +1,24 @@
 import { useRef } from "react";
 import { createJenisPengiriman } from "../../../../../services/jenisPengiriman";
+import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 
-const FormTambahDataJenisPengiriman = () => {
+const FormTambahDataJenisPengiriman = ({ updateJenisPengiriman }) => {
     const formRef = useRef(null);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-        
-        createJenisPengiriman(formData, (res) => {
-            console.log(res);
+
+        createJenisPengiriman(formData, (status, res) => {
+            if (status) {
+                updateJenisPengiriman();
+                Swal.fire("Success", res.message, "success");
+                form.reset();
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
     };
 
@@ -46,6 +54,10 @@ const FormTambahDataJenisPengiriman = () => {
             </form>
         </>
     );
+};
+
+FormTambahDataJenisPengiriman.propTypes = {
+    updateJenisPengiriman: PropTypes.func.isRequired,
 };
 
 export default FormTambahDataJenisPengiriman;
