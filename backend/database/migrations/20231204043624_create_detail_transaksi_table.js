@@ -19,26 +19,7 @@ export function up(knex) {
     UPDATE Kucing
     SET Status = 'Tidak Tersedia'
     WHERE ID_Kucing = @ID_Kucing;
-
-    -- Update Total_Biaya in Transaksi
-    UPDATE Transaksi
-    SET Total_Biaya = dbo.HitungTotal(@ID_Transaksi)
     END
-    `)
-    .raw(`
-    CREATE FUNCTION HitungTotal(@id_transaksi VARCHAR(50))
-    RETURNS DECIMAL
-    AS 
-    BEGIN
-        DECLARE @total_biaya DECIMAL;
-
-        SELECT @total_biaya = SUM(K.Biaya)
-        FROM Detail_Transaksi DT
-        JOIN Kucing K ON DT.ID_Kucing = K.ID_Kucing
-        WHERE DT.ID_Transaksi = @id_transaksi;
-
-        RETURN @total_biaya;
-    END;
     `)
 }
 
