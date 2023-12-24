@@ -51,8 +51,7 @@ const DetailTransaksi = ({ id }) => {
                                 {item.Kucing.Nama_Kucing}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
-                                {detail.Jenis_Pengiriman?.Jenis_Pengiriman ||
-                                    "-"}
+                                {detail.Jenis_Pengiriman?.Jenis_Pengiriman ?? "-"}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
                                 {detail.Metode_Pembayaran?.Metode_Pembayaran ??
