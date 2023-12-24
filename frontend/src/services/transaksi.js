@@ -1,9 +1,10 @@
 import axios from 'axios'
 
-export const getAllTransaksi = async (search, sort, order, callback) => {
+export const getAllTransaksi = async (ref, search, sort, order, callback) => {
   await axios.get(`http://localhost:3000/api/v1/cat-stories/checkout/payment?search=${search}&sort=${sort}&orderBy=${order}`)
     .then(function (response) {
       callback(response.data.data)
+      ref.current.classList.add('hidden')
     })
     .catch(function (error) {
       callback(error)

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Admin from "../../../layouts/admin";
 import TableDataTransaksi from "./components/Transaksi/Table";
 import TabelDataPembeli from "./components/Pembeli/Table";
@@ -20,6 +20,7 @@ import FormEditDataMetodePembayaran from "./components/MetodePembayaran/Edit";
 import DetailTransaksi from "./components/Transaksi/Detail";
 
 const DataTransaksi = () => {
+    const ref = useRef(null);
     const [menu, setMenu] = useState("Tabel Data Transaksi");
     const [tambahData, setTambahData] = useState(false);
     const [openDetail, setOpenDetail] = useState(false);
@@ -47,7 +48,7 @@ const DataTransaksi = () => {
     }, []);
 
     useEffect(() => {
-        getAllTransaksi(searchTransaksi, sort, order, (data) => {
+        getAllTransaksi(ref, searchTransaksi, sort, order, (data) => {
             setDataTransaksi(data);
         });
     }, [searchTransaksi, sort, order]);
@@ -122,6 +123,12 @@ const DataTransaksi = () => {
 
     return (
         <>
+            <div
+                ref={ref}
+                className="w-full flex justify-center items-center h-screen absolute top-0 left-0 backdrop-blur-sm bg-transparent z-50"
+            >
+                <div className="border-gray-300 h-10 w-10 animate-spin rounded-full border-2 border-t-blue-600" />
+            </div>
             <Admin title="Data Transaksi">
                 <div className="w-full min-h-screen py-10">
                     <div className="w-full h-full bg-white rounded-3xl p-5 flex flex-col gap-y-5">
@@ -133,10 +140,13 @@ const DataTransaksi = () => {
                                     </h1>
                                     <div className="flex justify-center items-center gap-x-7">
                                         {menu !== "Tabel Data Pembeli" && (
-                                            <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
+                                            <div className="order-3 ">
                                                 <button
                                                     onClick={handleTambahData}
-                                                    className="text-base text-white"
+                                                    className="text-base text-white px-3 py-2 bg-green-500 rounded-md text-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    disabled={
+                                                        dataKucing.length === 0
+                                                    }
                                                 >
                                                     Tambah Data
                                                 </button>

@@ -17,7 +17,7 @@ const Card = ({ item, setFormKucing, formKucing, setTotal, click }) => {
                     <img
                         src={item.Foto}
                         alt=""
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-contain rounded-lg"
                     />
                 </div>
                 <div className="w-full h-fit">

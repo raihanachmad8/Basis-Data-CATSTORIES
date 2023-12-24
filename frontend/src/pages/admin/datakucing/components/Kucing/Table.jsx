@@ -15,7 +15,6 @@ const TableDataKucing = ({
 }) => {
     const [filteredData, setFilteredData] = useState(dataSource);
     const [sortUmur, setSortUmur] = useState(false);
-    const [sortID, setSortID] = useState(false);
     const [sortNama, setSortNama] = useState(false);
     const handleDetail = (data) => {
         setData(data);
@@ -55,38 +54,14 @@ const TableDataKucing = ({
             <table className="w-full text-center">
                 <thead>
                     <tr>
-                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase">
-                            <button
-                                onClick={() => {
-                                    setSort("ID_Kucing");
-                                    setSortID(!sortID);
-                                    setSortUmur(false);
-                                    setSortNama(false);
-                                    setOrder(order === "asc" ? "desc" : "asc");
-                                }}
-                                className="relative flex justify-center items-center gap-x-2"
-                            >
-                                ID_Kucing
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    id="Outline"
-                                    viewBox="0 0 24 24"
-                                    width="18"
-                                    height="18"
-                                    className={`duration-500 ${
-                                        !sortID ? "" : "rotate-180"
-                                    }`}
-                                >
-                                    <path d="M18.71,8.21a1,1,0,0,0-1.42,0l-4.58,4.58a1,1,0,0,1-1.42,0L6.71,8.21a1,1,0,0,0-1.42,0,1,1,0,0,0,0,1.41l4.59,4.59a3,3,0,0,0,4.24,0l4.59-4.59A1,1,0,0,0,18.71,8.21Z" />
-                                </svg>
-                            </button>
+                        <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase ">
+                            ID_Kucing
                         </th>
                         <th className="text-gray-600 text-xs border-b border-gray-200 text-uppercase flex justify-center items-center">
                             <button
                                 onClick={() => {
                                     setSort("Nama_Kucing");
                                     setSortNama(!sortNama);
-                                    setSortID(false);
                                     setSortUmur(false);
                                     setOrder(order === "asc" ? "desc" : "asc");
                                 }}
@@ -122,7 +97,6 @@ const TableDataKucing = ({
                                 onClick={() => {
                                     setSort("Umur");
                                     setSortNama(false);
-                                    setSortID(false);
                                     setSortUmur(!sortUmur);
                                     setOrder(order === "asc" ? "desc" : "asc");
                                 }}

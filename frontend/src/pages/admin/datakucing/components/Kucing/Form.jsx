@@ -123,6 +123,16 @@ const FormTambahDataKucing = ({ updateDataKucing, setTambahData }) => {
         setSelectedDate(formattedDate);
     };
 
+    const previewImage = (event) => {
+        const image = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = () => {
+            document.getElementById("preview").style.display = "block";
+            document.getElementById("preview").src = reader.result;
+        };
+    };
+
     return (
         <>
             <form ref={formRef} id="form" action="" onSubmit={handleSubmit}>
@@ -178,7 +188,7 @@ const FormTambahDataKucing = ({ updateDataKucing, setTambahData }) => {
                             type="text"
                             id="umurKucing"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder="Umur Kucing"
+                            placeholder="Umur Kucing (Bulan)"
                             name="Umur"
                             required
                         />
@@ -258,11 +268,17 @@ const FormTambahDataKucing = ({ updateDataKucing, setTambahData }) => {
                             required
                         />
                     </div>
-                    <div className=" w-full col-span-2">
+                    <div className=" w-full col-span-2 relative">
                         <p>Gambar</p>
+                        <img
+                            id="preview"
+                            src=""
+                            alt=""
+                            className="absolute w-full h-36 object-cover hidden rounded-lg -z-10"
+                        />
                         <label
                             htmlFor="dropzone-file"
-                            className="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 "
+                            className="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer "
                         >
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg
@@ -295,6 +311,7 @@ const FormTambahDataKucing = ({ updateDataKucing, setTambahData }) => {
                                 type="file"
                                 className="hidden"
                                 name="Foto"
+                                onChange={previewImage}
                                 required
                             />
                         </label>

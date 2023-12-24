@@ -33,9 +33,6 @@ const Auth = () => {
                     >
                         <div className="flex flex-col justify-center items-center gap-y-5">
                             <h1 className="font-bold text-4xl">Welcome Back</h1>
-                            <h1 className="font-bold text-2xl text-gray-400">
-                                Continue Login
-                            </h1>
                         </div>
                         <div className="flex flex-col w-[70%]">
                             <label

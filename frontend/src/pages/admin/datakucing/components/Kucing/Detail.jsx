@@ -62,7 +62,7 @@ const DetailKucing = ({ setOpen, data, updateDataKucing }) => {
                             <img
                                 src={selectedData.gambar}
                                 alt=""
-                                className="w-full h-full object-cover rounded-lg"
+                                className="w-full h-full object-contain rounded-lg"
                             />
                         </div>
                         <div className="px-4">
@@ -96,7 +96,17 @@ const DetailKucing = ({ setOpen, data, updateDataKucing }) => {
                                     <tr>
                                         <td>Umur</td>
                                         <td>:</td>
-                                        <td>{selectedData.umur} Bulan</td>
+                                        <td>
+                                            {selectedData.umur >= 12
+                                                ? selectedData.umur % 12 === 0
+                                                    ? `${
+                                                          selectedData.umur / 12
+                                                      } Tahun`
+                                                    : `${(
+                                                          selectedData.umur / 12
+                                                      ).toFixed(1)} Tahun`
+                                                : `${selectedData.umur} Bulan`}{" "}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Status</td>
