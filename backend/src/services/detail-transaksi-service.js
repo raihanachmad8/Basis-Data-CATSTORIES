@@ -37,7 +37,7 @@ const get = async (id) => {
         }
 
         const detail = await Promise.all((result).map(async (data) => {
-            data.Kucing = (data.ID_Kucing) ? await kucingService.get(data.ID_Kucing) : null
+            data.Kucing = (data.ID_Kucing !== undefined) ? await kucingService.get(data.ID_Kucing) : null
             return formattedResult(data)
         }));      
         logger.info("Get detail transaksi success");
@@ -124,8 +124,8 @@ const formattedResult =  (result) => {
         Kucing: {
             ID_Kucing: result.ID_Kucing,
             Jenis_Kucing: {
-                ID_Jenis: result.Kucing.Jenis_Kucing.ID_Jenis ?? null,
-                Jenis_Kucing: result.Kucing.Jenis_Kucing.Jenis_Kucing ?? null,  
+                ID_Jenis: result.Kucing?.Jenis_Kucing.ID_Jenis ?? null,
+                Jenis_Kucing: result.Kucing?.Jenis_Kucing.Jenis_Kucing ?? null,  
             },
             Nama_Kucing: result.Kucing.Nama_Kucing,
             Foto: result.Kucing.Foto,

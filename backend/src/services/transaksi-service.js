@@ -76,8 +76,8 @@ const get = async (id) => {
 
         let result = await transaksiRepository.findById(id)
         result.Pembeli = (await pembeliService.get(result.ID_Pembeli));
-        result.Jenis_Pengiriman = (result.Jenis_Pengiriman) ? (await pengirimanService.get(result.ID_Jenis_Pengiriman)) : null;
-        result.Metode_Pembayaran = (result.Metode_Pembayaran) ? (await pembayaranService.get(result.ID_Metode_Pembayaran)) : null;
+        result.Jenis_Pengiriman = (result.ID_Jenis_Pengiriman) ? (await pengirimanService.get(result.ID_Jenis_Pengiriman))[0] : null;
+        result.Metode_Pembayaran = (result.ID_Metode_Pembayaran) ? (await pembayaranService.get(result.ID_Metode_Pembayaran))[0] : null;
         result.Detail_Transaksi = await detailTransaksiService.get(result.ID_Transaksi);
         result = formattedResult(result);
 
@@ -85,7 +85,6 @@ const get = async (id) => {
             logger.error("Transaksi not found")
             throw new ResponseError(404, "Transaksi not found")
         }
-
         return result
     } catch (error) {
         logger.error(error)
@@ -111,7 +110,7 @@ const create = async (data) => {
 
         const unavailableKucing = [];
 
-        const isAllKucingAvailable = await Promise.all(Detail_Transaksi.map(async (item) => {
+        await Promise.all(Detail_Transaksi.map(async (item) => {
             try {
                 const isAvailable = await isKucingAvailable(item.ID_Kucing);
                 if (!isAvailable) {

@@ -63,14 +63,15 @@ const get = async (id) => {
     }
 
     let result = await kucingRepository.findById(id);
-    (result.ID_Jenis != null) ? result.Jenis_Kucing = (await jenisService.get(result.ID_Jenis))[0].Jenis_Kucing : result.Jenis_Kucing = null
-    result = formattedResult(result);
-
-
     if (!result || result.length === 0) {
         logger.error("Kucing not found");
         throw new ResponseError(404, "Kucing not found");
     }
+    result.Jenis_Kucing = (result.ID_Jenis) ? (await jenisService.get(result.ID_Jenis))[0].Jenis_Kucing : null
+    result = formattedResult(result);
+    
+
+    
     logger.info("Get kucing success");
     return result;
 };
@@ -198,12 +199,12 @@ const handleDelete = async (file) => {
 }
 
 
-const formattedResult = (result) => {
+const formattedResult = (result) => {   
     return {
         ID_Kucing: result.ID_Kucing,
         Jenis_Kucing: {
-            ID_Jenis: result.ID_Jenis,
-            Jenis_Kucing: result.Jenis_Kucing,
+            ID_Jenis: result?.ID_Jenis ?? null,
+            Jenis_Kucing: result?.Jenis_Kucing ?? null,
         },
         Nama_Kucing: result.Nama_Kucing,
         Foto: result.Foto,
