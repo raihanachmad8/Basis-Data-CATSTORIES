@@ -9,11 +9,11 @@ import Swal from "sweetalert2";
 const options = {
     title: "Kalender",
     autoHide: true,
-    todayBtn: false,
+    todayBtn: true,
     clearBtn: true,
     clearBtnText: "Clear",
     maxDate: new Date("2030-01-01"),
-    minDate: new Date(),
+    minDate: new Date("2010-01-01"),
     theme: {
         background: "bg-gray-300",
         todayBtn: "",

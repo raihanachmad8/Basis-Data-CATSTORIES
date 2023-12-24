@@ -3,10 +3,7 @@ import { createMetodePembayaran } from "../../../../../services/metodePembayaran
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
 
-const FormTambahDataMetodePembayaran = ({
-    updateMetodePembayaran,
-    closeForm,
-}) => {
+const FormTambahDataMetodePembayaran = ({ updatePembayaran, closeForm }) => {
     const formRef = useRef(null);
 
     const handleSubmit = (event) => {
@@ -16,7 +13,7 @@ const FormTambahDataMetodePembayaran = ({
 
         createMetodePembayaran(formData, (status, res) => {
             if (status) {
-                updateMetodePembayaran();
+                updatePembayaran();
                 closeForm();
                 Swal.fire("Success", res.message, "success");
                 form.reset();
@@ -61,7 +58,7 @@ const FormTambahDataMetodePembayaran = ({
 };
 
 FormTambahDataMetodePembayaran.propTypes = {
-    updateMetodePembayaran: PropTypes.func.isRequired,
+    updatePembayaran: PropTypes.func.isRequired,
     closeForm: PropTypes.func.isRequired,
 };
 

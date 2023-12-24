@@ -7,10 +7,12 @@ const DetailTransaksi = ({ id }) => {
     const [dataKucing, setDataKucing] = useState([]);
 
     useEffect(() => {
-        getDetailTransaksi(id, (data) => {
-            setDetail(data);
-            setDataKucing(data.Detail_Transaksi);
-        });
+        if (id) {
+            getDetailTransaksi(id, (data) => {
+                setDetail(data);
+                setDataKucing(data.Detail_Transaksi);
+            });
+        }
     }, [id]);
 
     return (
