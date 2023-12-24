@@ -51,7 +51,7 @@ const create = async (data) => {
             ID_Jenis_Pengiriman: data.ID_Jenis_Pengiriman,
             ID_Metode_Pembayaran: data.ID_Metode_Pembayaran,
             Total_Biaya: data.Total_Biaya,
-            Nomor_Resi: data.Nomor_Resi,
+            Nomor_Resi: data.Nomor_Resi ?? null,
             Tanggal_Transaksi: data.Tanggal_Transaksi,
             Pesan: data.Pesan
         })
@@ -96,7 +96,7 @@ const remove = async (id) => {
     try {
         const result = await db.raw(`
         EXEC hapusTransaksi @ID_Transaksi = :ID_Transaksi;`, { ID_Transaksi: id })
-        return (await db('Transaksi').where('ID_Transaksi', id) == false )
+        return (await db('Transaksi').where('ID_Transaksi', id) == false)
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -106,10 +106,10 @@ const remove = async (id) => {
 const incrementId = async (table, column, prefix = '') => {
     try {
         const result = await db
-        .raw(`
+            .raw(`
         SELECT TOP 1 ${column}
         FROM ${table}
-        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length +1}, LEN(${column})) AS INT) DESC
+        ORDER BY CAST(SUBSTRING(${column}, ${prefix.length + 1}, LEN(${column})) AS INT) DESC
         `)
         const newId = result[0][column].substring(prefix.length)
         return prefix + (parseInt(newId) + 1)

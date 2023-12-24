@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Admin from "../../../layouts/admin";
 import TableDataTransaksi from "./components/Transaksi/Table";
 import TabelDataPembeli from "./components/Pembeli/Table";
@@ -20,6 +20,7 @@ import FormEditDataMetodePembayaran from "./components/MetodePembayaran/Edit";
 import DetailTransaksi from "./components/Transaksi/Detail";
 
 const DataTransaksi = () => {
+    const ref = useRef(null);
     const [menu, setMenu] = useState("Tabel Data Transaksi");
     const [tambahData, setTambahData] = useState(false);
     const [openDetail, setOpenDetail] = useState(false);
@@ -32,19 +33,25 @@ const DataTransaksi = () => {
     const [dataKucing, setDataKucing] = useState([]);
     const [jenisPengiriman, setJenisPengiriman] = useState([]);
     const [metodePembayaran, setMetodePembayaran] = useState([]);
+    const [searchPembeli, setSearchPembeli] = useState("");
+    const [searchTransaksi, setSearchTransaksi] = useState("");
+    const [searchJenisPengiriman, setSearchJenisPengiriman] = useState("");
+    const [searchMetodePembayaran, setSearchMetodePembayaran] = useState("");
+    const [sort, setSort] = useState("");
+    const [order, setOrder] = useState("asc");
 
     useEffect(() => {
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
         if (!token) {
             window.location.href = "/admin/";
-        } 
+        }
     }, []);
 
     useEffect(() => {
-        getAllTransaksi((data) => {
+        getAllTransaksi(ref, searchTransaksi, sort, order, (data) => {
             setDataTransaksi(data);
         });
-    }, []);
+    }, [searchTransaksi, sort, order]);
 
     useEffect(() => {
         getKucingOption((data) => {
@@ -53,22 +60,40 @@ const DataTransaksi = () => {
     }, []);
 
     useEffect(() => {
-        getAllJenisPengiriman((data) => {
+        getAllJenisPengiriman(searchJenisPengiriman, (data) => {
             setJenisPengiriman(data);
         });
-    }, []);
+    }, [searchJenisPengiriman]);
 
     useEffect(() => {
-        getAllMetodePembayaran((data) => {
+        getAllMetodePembayaran(searchMetodePembayaran, (data) => {
             setMetodePembayaran(data);
         });
-    }, []);
+    }, [searchMetodePembayaran]);
 
     useEffect(() => {
-        getAllPembeli((data) => {
+        getAllPembeli(searchPembeli, sort, order, (data) => {
             setDataPembeli(data);
         });
-    }, []);
+    }, [searchPembeli, sort, order]);
+
+    const updatePembeli = () => {
+        getAllPembeli(searchPembeli, sort, order, (data) => {
+            setDataPembeli(data);
+        });
+    };
+
+    const updateJenisPengiriman = () => {
+        getAllJenisPengiriman(searchJenisPengiriman, (data) => {
+            setJenisPengiriman(data);
+        });
+    };
+
+    const updatePembayaran = () => {
+        getAllMetodePembayaran(searchMetodePembayaran, (data) => {
+            setMetodePembayaran(data);
+        });
+    };
 
     const handleTambahData = () => {
         setTambahData(true);
@@ -90,8 +115,20 @@ const DataTransaksi = () => {
         setEditMenu(false);
     };
 
+    const updateDataTransaksi = () => {
+        getAllTransaksi(searchTransaksi, sort, order, (data) => {
+            setDataTransaksi(data);
+        });
+    };
+
     return (
         <>
+            <div
+                ref={ref}
+                className="w-full flex justify-center items-center h-screen absolute top-0 left-0 backdrop-blur-sm bg-transparent z-50"
+            >
+                <div className="border-gray-300 h-10 w-10 animate-spin rounded-full border-2 border-t-blue-600" />
+            </div>
             <Admin title="Data Transaksi">
                 <div className="w-full min-h-screen py-10">
                     <div className="w-full h-full bg-white rounded-3xl p-5 flex flex-col gap-y-5">
@@ -103,52 +140,172 @@ const DataTransaksi = () => {
                                     </h1>
                                     <div className="flex justify-center items-center gap-x-7">
                                         {menu !== "Tabel Data Pembeli" && (
-                                            <div className="order-3 px-3 py-2 bg-green-500 rounded-md text-center ">
+                                            <div className="order-3 ">
                                                 <button
                                                     onClick={handleTambahData}
-                                                    className="text-base text-white"
+                                                    className="text-base text-white px-3 py-2 bg-green-500 rounded-md text-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    disabled={
+                                                        dataKucing.length === 0
+                                                    }
                                                 >
                                                     Tambah Data
                                                 </button>
                                             </div>
                                         )}
-
                                         <div className="relative mx-auto text-gray-600 w-[10rem]">
-                                            <input
-                                                className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
-                                                type="search"
-                                                name="search"
-                                                placeholder="Search"
-                                            />
-                                            <button
-                                                type="submit"
-                                                className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
-                                            >
-                                                <svg
-                                                    className="text-gray-600 h-4 w-4 fill-current"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                                                    version="1.1"
-                                                    id="Capa_1"
-                                                    x="0px"
-                                                    y="0px"
-                                                    viewBox="0 0 56.966 56.966"
-                                                    width="512px"
-                                                    height="512px"
-                                                >
-                                                    <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-                                                </svg>
-                                            </button>
+                                            {menu === "Tabel Data Pembeli" && (
+                                                <>
+                                                    <input
+                                                        className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
+                                                        type="search"
+                                                        name="search"
+                                                        placeholder="Search"
+                                                        onChange={(e) =>
+                                                            setSearchPembeli(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
+                                                    >
+                                                        <svg
+                                                            className="text-gray-600 h-4 w-4 fill-current"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                            version="1.1"
+                                                            id="Capa_1"
+                                                            x="0px"
+                                                            y="0px"
+                                                            viewBox="0 0 56.966 56.966"
+                                                            width="512px"
+                                                            height="512px"
+                                                        >
+                                                            <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                        </svg>
+                                                    </button>
+                                                </>
+                                            )}
+                                            {menu ===
+                                                "Tabel Data Transaksi" && (
+                                                <>
+                                                    <input
+                                                        className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
+                                                        type="search"
+                                                        name="search"
+                                                        placeholder="Search"
+                                                        onChange={(e) =>
+                                                            setSearchTransaksi(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
+                                                    >
+                                                        <svg
+                                                            className="text-gray-600 h-4 w-4 fill-current"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                            version="1.1"
+                                                            id="Capa_1"
+                                                            x="0px"
+                                                            y="0px"
+                                                            viewBox="0 0 56.966 56.966"
+                                                            width="512px"
+                                                            height="512px"
+                                                        >
+                                                            <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                        </svg>
+                                                    </button>
+                                                </>
+                                            )}
+                                            {menu ===
+                                                "Tabel Jenis Pengiriman" && (
+                                                <>
+                                                    <input
+                                                        className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
+                                                        type="search"
+                                                        name="search"
+                                                        placeholder="Search"
+                                                        onChange={(e) =>
+                                                            setSearchJenisPengiriman(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
+                                                    >
+                                                        <svg
+                                                            className="text-gray-600 h-4 w-4 fill-current"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                            version="1.1"
+                                                            id="Capa_1"
+                                                            x="0px"
+                                                            y="0px"
+                                                            viewBox="0 0 56.966 56.966"
+                                                            width="512px"
+                                                            height="512px"
+                                                        >
+                                                            <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                        </svg>
+                                                    </button>
+                                                </>
+                                            )}
+                                            {menu ===
+                                                "Tabel Metode Pembayaran" && (
+                                                <>
+                                                    <input
+                                                        className="border-2 border-gray-300 bg-white h-10 w-full px-3 pr-7 rounded-lg text-sm focus:outline-none flex justify-center items-center overflow-hidden"
+                                                        type="search"
+                                                        name="search"
+                                                        placeholder="Search"
+                                                        onChange={(e) =>
+                                                            setSearchMetodePembayaran(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        className="absolute right-0 top-0 h-full w-[2rem] flex justify-center items-center"
+                                                    >
+                                                        <svg
+                                                            className="text-gray-600 h-4 w-4 fill-current"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            xmlnsXlink="http://www.w3.org/1999/xlink"
+                                                            version="1.1"
+                                                            id="Capa_1"
+                                                            x="0px"
+                                                            y="0px"
+                                                            viewBox="0 0 56.966 56.966"
+                                                            width="512px"
+                                                            height="512px"
+                                                        >
+                                                            <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                                                        </svg>
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                                 <nav className="flex gap-x-5">
                                     <button
-                                        onClick={() =>
+                                        onClick={() => {
                                             handleChangeMenu(
                                                 "Tabel Data Transaksi"
-                                            )
-                                        }
+                                            );
+                                            setSearchJenisPengiriman("");
+                                            setSearchMetodePembayaran("");
+                                            setSearchTransaksi("");
+                                            setSearchPembeli("");
+                                        }}
                                         className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
                                             menu === "Tabel Data Transaksi"
                                                 ? "border-opacity-100"
@@ -158,11 +315,15 @@ const DataTransaksi = () => {
                                         Tabel Data Transaksi
                                     </button>
                                     <button
-                                        onClick={() =>
+                                        onClick={() => {
                                             handleChangeMenu(
                                                 "Tabel Data Pembeli"
-                                            )
-                                        }
+                                            );
+                                            setSearchJenisPengiriman("");
+                                            setSearchMetodePembayaran("");
+                                            setSearchTransaksi("");
+                                            setSearchPembeli("");
+                                        }}
                                         className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
                                             menu === "Tabel Data Pembeli"
                                                 ? "border-opacity-100"
@@ -172,11 +333,15 @@ const DataTransaksi = () => {
                                         Tabel Data Pembeli
                                     </button>
                                     <button
-                                        onClick={() =>
+                                        onClick={() => {
                                             handleChangeMenu(
                                                 "Tabel Jenis Pengiriman"
-                                            )
-                                        }
+                                            );
+                                            setSearchJenisPengiriman("");
+                                            setSearchMetodePembayaran("");
+                                            setSearchTransaksi("");
+                                            setSearchPembeli("");
+                                        }}
                                         className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
                                             menu === "Tabel Jenis Pengiriman"
                                                 ? "border-opacity-100"
@@ -186,11 +351,15 @@ const DataTransaksi = () => {
                                         Tabel Jenis Pengiriman
                                     </button>
                                     <button
-                                        onClick={() =>
+                                        onClick={() => {
                                             handleChangeMenu(
                                                 "Tabel Metode Pembayaran"
-                                            )
-                                        }
+                                            );
+                                            setSearchJenisPengiriman("");
+                                            setSearchMetodePembayaran("");
+                                            setSearchTransaksi("");
+                                            setSearchPembeli("");
+                                        }}
                                         className={`text-xs border-b border-black border-opacity-0 py-4 duration-500 hover:border-opacity-50 ${
                                             menu === "Tabel Metode Pembayaran"
                                                 ? "border-opacity-100"
@@ -208,6 +377,10 @@ const DataTransaksi = () => {
                                     data={dataTransaksi}
                                     setOpenDetail={setOpenDetail}
                                     setIdDetail={setIdDetail}
+                                    setSort={setSort}
+                                    setOrder={setOrder}
+                                    sort={sort}
+                                    order={order}
                                 />
                             )}
                             {menu === "Tabel Data Pembeli" && (
@@ -215,6 +388,11 @@ const DataTransaksi = () => {
                                     data={dataPembeli}
                                     setOpenDetail={setOpenDetail}
                                     setDataDetail={setDataDetail}
+                                    setSort={setSort}
+                                    setOrder={setOrder}
+                                    sort={sort}
+                                    order={order}
+                                    updatePembeli={updatePembeli}
                                 />
                             )}
                             {menu === "Tabel Jenis Pengiriman" && (
@@ -222,6 +400,9 @@ const DataTransaksi = () => {
                                     data={jenisPengiriman}
                                     setEditMenu={setEditMenu}
                                     setDataEdit={setDataEdit}
+                                    updateJenisPengiriman={
+                                        updateJenisPengiriman
+                                    }
                                 />
                             )}
                             {menu === "Tabel Metode Pembayaran" && (
@@ -229,6 +410,7 @@ const DataTransaksi = () => {
                                     data={metodePembayaran}
                                     setEditMenu={setEditMenu}
                                     setDataEdit={setDataEdit}
+                                    updatePembayaran={updatePembayaran}
                                 />
                             )}
                         </div>
@@ -265,14 +447,21 @@ const DataTransaksi = () => {
                             dataKucing={dataKucing}
                             dataMetodePembayaran={metodePembayaran}
                             dataJenisPengiriman={jenisPengiriman}
+                            updateDataTransaksi={updateDataTransaksi}
+                            closeForm={handleCloseForm}
                         />
                     )}
                     {menu === "Tabel Data Pembeli" && <FormTambahDataPembeli />}
                     {menu === "Tabel Jenis Pengiriman" && (
-                        <FormTambahDataJenisPengiriman />
+                        <FormTambahDataJenisPengiriman
+                            updateJenisPengiriman={updateJenisPengiriman}
+                        />
                     )}
                     {menu === "Tabel Metode Pembayaran" && (
-                        <FormTambahDataMetodePembayaran />
+                        <FormTambahDataMetodePembayaran
+                            updatePembayaran={updatePembayaran}
+                            closeForm={handleCloseForm}
+                        />
                     )}
                 </div>
             </div>
@@ -304,7 +493,11 @@ const DataTransaksi = () => {
                         <DetailTransaksi id={idDetail} />
                     )}
                     {menu === "Tabel Data Pembeli" && (
-                        <DetailPembeli data={dataDetail} />
+                        <DetailPembeli
+                            data={dataDetail}
+                            updatePembeli={updatePembeli}
+                            setOpenDetail={setOpenDetail}
+                        />
                     )}
                 </div>
             </div>
@@ -334,10 +527,18 @@ const DataTransaksi = () => {
                     </div>
                     {menu === "Tabel Data Pembeli" && <FormEditDataPembeli />}
                     {menu === "Tabel Jenis Pengiriman" && (
-                        <FormEditDataJenisPengiriman data={dataEdit} />
+                        <FormEditDataJenisPengiriman
+                            data={dataEdit}
+                            updatePengiriman={updateJenisPengiriman}
+                            closeForm={handleCloseEdit}
+                        />
                     )}
                     {menu === "Tabel Metode Pembayaran" && (
-                        <FormEditDataMetodePembayaran data={dataEdit} />
+                        <FormEditDataMetodePembayaran
+                            data={dataEdit}
+                            closeForm={handleCloseEdit}
+                            updatePembayaran={updatePembayaran}
+                        />
                     )}
                 </div>
             </div>

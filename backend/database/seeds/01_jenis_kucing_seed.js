@@ -17,7 +17,6 @@ export async function seed(knex) {
             { ID_Jenis: 'J10', Jenis_Kucing: 'Russian Blue' }
         ])
         await knex('Jenis').insert(Jenis)
-        console.log('seed Jenis Kucing  success')
         return 
     })
 }

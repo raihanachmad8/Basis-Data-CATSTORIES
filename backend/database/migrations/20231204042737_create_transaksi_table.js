@@ -1,23 +1,23 @@
 export function up(knex) {
     return knex.schema
-    .createTable("Transaksi", (table) => {
-        table.string("ID_Transaksi", 50).primary()
-        table.string("ID_Pembeli", 50)
-        table.string("ID_Jenis_Pengiriman", 50)
-        table.string("ID_Metode_Pembayaran", 50)
-        table.decimal("Total_Biaya").notNullable()
-        table.string("Nomor_Resi", 30)
-        table.date('Tanggal_Transaksi').notNullable()
-        table.text("Pesan")
-    })
-    .raw(`
+        .createTable("Transaksi", (table) => {
+            table.string("ID_Transaksi", 50).primary()
+            table.string("ID_Pembeli", 50)
+            table.string("ID_Jenis_Pengiriman", 50)
+            table.string("ID_Metode_Pembayaran", 50)
+            table.decimal("Total_Biaya").notNullable()
+            table.string("Nomor_Resi", 30)
+            table.date('Tanggal_Transaksi').notNullable()
+            table.text("Pesan")
+        })
+        .raw(`
     CREATE PROCEDURE tambahTransaksi
         @ID_Transaksi VARCHAR(50),
         @ID_Pembeli VARCHAR(50),
         @ID_Jenis_Pengiriman VARCHAR(50),
         @ID_Metode_Pembayaran VARCHAR(50),
         @Total_Biaya DECIMAL,
-        @Nomor_Resi VARCHAR(30),
+        @Nomor_Resi VARCHAR(30) NULL,
         @Tanggal_Transaksi DATE,
         @Pesan TEXT
     AS
@@ -26,7 +26,7 @@ export function up(knex) {
         VALUES (@ID_Transaksi, @ID_Pembeli, @ID_Jenis_Pengiriman, @ID_Metode_Pembayaran, @Total_Biaya, @Nomor_Resi, @Tanggal_Transaksi, @Pesan);
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE PROCEDURE updateTransaksi
         @ID_Transaksi VARCHAR(50),
         @ID_Pembeli VARCHAR(50),
@@ -50,7 +50,7 @@ export function up(knex) {
     WHERE ID_Transaksi = @ID_Transaksi;
     END;
     `)
-    .raw(`
+        .raw(`
     CREATE PROCEDURE HapusTransaksi
         @ID_Transaksi VARCHAR(50)
     AS
@@ -59,33 +59,29 @@ export function up(knex) {
         DELETE FROM Detail_Transaksi WHERE ID_Transaksi = @ID_Transaksi;
     END;
     `)
-    .raw(`
-    CREATE FUNCTION CariTransaksi(@key VARCHAR(50))
-    RETURNS TABLE
-    AS
-    RETURN (
-        SELECT 
-        T.ID_Transaksi,
-        T.Tanggal_Transaksi,
-        T.Total_Biaya,
-        T.Nomor_Resi,
-        P.Nama_Pembeli AS Nama_Pembeli_Transaksi,
-        JP.Jenis_Pengiriman,
-        MP.Metode_Pembayaran
-    FROM Transaksi T
-    JOIN Pembeli P ON P.ID_Pembeli = T.ID_Pembeli
-    JOIN Jenis_Pengiriman JP ON JP.ID_Jenis_Pengiriman = T.ID_Jenis_Pengiriman
-    JOIN Metode_Pembayaran MP ON MP.ID_Metode_Pembayaran = T.ID_Metode_Pembayaran
-    WHERE P.Nama_Pembeli LIKE '%' + @key + '%'
-        OR JP.Jenis_Pengiriman LIKE '%' + @key + '%'
-        OR MP.Metode_Pembayaran LIKE '%' + @key + '%'
-        OR CAST(T.Total_Biaya AS VARCHAR(50)) LIKE '%' + @key + '%'
-        OR T.ID_Transaksi LIKE '%' + @key + '%'
-        OR T.Nomor_Resi LIKE '%' + @key + '%'
-        OR CAST(T.Tanggal_Transaksi AS VARCHAR(50)) LIKE '%' + @key + '%'
-    );
+        .raw(`
+        CREATE FUNCTION CariTransaksi(@key VARCHAR(50))
+        RETURNS TABLE
+        AS
+        RETURN (
+            SELECT 
+                T.*
+            FROM Transaksi T
+            JOIN Pembeli P ON P.ID_Pembeli = T.ID_Pembeli
+            JOIN Jenis_Pengiriman JP ON JP.ID_Jenis_Pengiriman = T.ID_Jenis_Pengiriman
+            JOIN Metode_Pembayaran MP ON MP.ID_Metode_Pembayaran = T.ID_Metode_Pembayaran
+            WHERE 
+                P.Nama_Pembeli LIKE '%' + @key + '%'
+                OR JP.Jenis_Pengiriman LIKE '%' + @key + '%'
+                OR MP.Metode_Pembayaran LIKE '%' + @key + '%'
+                OR CAST(T.Total_Biaya AS VARCHAR(50)) LIKE '%' + @key + '%'
+                OR CAST(T.ID_Transaksi AS VARCHAR(50)) LIKE '%' + @key + '%'
+                OR T.Nomor_Resi LIKE '%' + @key + '%'
+                OR CAST(T.Tanggal_Transaksi AS VARCHAR(50)) LIKE '%' + @key + '%'
+        );
+        
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilTransaksi()
     RETURNS TABLE
     AS
@@ -96,7 +92,7 @@ export function up(knex) {
             Transaksi
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION TampilTransaksiById(@ID_Transaksi VARCHAR(50))
     RETURNS TABLE
     AS
@@ -109,7 +105,7 @@ export function up(knex) {
             ID_Transaksi = @ID_Transaksi
     );
     `)
-    .raw(`
+        .raw(`
     CREATE FUNCTION JumlahTransaksiPivot()
     RETURNS TABLE
     AS
@@ -150,12 +146,12 @@ export function up(knex) {
 
 export function down(knex) {
     return knex.schema
-    .dropTable("Transaksi")
-    .raw('DROP PROCEDURE IF EXISTS tambahTransaksi')
-    .raw('DROP PROCEDURE IF EXISTS updateTransaksi')
-    .raw('DROP PROCEDURE IF EXISTS HapusTransaksi')
-    .raw('DROP FUNCTION IF EXISTS CariTransaksi')
-    .raw('DROP FUNCTION IF EXISTS TampilTransaksi')
-    .raw('DROP FUNCTION IF EXISTS TampilTransaksiById')
-    .raw('DROP FUNCTION IF EXISTS JumlahTransaksiPivot')
+        .dropTable("Transaksi")
+        .raw('DROP PROCEDURE IF EXISTS tambahTransaksi')
+        .raw('DROP PROCEDURE IF EXISTS updateTransaksi')
+        .raw('DROP PROCEDURE IF EXISTS HapusTransaksi')
+        .raw('DROP FUNCTION IF EXISTS CariTransaksi')
+        .raw('DROP FUNCTION IF EXISTS TampilTransaksi')
+        .raw('DROP FUNCTION IF EXISTS TampilTransaksiById')
+        .raw('DROP FUNCTION IF EXISTS JumlahTransaksiPivot')
 }

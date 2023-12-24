@@ -5,7 +5,6 @@ import { kucingService } from "../services/kucing-service.js"
 const getAllKucing = async (req, res, next) => {
     try {
         const { search, sort, orderBy, groupBy } = req.query
-        console.log(req.query)
         const result = await kucingService.getAll(search, sort, orderBy, groupBy)
         logger.info("Get all kucing success")
 

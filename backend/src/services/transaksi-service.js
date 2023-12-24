@@ -11,17 +11,55 @@ import { pengirimanService } from "./pengiriman-service.js"
 
 const getAll = async (search, sort, orderBy, groupBy) => {
     try {
-        const result = (search) ? await transaksiRepository.search(search) : await transaksiRepository.getAll()
+        let result = (search) ? await transaksiRepository.search(search) : await transaksiRepository.getAll()
 
-        const resultWithDetails = await Promise.all(result.map(async (item) => {
+
+        result = await Promise.all(result.map(async (item) => {
             item.Pembeli = await pembeliService.get(item.ID_Pembeli);
             item.Jenis_Pengiriman = (item.Jenis_Pengiriman !== undefined) ? await pengirimanService.get(item.ID_Jenis_Pengiriman) : null
             item.Metode_Pembayaran = (item.Metode_Pembayaran !== undefined) ? await pembayaranService.get(item.ID_Metode_Pembayaran) : null
             item.Detail_Transaksi = await detailTransaksiService.get(item.ID_Transaksi);
-            return formattedResult(item);
+            return item;
         }));
-        console.log(resultWithDetails);
-        return resultWithDetails
+
+        // Sort
+        if (sort) {
+            const sortFields = sort.split(',');
+            const sortOrder = orderBy === 'desc' ? -1 : 1;
+
+            result.sort((a, b) => {
+                for (const field of sortFields) {
+                    const aValue = a[field];
+                    const bValue = b[field];
+
+                    if (aValue > bValue) return sortOrder;
+                    if (aValue < bValue) return -sortOrder;
+                }
+
+                return 0;
+            });
+        }
+
+        // Group
+        if (groupBy) {
+            const groupedResults = {};
+            result.forEach(item => {
+                const groupValue = item[groupBy];
+                if (!groupedResults[groupValue]) {
+                    groupedResults[groupValue] = [];
+                }
+                groupedResults[groupValue].push(item);
+            });
+            result = Object.values(groupedResults);
+        }
+        if (!result || result.length === 0) {
+            logger.error("Kucing not found");
+            throw new ResponseError(404, "Kucing not found");
+        }
+
+        result = result.map(formattedResult);
+
+        return result
     } catch (error) {
         logger.error(error)
         throw new ResponseError(500, "Internal Server Error")
@@ -38,7 +76,7 @@ const get = async (id) => {
 
         let result = await transaksiRepository.findById(id)
         result.Pembeli = (await pembeliService.get(result.ID_Pembeli));
-        result.Jenis_Pengiriman = (result.Jenis_Pengiriman) ? (await pengirimanService.get(result.ID_Jenis_Pengiriman)) :  null;
+        result.Jenis_Pengiriman = (result.Jenis_Pengiriman) ? (await pengirimanService.get(result.ID_Jenis_Pengiriman)) : null;
         result.Metode_Pembayaran = (result.Metode_Pembayaran) ? (await pembayaranService.get(result.ID_Metode_Pembayaran)) : null;
         result.Detail_Transaksi = await detailTransaksiService.get(result.ID_Transaksi);
         result = formattedResult(result);
@@ -69,7 +107,7 @@ const create = async (data) => {
             throw new ResponseError(400, validateTransaction.error.message)
         }
 
-        const {Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Detail_Transaksi} = data
+        const { Pembeli, ID_Jenis_Pengiriman, ID_Metode_Pembayaran, Detail_Transaksi } = data
 
         const unavailableKucing = [];
 
@@ -89,8 +127,8 @@ const create = async (data) => {
         }
         const pembeli = await pembeliService.create(Pembeli)
         const transaksi = await transaksiRepository.create({
-            ID_Pembeli: pembeli.ID_Pembeli, 
-            ID_Jenis_Pengiriman: ID_Jenis_Pengiriman, 
+            ID_Pembeli: pembeli.ID_Pembeli,
+            ID_Jenis_Pengiriman: ID_Jenis_Pengiriman,
             ID_Metode_Pembayaran: ID_Metode_Pembayaran,
             Total_Biaya: data.Total_Biaya,
             Nomor_Resi: data.Nomor_Resi,
@@ -104,8 +142,8 @@ const create = async (data) => {
                 ID_Kucing: item.ID_Kucing
             });
         }
-        
-        
+
+
         if (transaksi !== null && detail_transaksi !== null) {
             return transaksi
         } else {

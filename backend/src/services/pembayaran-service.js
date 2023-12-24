@@ -10,26 +10,26 @@ const getAll = async (search, sort, orderBy, groupBy) => {
     if (!result || result.length === 0) {
         logger.error("metode pembayaran not found");
         throw new ResponseError(404, "metode pembayaran not found");
-    } 
+    }
     logger.info("Get all metode pembayaran success");
     // Sort
     if (sort) {
         const sortFields = sort.split(',');
         const sortOrder = orderBy === 'desc' ? -1 : 1;
-    
+
         result.sort((a, b) => {
             for (const field of sortFields) {
                 const aValue = a[field];
                 const bValue = b[field];
-    
+
                 if (aValue > bValue) return sortOrder;
                 if (aValue < bValue) return -sortOrder;
             }
-    
+
             return 0;
         });
     }
-    
+
     // Group
     if (groupBy) {
         const groupedResults = {};
@@ -78,8 +78,8 @@ const create = async (pembayaran) => {
         logger.error(
             "Error while validating pembayaran:",
             validatePembayaran.error?.message
-            );
-        throw new ResponseError(400, "Validation error: ",validatePembayaran.error?.message );
+        );
+        throw new ResponseError(400, "Validation error: ", validatePembayaran.error?.message);
     }
 
     const result = await pembayaranRepository.create(pembayaran)
@@ -102,8 +102,8 @@ const update = async (pembayaran) => {
         logger.error(
             "Error while validating pembayaran:",
             validatePembayaran.error?.message
-            );
-        throw new ResponseError(400, "Validation error: ",validatePembayaran.error?.message );
+        );
+        throw new ResponseError(400, "Validation error: ", validatePembayaran.error?.message);
     }
     const result = await pembayaranRepository.update(pembayaran)
     if (!result || result.length === 0) {

@@ -3,8 +3,8 @@ export function up(knex) {
         table.string("ID_Detail_Transaksi", 50).primary()
         table.string("ID_Transaksi", 50)
         table.string("ID_Kucing", 50)
-    })        
-    .raw(`
+    })
+        .raw(`
     CREATE PROCEDURE tambahDetailTransaksi
         @ID_Detail_Transaksi VARCHAR(50),
         @ID_Transaksi VARCHAR(50),
@@ -25,7 +25,6 @@ export function up(knex) {
 
 export function down(knex) {
     return knex.schema
-    .dropTable("Detail_Transaksi")
-    .raw('DROP FUNCTION IF EXISTS HitungTotal')
-    .raw('DROP PROCEDURE IF EXISTS tambahDetailTransaksi')
+        .dropTable("Detail_Transaksi")
+        .raw('DROP PROCEDURE IF EXISTS tambahDetailTransaksi')
 }

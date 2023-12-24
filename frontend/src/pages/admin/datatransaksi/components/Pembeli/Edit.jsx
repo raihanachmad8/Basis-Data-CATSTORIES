@@ -1,8 +1,14 @@
 import { useRef } from "react";
 import PropTypes from "prop-types";
 import { updatePembeli } from "../../../../../services/pembeli";
+import Swal from "sweetalert2";
 
-const FormEditDataPembeli = ({ setEditMenu, dataEdit }) => {
+const FormEditDataPembeli = ({
+    setEditMenu,
+    dataEdit,
+    updateDataPembeli,
+    setOpenDetail,
+}) => {
     const formRef = useRef(null);
 
     const handleSubmit = (e) => {
@@ -12,13 +18,17 @@ const FormEditDataPembeli = ({ setEditMenu, dataEdit }) => {
 
         formData.append("ID_Pembeli", dataEdit && dataEdit.ID_Pembeli);
 
-        console.log("FORM DATA", formData);
-
-        updatePembeli(formData, (res) => {
-            console.log(res);
+        updatePembeli(formData, (status, res) => {
+            if (status) {
+                Swal.fire("Success", res.message, "success");
+                setEditMenu(false);
+                setOpenDetail(false);
+                updateDataPembeli();
+                form.reset();
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
-
-        setEditMenu(false);
     };
 
     return (
@@ -105,6 +115,8 @@ const FormEditDataPembeli = ({ setEditMenu, dataEdit }) => {
 FormEditDataPembeli.propTypes = {
     dataEdit: PropTypes.object.isRequired,
     setEditMenu: PropTypes.func.isRequired,
+    updateDataPembeli: PropTypes.func.isRequired,
+    setOpenDetail: PropTypes.func.isRequired,
 };
 
 export default FormEditDataPembeli;

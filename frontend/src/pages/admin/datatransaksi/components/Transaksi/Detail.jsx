@@ -13,11 +13,6 @@ const DetailTransaksi = ({ id }) => {
         });
     }, [id]);
 
-    useEffect(() => {
-        console.log("DETAIL", detail);
-        console.log("DATA KUCING", dataKucing);
-    }, [detail]);
-
     return (
         <>
             <table className="w-full text-center">
@@ -50,16 +45,18 @@ const DetailTransaksi = ({ id }) => {
                                 {index + 1}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
-                                {detail.Pembeli.Nama_Pembeli}
+                                {detail.Pembeli[0].Nama_Pembeli}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
                                 {item.Kucing.Nama_Kucing}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
-                                {detail.Jenis_Pengiriman?.Jenis_Pengiriman || "-"}
+                                {detail.Jenis_Pengiriman?.Jenis_Pengiriman ||
+                                    "-"}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
-                                {detail.Metode_Pembayaran?.Metode_Pembayaran ?? "-"}
+                                {detail.Metode_Pembayaran?.Metode_Pembayaran ??
+                                    "-"}
                             </td>
                             <td className="text-gray-600 text-xs border-b border-gray-200 py-5">
                                 {detail.Pesan}

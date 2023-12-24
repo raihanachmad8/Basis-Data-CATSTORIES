@@ -36,7 +36,6 @@ const findById = async (id) => {
 const create = async (jenis) => {
     try {
         const id = await incrementId('Jenis', 'ID_Jenis', 'J')
-        console.log(id)
         await db.raw(`
         EXEC TambahJenis @ID_Jenis = :ID_Jenis, @Jenis_Kucing = :Jenis_Kucing;`, 
         { ID_Jenis: id, Jenis_Kucing: jenis.Jenis_Kucing });

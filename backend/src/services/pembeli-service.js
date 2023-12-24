@@ -94,7 +94,6 @@ const create = async (pembeli) => {
 }
 
 const update = async (pembeli) => {
-    console.log(pembeli)
     logger.info('Create Pembeli:', pembeli)
     const validatePembeli = validate(
         pembeliValidation.updatePembeliSchema,

@@ -1,9 +1,20 @@
 import PropTypes from "prop-types";
 import { deleteMetodePembayaran } from "../../../../../services/metodePembayaran";
-const TabelMetodePembayaran = ({ data, setEditMenu, setDataEdit }) => {
+import Swal from "sweetalert2";
+const TabelMetodePembayaran = ({
+    data,
+    setEditMenu,
+    setDataEdit,
+    updatePembayaran,
+}) => {
     const handleDelete = (id) => {
-        deleteMetodePembayaran(id, (res) => {
-            console.log(res);
+        deleteMetodePembayaran(id, (status, res) => {
+            if (status) {
+                updatePembayaran();
+                Swal.fire("Success", res.message, "success");
+            } else {
+                Swal.fire("Error", res.message, "error");
+            }
         });
     };
 
@@ -76,6 +87,7 @@ TabelMetodePembayaran.propTypes = {
     data: PropTypes.array.isRequired,
     setEditMenu: PropTypes.func.isRequired,
     setDataEdit: PropTypes.func.isRequired,
+    updatePembayaran: PropTypes.func.isRequired,
 };
 
 export default TabelMetodePembayaran;

@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
 
-const Card = ({ item, setFormKucing, formKucing, setTotal }) => {
+const Card = ({ item, setFormKucing, formKucing, setTotal, click }) => {
     const handleClick = (id, biaya) => {
         setTotal((prev) => prev + biaya);
         setFormKucing([...formKucing, { ID_Kucing: id }]);
+        click(id);
     };
 
     return (
@@ -16,7 +17,7 @@ const Card = ({ item, setFormKucing, formKucing, setTotal }) => {
                     <img
                         src={item.Foto}
                         alt=""
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-contain rounded-lg"
                     />
                 </div>
                 <div className="w-full h-fit">
@@ -47,6 +48,7 @@ Card.propTypes = {
     setFormKucing: PropTypes.func.isRequired,
     formKucing: PropTypes.array.isRequired,
     setTotal: PropTypes.func.isRequired,
+    click: PropTypes.func.isRequired,
 };
 
 export default Card;

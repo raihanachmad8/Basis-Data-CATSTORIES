@@ -1,12 +1,13 @@
 import axios from 'axios'
 
-export const getAllTransaksi = async (callback) => {
-  await axios.get('http://localhost:3000/api/v1/cat-stories/checkout/payment')
+export const getAllTransaksi = async (ref, search, sort, order, callback) => {
+  await axios.get(`http://localhost:3000/api/v1/cat-stories/checkout/payment?search=${search}&sort=${sort}&orderBy=${order}`)
     .then(function (response) {
       callback(response.data.data)
+      ref.current.classList.add('hidden')
     })
     .catch(function (error) {
-      console.log(error)
+      callback(error)
     })
 }
 
@@ -15,7 +16,7 @@ export const createTransaksi = async (data, callback) => {
 
   await axios.post(URL, {
     Pembeli: {
-      Nama_Pembeli: data.get('Nama_Pembeli'),
+      Nama_Pembeli: capitalizeEachWord(data.get('Nama_Pembeli')),
       Alamat: data.get('Alamat'),
       No_Telp: data.get('No_Telp'),
       Email: data.get('Email')
@@ -28,9 +29,12 @@ export const createTransaksi = async (data, callback) => {
     Pesan: data.get('Pesan'),
     Detail_Transaksi: JSON.parse(data.get('Detail_Transaksi'))
   }).then(function (response) {
-    callback(response.data)
+    callback(true, response.data)
   }).catch(function (error) {
-    console.log(error)
+    callback(false, error)
   })
+}
 
+function capitalizeEachWord(string) {
+  return string.replace(/\b\w/g, (char) => char.toUpperCase());
 }

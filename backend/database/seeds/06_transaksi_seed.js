@@ -7,7 +7,6 @@ export async function seed(knex) {
             {ID_Transaksi:'T2', ID_Pembeli: 'P2', ID_Jenis_Pengiriman: 'JP2', ID_Metode_Pembayaran: 'MPB2', Total_Biaya: 300000, Nomor_Resi: 'RESI456', Tanggal_Transaksi: '2023-02-20', Pesan: 'Pesan transaksi 2'},
         ])
         await knex('Transaksi').insert(Transaksi)
-        console.log('seed Transaksi success')
         return 
     })
 }
