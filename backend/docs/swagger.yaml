@@ -18,7 +18,6 @@ paths:
       tags:
         -  API Documentation
       summary: Get API Documentation
-
   /users/auth/login:
     post:
       tags:
@@ -30,8 +29,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Login'
             example:
-              username: raihan
-              password: raihan
+              username: admin
+              password: admin
       responses:
         '201':
           description: OK
@@ -43,9 +42,9 @@ paths:
                 status: 200
                 message: Login success
                 data:
-                  - user:
+                  user:
                     username: raihan
-                    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJyYWloYW4iLCJpYXQiOjE2MjQ0NjY0NzMsImV4cCI6MTY
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJyYWloYW4iLCJpYXQiOjE2MjQ0NjY0NzMsImV4cCI6MTY
         '400':
           description: Bad Request
           content:
@@ -100,8 +99,8 @@ paths:
                 status: 200
                 message: Get current user success
                 data:
-                  - user:
-                      username: raihan
+                  user:
+                    username: admin
         '401':
           description: Unauthorized
           content:
@@ -172,6 +171,22 @@ paths:
       summary: Get all jenis
       security:
         -  bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering jenis.
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Sort order for jenis.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+          description: Order jenis by a specific field.
       responses:
         '200':
           description: OK
@@ -184,9 +199,9 @@ paths:
                 message: Get all jenis success
                 data:
                   - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-                    Nama_Jenis: Russian Blue
+                    Jenis_Kucing: Russian Blue
                   - ID_Jenis: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
-                    Nama_Jenis: Abyssinian
+                    Jenis_Kucing: Abyssinian
         '401':
           description: Unauthorized
           content:
@@ -231,7 +246,7 @@ paths:
                 message: Get jenis success
                 data:
                   - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-                    Nama_Jenis: Russian Blue
+                    Jenis_Kucing: Russian Blue
         '401':
           description: Unauthorized
           content:
@@ -272,10 +287,10 @@ paths:
             schema:
               type: object
               properties:
-                Nama_Jenis:
+                Jenis_Kucing:
                   type: string
             example:
-              Nama_Jenis: Russian Blue
+              Jenis_Kucing: Russian Blue
       responses:
         '201':
           description: OK
@@ -288,7 +303,7 @@ paths:
                 message: Create new jenis success
                 data:
                   - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-                    Nama_Jenis: Russian Blue
+                    Jenis_Kucing: Russian Blue
         '400':
           description: Bad Request
           content:
@@ -297,7 +312,7 @@ paths:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
                 status: 400
-                error: Nama_Jenis is required
+                error: Jenis_Kucing is required
         '401':
           description: Unauthorized
           content:
@@ -331,11 +346,11 @@ paths:
               properties:
                 ID_Jenis:
                   type: string
-                Nama_Jenis:
+                Jenis_Kucing:
                   type: string
             example:
               ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-              Nama_Jenis: Russian Blue
+              Jenis_Kucing: Russian Blue
       responses:
         '201':
           description: OK
@@ -348,7 +363,7 @@ paths:
                 message: Update jenis success
                 data:
                   - ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-                    Nama_Jenis: Russian Blue
+                    Jenis_Kucing: Russian Blue
         '400':
           description: Bad Request
           content:
@@ -357,7 +372,7 @@ paths:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
                 status: 400
-                error: Nama_Jenis is required
+                error: Jenis_Kucing is required
         '401':
           description: Unauthorized
           content:
@@ -456,6 +471,22 @@ paths:
       summary: Get all kucing
       security: 
         -  bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering kucing.
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Sort order for kucing.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+          description: Order kucing by a specific field.
       responses:
         '200': 
           description: OK
@@ -468,15 +499,28 @@ paths:
                 message: Get all kucing success
                 data:
                   - ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-                    ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Jenis_Kucing:
+                      ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Kucing: Russian Blue
                     Nama_Kucing: Kucing
-                    Foto: 
-                      - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                    Foto: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
                     Umur: 1
                     Jenis_Kelamin: Jantan
                     Tanggal_Masuk: 2021-06-23T00:00:00.000Z
                     Biaya: 100000
-                    Status: 1
+                    Status: Tersedia
+                    Keterangan: Kucing ini sangat lucu
+                  - ID_Kucing: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
+                    Jenis_Kucing:
+                      ID_Jenis: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
+                      Jenis_Kucing: Abyssinian
+                    Nama_Kucing: Kucing
+                    Foto: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/35392ceb-03b7-4fea-ba98-1c6be95dbaa6.jpg
+                    Umur: 1
+                    Jenis_Kelamin: Jantan
+                    Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                    Biaya: 100000
+                    Status: Tidak Tersedia
                     Keterangan: Kucing ini sangat lucu
         '400': 
           description: Bad Request
@@ -540,15 +584,16 @@ paths:
                 message: Get kucing success
                 data:
                   - ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-                    ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Jenis_Kucing: 
+                      ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Kucing: Russian Blue
                     Nama_Kucing: Kucing
-                    Foto: 
-                      - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                    Foto: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
                     Umur: 1
                     Jenis_Kelamin: Jantan
                     Tanggal_Masuk: 2021-06-23T00:00:00.000Z
                     Biaya: 100000
-                    Status: 1
+                    Status: 'Tersedia'
                     Keterangan: Kucing ini sangat lucu
         '400': 
           description: Bad Request
@@ -585,8 +630,7 @@ paths:
                 $ref: '#/components/schemas/ResponseFailed'
               example:
                 status: 500
-                error: Internal Server Error
-                
+                error: Internal Server Error             
   /cat-stories/kucing/create:
     post: 
       tags:
@@ -605,7 +649,7 @@ paths:
                 Nama_Kucing:
                   type: string
                 Foto:
-                  type: string
+                  type: string # Or 'type: file' if you want to explicitly state it's a file
                   format: binary
                 Umur:
                   type: integer
@@ -613,26 +657,27 @@ paths:
                 Jenis_Kelamin:
                   type: string
                 Tanggal_Masuk:
-                  type: string
+                  type: string # Date format
                 Biaya:
                   type: integer
                   format: int64
                 Status:
-                  type: integer
-                  format: int64
+                  type: string 
+                  enum: 
+                    - Tersedia
+                    - Tidak Tersedia
                 Keterangan:
                   type: string
-            example:
-              ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-              Nama_Kucing: Kucing
-              Foto: 
-                - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
-              Umur: 1
-              Jenis_Kelamin: Jantan
-              Tanggal_Masuk: 2021-06-23T00:00:00.000Z
-              Biaya: 100000
-              Status: 1
-              Keterangan: Kucing ini sangat lucu
+              example:
+                ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                Nama_Kucing: Kucing
+                Foto: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                Umur: 1
+                Jenis_Kelamin: Jantan
+                Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                Biaya: 90000
+                Status: Tersedia
+                Keterangan: Kucing ini sangat lucu
       responses:
         '201': 
           description: OK
@@ -653,7 +698,7 @@ paths:
                     Jenis_Kelamin: Jantan
                     Tanggal_Masuk: 2021-06-23T00:00:00.000Z
                     Biaya: 100000
-                    Status: 1
+                    Status: Tersedia
                     Keterangan: Kucing ini sangat lucu
         '400': 
           description: Bad Request
@@ -661,9 +706,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
-              example:
-                status: 400
-                error: ID_Jenis is required
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 400
+                    error: ID_Jenis is required
+                Nama_Kucing:
+                  value:
+                    status: 400
+                    error: Nama_Kucing is required
+                Foto:
+                  value:
+                    status: 400
+                    error: No file uploaded
+                Umur:
+                  value: 
+                    status: 400
+                    error: Umur is required
+                Jenis_Kelamin:
+                  value:
+                    status: 400
+                    error: Jenis_Kelamin is required
+                Tanggal_Masuk:
+                  value: 
+                    status: 400
+                    error: Tanggal_Masuk is required
+                Biaya:
+                  value: 
+                    status: 400
+                    error: Biaya is required
+                Status:
+                  value: 
+                    status: 400
+                    error: Status is required
+                Keterangan:
+                  value: 
+                    status: 400
+                    error: Keterangan is required
         '401':
           description: Unauthorized
           content: 
@@ -683,14 +762,14 @@ paths:
                 status: 500
                 error: Internal Server Error
   /cat-stories/kucing/update:
-    put:
-      tags:
+    put: 
+      tags: 
         -  Kucing
       summary: Update kucing
-      security:
-        - bearerAuth: []
+      security: 
+        -  bearerAuth: []
       requestBody:
-        content:
+        content: 
           multipart/form-data:
             schema:
               type: object
@@ -702,7 +781,7 @@ paths:
                 Nama_Kucing:
                   type: string
                 Foto:
-                  type: string
+                  type: string # Or 'type: file' if you want to explicitly state it's a file
                   format: binary
                 Umur:
                   type: integer
@@ -710,27 +789,28 @@ paths:
                 Jenis_Kelamin:
                   type: string
                 Tanggal_Masuk:
-                  type: string
+                  type: string # Date format
                 Biaya:
                   type: integer
                   format: int64
                 Status:
-                  type: integer
-                  format: int64
+                  type: string 
+                  enum: 
+                    - Tersedia
+                    - Tidak Tersedia
                 Keterangan:
                   type: string
-            example:
-              ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-              ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
-              Nama_Kucing: Kucing
-              Foto: 
-                - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
-              Umur: 1
-              Jenis_Kelamin: Jantan
-              Tanggal_Masuk: 2021-06-23T00:00:00.000Z
-              Biaya: 100000
-              Status: 1
-              Keterangan: Kucing ini sangat lucu
+              example:
+                ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                Nama_Kucing: Kucing
+                Foto: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                Umur: 1
+                Jenis_Kelamin: Jantan
+                Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                Biaya: 90000
+                Status: Tersedia
+                Keterangan: Kucing ini sangat lucu
       responses:
         '201': 
           description: OK
@@ -747,15 +827,55 @@ paths:
                     Nama_Kucing: Kucing
                     Foto: 
                       - url: https://res.cloudinary.com/dxqnb8xjb/image/upload/v1624466433/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
-        '400': 
+                    Umur: 1
+                    Jenis_Kelamin: Jantan
+                    Tanggal_Masuk: 2021-06-23T00:00:00.000Z
+                    Biaya: 100000
+                    Status: Tersedia
+                    Keterangan: Kucing ini sangat lucu
+        '400':
           description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
-              example:
-                status: 400
-                error: ID_Jenis is required
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 400
+                    error: ID_Jenis is required
+                Nama_Kucing:
+                  value:
+                    status: 400
+                    error: Nama_Kucing is required
+                Foto:
+                  value:
+                    status: 400
+                    error: No file uploaded
+                Umur:
+                  value: 
+                    status: 400
+                    error: Umur is required
+                Jenis_Kelamin:
+                  value:
+                    status: 400
+                    error: Jenis_Kelamin is required
+                Tanggal_Masuk:
+                  value: 
+                    status: 400
+                    error: Tanggal_Masuk is required
+                Biaya:
+                  value: 
+                    status: 400
+                    error: Biaya is required
+                Status:
+                  value: 
+                    status: 400
+                    error: Status is required
+                Keterangan:
+                  value: 
+                    status: 400
+                    error: Keterangan is required
         '401':
           description: Unauthorized
           content: 
@@ -784,22 +904,19 @@ paths:
                 status: 500
                 error: Internal Server Error
   /cat-stories/kucing/delete:
-    delete:
-      tags:
+    delete: 
+      tags: 
         -  Kucing
       summary: Delete kucing
-      security:
-        - bearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                ID_Kucing:
-                  type: string
-            example:
-              ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+      security: 
+        -  bearerAuth: []
+      parameters: 
+        - name: id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Kucing id
       responses:
         '201': 
           description: OK
@@ -811,15 +928,17 @@ paths:
                 status: 201
                 message: Delete kucing success
                 data: 'OK'
-        '400': 
+        '400':
           description: Bad Request
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseFailed'
-              example:
-                status: 400
-                error: ID_Jenis is required
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 400
+                    error: ID_Jenis is required
         '401':
           description: Unauthorized
           content: 
@@ -848,9 +967,1394 @@ paths:
                 status: 500
                 error: Internal Server Error
 
-  
+  /cat-stories/pembeli:
+    get: 
+      tags:
+        - Pembeli
+      summary: Get all pembeli
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering pembeli.
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Sort order for pembeli.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+          description: Order pembeli by a specific field.
+      responses:
+        '200': 
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 200
+                message: Get all pembeli success
+                data:
+                  - ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Pembeli: Pembeli
+                    Alamat: Jl. Pembeli
+                    No_Telp: 081234567890
+                    Email: john.doe@email.com
+                  - ID_Pembeli: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
+                    Nama_Pembeli: Pembeli
+                    Alamat: Jl. Pembeli
+                    No_Telp: 081234567890
+                    Email: john.doe@email.com
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 400
+                    error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 401
+                    error: Unauthorized
+        '404':
+          description: Pembeli not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 404
+                    error: Pembeli not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 500
+                    error: Internal Server Error
+  /cat-stories/pembeli/{id}:
+    get:
+      tags: 
+        -  Pembeli
+      summary: Get pembeli by id
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Pembeli id
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 200
+                message: Get pembeli success
+                data:
+                  - ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Pembeli: Pembeli
+                    Alamat: Jl. Pembeli
+                    No_Telp: 081234567890
+                    Email:
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 400
+                    error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 401
+                    error: Unauthorized
+        '404':
+          description: Pembeli not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 404
+                    error: Pembeli not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Jenis:
+                  value:
+                    status: 500
+                    error: Internal Server Error
+  /cat-stories/pembeli/update:
+    put: 
+      tags: 
+        -  Pembeli
+      summary: Update pembeli
+      security: 
+        -  bearerAuth: []
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID_Pembeli:
+                  type: string
+                Nama_Pembeli:
+                  type: string
+                Alamat:
+                  type: string
+                No_Telp:
+                  type: string
+                Email:
+                  type: string
+            example:
+              ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Nama_Pembeli: Pembeli
+              Alamat: Jl. Pembeli
+              No_Telp: 081234567890
+              Email: john.doe@email.com
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example:
+                status: 200
+                message: Update pembeli success
+                data:
+                  - ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                    Nama_Pembeli: Pembeli
+                    Alamat: Jl. Pembeli
+                    No_Telp: 081234567890
+                    Email: john.doe@email.com
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              examples: 
+                ID_Pembeli:
+                    value:
+                      status: 400
+                      error: ID_Pembeli is required
+                Nama_Pembeli:
+                    value:
+                      status: 400
+                      error: Nama_Pembeli is required
+                Alamat:
+                    value:
+                      status: 400
+                      error: Alamat is required
+                No_Telp:
+                    value:
+                      status: 400
+                      error: No_Telp is required
+                Email:
+                    value:
+                      status: 400
+                      error: Email is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example: 
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Pembeli not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example: 
+                status: 404
+                error: Pembeli not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+              example: 
+                status: 500
+                error: Internal Server Error
+  /cat-stories/pembeli/delete:
+    delete: 
+      tags: 
+        -  Pembeli
+      summary: Delete pembeli
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Pembeli id
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+              example: 
+                status: 201
+                message: Delete pembeli success
+                data: 'OK'
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Pembeli not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 404
+                  error: Pembeli not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pengiriman:
+    get: 
+      tags: 
+        -  Jenis Pengiriman
+      summary: Get all jenis pengiriman
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering jenis pengiriman.
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Sort order for jenis pengiriman.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+          description: Order jenis pengiriman by a specific field.
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+                example:
+                  status: 200
+                  message: Get all jenis pengiriman success
+                  data:
+                    - ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+                    - ID_Jenis_Pengiriman: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
+                      Jenis_Pengiriman: JNT
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Jenis Pengiriman not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 404
+                  error: Jenis Pengiriman not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pengiriman/{id}:
+    get:
+      tags: 
+        -  Jenis Pengiriman
+      summary: Get jenis pengiriman by id
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Jenis Pengiriman id
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+                example:
+                  status: 200
+                  message: Get jenis pengiriman success
+                  data:
+                    - ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Jenis Pengiriman not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 404
+                  error: Jenis Pengiriman not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pengiriman/create:
+    post: 
+      tags: 
+        -  Jenis Pengiriman
+      summary: Create new jenis pengiriman
+      security: 
+        -  bearerAuth: []
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                Jenis_Pengiriman:
+                  type: string
+            example:
+              Jenis_Pengiriman: JNE
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+                example:
+                  status: 201
+                  message: Create new jenis pengiriman success
+                  data:
+                    - ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'
+                examples: 
+                  Jenis_Pengiriman:
+                    value:
+                      status: 400
+                      error: Jenis_Pengiriman is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 401
+                  error: Unauthorized
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pengiriman/update:
+    put: 
+      tags: 
+        -  Jenis Pengiriman
+      summary: Update jenis pengiriman
+      security: 
+        -  bearerAuth: []
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID_Jenis_Pengiriman:
+                  type: string
+                Jenis_Pengiriman:
+                  type: string
+            example:
+              ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Jenis_Pengiriman: JNE 
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'
+                example:
+                  status: 201
+                  message: Update jenis pengiriman success
+                  data:
+                    - ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                examples: 
+                  ID_Jenis_Pengiriman:
+                    value:
+                      status: 400
+                      error: ID_Jenis_Pengiriman is required
+                  Jenis_Pengiriman:
+                    value:
+                      status: 400
+                      error: Jenis_Pengiriman is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Jenis Pengiriman not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 404
+                  error: Jenis Pengiriman not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pengiriman/delete:
+    delete: 
+      tags: 
+        - Jenis Pengiriman
+      summary: Delete jenis pengiriman
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Jenis Pengiriman id
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess' 
+                example:
+                  status: 201
+                  message: Delete jenis pengiriman success
+                  data: 'OK'
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Jenis Pengiriman not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 404
+                  error: Jenis Pengiriman not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pembayaran:
+    get: 
+      tags: 
+        -  Metode Pembayaran
+      summary: Get all metode pembayaran
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering metode pembayaran.
+        - in: query
+          name: sort
+          schema:
+            type: string
+          description: Sort order for metode pembayaran.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+          description: Order metode pembayaran by a specific field.
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess' 
+                example:
+                  status: 200
+                  message: Get all metode pembayaran success
+                  data:
+                    - ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+                    - ID_Metode_Pembayaran: 35392ceb-03b7-4fea-ba98-1c6be95dbaa6
+                      Metode_Pembayaran: Transfer
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Metode Pembayaran not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 404
+                  error: Metode Pembayaran not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pembayaran/{id}:
+    get: 
+      tags:
+        - Metode Pembayaran
+      summary: Get metode pembayaran by id
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Metode Pembayaran id
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess' 
+                example:
+                  status: 200
+                  message: Get metode pembayaran success
+                  data:
+                    - ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Metode Pembayaran not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed' 
+                example:
+                  status: 404
+                  error: Metode Pembayaran not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pembayaran/create:
+    post: 
+      tags: 
+        -  Metode Pembayaran
+      summary: Create new metode pembayaran
+      security: 
+        -  bearerAuth: []
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                Metode_Pembayaran:
+                  type: string
+            example:
+              Metode_Pembayaran: Cash
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'  
+                example:
+                  status: 201
+                  message: Create new metode pembayaran success
+                  data:
+                    - ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                examples: 
+                  Metode_Pembayaran:
+                    value:
+                      status: 400
+                      error: Metode_Pembayaran is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 401
+                  error: Unauthorized
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pembayaran/update:
+    put: 
+      tags: 
+        -  Metode Pembayaran
+      summary: Update metode pembayaran
+      security: 
+        -  bearerAuth: []
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID_Metode_Pembayaran:
+                  type: string
+                Metode_Pembayaran:
+                  type: string
+            example:
+              ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Metode_Pembayaran: Cash
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'  
+                example:
+                  status: 201
+                  message: Update metode pembayaran success
+                  data:
+                    - ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                examples: 
+                  ID_Metode_Pembayaran:
+                    value:
+                      status: 400
+                      error: ID_Metode_Pembayaran is required
+                  Metode_Pembayaran:
+                    value:
+                      status: 400
+                      error: Metode_Pembayaran is required
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Metode Pembayaran not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 404
+                  error: Metode Pembayaran not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/pembayaran/delete:
+    delete: 
+      tags: 
+        -  Metode Pembayaran
+      summary: Delete metode pembayaran
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Metode Pembayaran id
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseSuccess'  
+                example:
+                  status: 201
+                  message: Delete metode pembayaran success
+                  data: 'OK'
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 400
+                  error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 401
+                  error: Unauthorized
+        '404':
+          description: Metode Pembayaran not found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 404
+                  error: Metode Pembayaran not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseFailed'  
+                example:
+                  status: 500
+                  error: Internal Server Error
+  /cat-stories/checkout/payment:
+    get:
+      tags: 
+        -  Transaksi
+      summary: Get all transaksi
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term for filtering transaksi.
+        - in: query
+          name: Sort
+          schema: 
+            type: string
+            description: Sort order for transaksi.
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+          description: Order transaksi by a specific field.
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseSuccess"
+              example:
+                status: 200
+                message: Get all transaksi success
+                data: 
+                  - ID_Transaksi: T1
+                    Pembeli: 
+                      ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Nama_Pembeli: Pembeli
+                      Alamat: Jl. Pembeli
+                      No_Telp: 081234567890
+                      Email: john.doe@email.com
+                    Jenis_Pengiriman: 
+                      ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+                    Metode_Pembayaran:
+                      ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+                    Total_Biaya: 100000
+                    Nomor_Resi: 123456789
+                    Tanggal_Transaksi: 2021-08-01T00:00:00.000Z
+                    Pesan: Pesan
+                    Detail_Transaksi : 
+                      - ID_Detail_Transaksi: DT1
+                        Kucing: 
+                          ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                          Jenis_Kucing: 
+                            ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                            Jenis_Kucing: Kucing Persia
+                          Nama_Kucing: Kucing
+                          Foto: http://localhost:3000/images/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                          Umur: 1
+                          Jenis_Kelamin: Jantan
+                          Tanggal_Masuk: 2021-08-01T00:00:00.000Z
+                          Biaya: 100000
+                          Status: Tersedia
+                          Keterangan: Keterangan
+                      
+                      - ID_Detail_Transaksi: DT2
+                        Kucing: 
+                          ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                          Jenis_Kucing: 
+                            ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                            Jenis_Kucing: Kucing Persia
+                          Nama_Kucing: Kucing
+                          Foto: http://localhost:3000/images/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                          Umur: 1
+                          Jenis_Kelamin: Jantan
+                          Tanggal_Masuk: 2021-08-01T00:00:00.000Z
+                          Biaya: 100000
+                          Status: Tersedia
+                          Keterangan: Keterangan
+                  - ID_Transaksi: T1
+                    Pembeli: 
+                      ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Nama_Pembeli: Pembeli
+                      Alamat: Jl. Pembeli
+                      No_Telp: 081234567890
+                      Email: john.doe@email.com
+                    Jenis_Pengiriman: 
+                      ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+                    Metode_Pembayaran:
+                      ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+                    Total_Biaya: 100000
+                    Nomor_Resi: 123456789
+                    Tanggal_Transaksi: 2021-08-01T00:00:00.000Z
+                    Pesan: Pesan
+                    Detail_Transaksi : 
+                      - ID_Detail_Transaksi: DT1
+                        Kucing: 
+                          ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                          Jenis_Kucing: 
+                            ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                            Jenis_Kucing: Kucing Persia
+                          Nama_Kucing: Kucing
+                          Foto: http://localhost:3000/images/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                          Umur: 1
+                          Jenis_Kelamin: Jantan
+                          Tanggal_Masuk: 2021-08-01T00:00:00.000Z
+                          Biaya: 100000
+                          Status: Tersedia
+                          Keterangan: Keterangan
+                      
+                      - ID_Detail_Transaksi: DT2
+                        Kucing: 
+                          ID_Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                          Jenis_Kucing: 
+                            ID_Jenis: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                            Jenis_Kucing: Kucing Persia
+                          Nama_Kucing: Kucing
+                          Foto: http://localhost:3000/images/1aadf456-c268-4d74-905c-e8de04f7c9a8.jpg
+                          Umur: 1
+                          Jenis_Kelamin: Jantan
+                          Tanggal_Masuk: 2021-08-01T00:00:00.000Z
+                          Biaya: 100000
+                          Status: Tersedia
+                          Keterangan: Keterangan
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 400
+                error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Transaksi not found
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 404
+                error: Transaksi not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/checkout/payment/details/{id}:
+    get: 
+      tags: 
+        -  Transaksi
+      summary: Get transaksi by id
+      security: 
+        -  bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Transaksi id
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseSuccess"
+              example:
+                status: 200
+                message: Get transaksi success
+                data: 
+                  - ID_Transaksi: T1
+                    Pembeli: 
+                      ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Nama_Pembeli: Pembeli
+                      Alamat: Jl. Pembeli
+                      No_Telp: 081234567890
+                      Email: john.doe@email.com
+                    Jenis_Pengiriman:
+                      ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+                    Metode_Pembayaran:
+                      ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+                    Total_Biaya: 100000
+                    Nomor_Resi: 123456789
+                    Tanggal_Transaksi: 2021-08-01T00:00:00.000Z
+                    Pesan: Pesan
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 400
+                error: Bad Request
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Transaksi not found
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 404
+                error: Transaksi not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 500
+                error: Internal Server Error
+  /cat-stories/checkout/payment/create:
+    post: 
+      tags:
+        - Transaksi
+      summary: Create new transaksi
+      security: 
+        -  bearerAuth: []
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                Pembeli:
+                  type: object
+                Jenis_Pengiriman:
+                  type: string
+                Metode_Pembayaran:
+                  type: string
+                Total_Biaya:
+                  type: integer
+                  format: int64
+                Nomor_Resi:
+                  type: string
+                Tanggal_Transaksi:
+                  type: string
+                Pesan:
+                  type: string
+                Detail_Transaksi:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Kucing:
+                        type: string
+            example:
+              Pembeli: 
+                ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                Nama_Pembeli: Pembeli
+                Alamat: Jl. Pembeli
+                No_Telp: 081234567890
+                Email: john.doe@email.com
+              Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+              Total_Biaya: 100000
+              Nomor_Resi: Resi34234
+              Tanggal_Transaksi: 2021-08-01T00:00:00.000Z
+              Pesan: Pesan
+              Detail_Transaksi:
+                - Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                - Kucing: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+      responses:
+        '201':
+          description: OK
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseSuccess"
+              example:
+                status: 201
+                message: Create new transaksi success
+                data: 
+                  - ID_Transaksi: T1
+                    Pembeli: 
+                      ID_Pembeli: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Nama_Pembeli: Pembeli
+                      Alamat: Jl. Pembeli
+                      No_Telp: 081234567890
+                      Email: john.doe@email.com
+                    Jenis_Pengiriman:
+                      ID_Jenis_Pengiriman: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Jenis_Pengiriman: JNE
+                    Metode_Pembayaran:
+                      ID_Metode_Pembayaran: 1aadf456-c268-4d74-905c-e8de04f7c9a8
+                      Metode_Pembayaran: Cash
+                    Total_Biaya: 100000
+                    Nomor_Resi: Resi12324
+                    Tanggal_Transaksi: 2021-08-01T00:00:00.000Z
+                    Pesan: Pesan
+        '400':
+          description: Bad Request
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              examples:
+                Pembeli:
+                  value:
+                    status: 400
+                    error: Pembeli is required
+                Jenis_Pengiriman:
+                  value:
+                    status: 400
+                    error: Jenis_Pengiriman is required
+                Metode_Pembayaran:
+                  value:
+                    status: 400
+                    error: Metode_Pembayaran is required
+                Total_Biaya:
+                  value:
+                    status: 400
+                    error: Total_Biaya is required
+                Nomor_Resi:
+                  value:
+                    status: 400
+                    error: Nomor_Resi is required
+                Tanggal_Transaksi:
+                  value:
+                    status: 400
+                    error: Tanggal_Transaksi is required
+                Pesan:
+                  value:
+                    status: 400
+                    error: Pesan is required
+                Detail_Transaksi:
+                  value:
+                    status: 400
+                    error: Detail_Transaksi is required
+                Kucing:
+                  value:
+                    status: 400
+                    error: Kucing is required 
+        '401':
+          description: Unauthorized
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 401
+                error: Unauthorized
+        '404':
+          description: Transaksi not found
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 404
+                error: Transaksi not found
+        '500':
+          description: Internal Server Error
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/ResponseFailed"
+              example:
+                status: 500
+                error: Internal Server Error
+                
+            
+
+      
+                      
 
 
+
+      
+      
+      
 
 components:
   securitySchemes:
@@ -888,6 +2392,7 @@ components:
           type: string
         data:
           oneOf:
+            - type: object
             - type: array
             - type: string
     ResponseFailed:
@@ -904,7 +2409,7 @@ components:
         ID_Jenis:
           type: integer
           format: int64
-        Nama_Jenis:
+        Jenis_Kucing:
           type: string
     Kucing:
       type: object

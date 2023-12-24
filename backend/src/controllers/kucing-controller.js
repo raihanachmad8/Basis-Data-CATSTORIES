@@ -34,6 +34,10 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
     try {
+        if (!req.file) {
+            logger.error("No file uploaded")
+            throw new ResponseError(400, "No file uploaded")
+        }
         const result = await kucingService.create(req.body, req.file)
         logger.info("Create kucing success")
         res.status(201).json({
@@ -48,6 +52,10 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
+        if (!req.file) {
+            logger.error("No file uploaded")
+            throw new ResponseError(400, "No file uploaded")
+        }
         const result = await kucingService.update(req.body, req.file)
         logger.info('Update kucing success')
         res.status(201).json({

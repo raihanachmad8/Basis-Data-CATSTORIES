@@ -8,7 +8,7 @@ import { resolve } from 'path';
 import * as fs from 'fs';
 import { jenisService } from "./jenis-service.js";
 
-const getAll = async (search, sort, orderBy, groupBy) => {
+const getAll = async (search, sort, orderBy) => {
     let result = (search) ? await kucingRepository.search(search) : await kucingRepository.getAll();
     result = await Promise.all(result.map(async (kucing) => {
         kucing.Jenis_Kucing = (kucing.ID_Jenis != null) ? (await jenisService.get(kucing.ID_Jenis))[0].Jenis_Kucing : null
@@ -35,18 +35,7 @@ const getAll = async (search, sort, orderBy, groupBy) => {
         });
     }
     
-    // Group
-    if (groupBy) {
-        const groupedResults = {};
-        result.forEach(item => {
-            const groupValue = item[groupBy];
-            if (!groupedResults[groupValue]) {
-                groupedResults[groupValue] = [];
-            }
-            groupedResults[groupValue].push(item);
-        });
-        result = Object.values(groupedResults);
-    }
+    
     if (!result || result.length === 0) {
         logger.error("Kucing not found");
         throw new ResponseError(404, "Kucing not found");

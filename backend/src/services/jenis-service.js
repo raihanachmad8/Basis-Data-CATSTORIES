@@ -5,7 +5,7 @@ import { jenisRepository } from "../repository/jenis-repository.js"
 import { jenisValidation } from "../validations/jenis-validation.js"
 import { validate } from "../validations/validate.js"
 
-const getAllJenis = async (search, sort, orderBy, groupBy) => {
+const getAllJenis = async (search, sort, orderBy) => {
     const result = (search) ? await jenisRepository.search(search) : await jenisRepository.getAllJenis()
 
     // Sort
@@ -26,18 +26,6 @@ const getAllJenis = async (search, sort, orderBy, groupBy) => {
         });
     }
 
-    // Group
-    if (groupBy) {
-        const groupedResults = {};
-        result.forEach(item => {
-            const groupValue = item[groupBy];
-            if (!groupedResults[groupValue]) {
-                groupedResults[groupValue] = [];
-            }
-            groupedResults[groupValue].push(item);
-        });
-        result = Object.values(groupedResults);
-    }
     if (!result || result.length === 0) {
         logger.error("Jenis not found");
         throw new ResponseError(404, "Jenis not found");

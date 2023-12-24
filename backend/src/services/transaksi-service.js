@@ -9,7 +9,7 @@ import { pembayaranService } from "./pembayaran-service.js"
 import { pembeliService } from "./pembeli-service.js"
 import { pengirimanService } from "./pengiriman-service.js"
 
-const getAll = async (search, sort, orderBy, groupBy) => {
+const getAll = async (search, sort, orderBy) => {
     try {
         let result = (search) ? await transaksiRepository.search(search) : await transaksiRepository.getAll()
 
@@ -40,18 +40,6 @@ const getAll = async (search, sort, orderBy, groupBy) => {
             });
         }
 
-        // Group
-        if (groupBy) {
-            const groupedResults = {};
-            result.forEach(item => {
-                const groupValue = item[groupBy];
-                if (!groupedResults[groupValue]) {
-                    groupedResults[groupValue] = [];
-                }
-                groupedResults[groupValue].push(item);
-            });
-            result = Object.values(groupedResults);
-        }
         if (!result || result.length === 0) {
             logger.error("Kucing not found");
             throw new ResponseError(404, "Kucing not found");

@@ -3,7 +3,7 @@ import { pengirimanRepository } from "../repository/pengiriman-repository.js"
 import { pengirimanValidation } from "../validations/pengiriman-validation.js"
 import { ResponseError } from "../errors/response-error.js"
 import { validate } from "../validations/validate.js"
-const getAll = async (search, sort, orderBy, groupBy) => {
+const getAll = async (search, sort, orderBy) => {
     const result = (search) ? await pengirimanRepository.search(search) : await pengirimanRepository.getAll()
     
     // Sort
@@ -24,18 +24,7 @@ const getAll = async (search, sort, orderBy, groupBy) => {
         });
     }
     
-    // Group
-    if (groupBy) {
-        const groupedResults = {};
-        result.forEach(item => {
-            const groupValue = item[groupBy];
-            if (!groupedResults[groupValue]) {
-                groupedResults[groupValue] = [];
-            }
-            groupedResults[groupValue].push(item);
-        });
-        result = Object.values(groupedResults);
-    }
+   
     if (!result || result.length === 0) {
         logger.error("jenis pengiriman not found");
         throw new ResponseError(404, "jenis pengiriman not found");

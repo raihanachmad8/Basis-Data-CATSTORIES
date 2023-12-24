@@ -5,7 +5,7 @@ dotenv.config();
 export default {
 
     development: {
-        client: 'mssql',
+        client: process.env.DB_CLIENT || 'mssql',
         connection: {
             host: process.env.DB_MSSQL_HOST || 'localhost', 
             port: parseInt(process.env.DB_MSSQL_PORT) || 1433,

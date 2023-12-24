@@ -5,7 +5,7 @@ import { pembayaranRepository } from "../repository/pembayaran-repository.js"
 import { pembayaranValidation } from "../validations/pembayaran-validation.js"
 import { validate } from "../validations/validate.js"
 
-const getAll = async (search, sort, orderBy, groupBy) => {
+const getAll = async (search, sort, orderBy) => {
     const result = (search) ? await pembayaranRepository.search(search) : await pembayaranRepository.getAll()
     if (!result || result.length === 0) {
         logger.error("metode pembayaran not found");
@@ -30,18 +30,6 @@ const getAll = async (search, sort, orderBy, groupBy) => {
         });
     }
 
-    // Group
-    if (groupBy) {
-        const groupedResults = {};
-        result.forEach(item => {
-            const groupValue = item[groupBy];
-            if (!groupedResults[groupValue]) {
-                groupedResults[groupValue] = [];
-            }
-            groupedResults[groupValue].push(item);
-        });
-        result = Object.values(groupedResults);
-    }
     if (!result || result.length === 0) {
         logger.error("Metode Pembayaran not found");
         throw new ResponseError(404, "Metode Pembayaran not found");
