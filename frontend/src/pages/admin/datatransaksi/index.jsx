@@ -145,7 +145,7 @@ const DataTransaksi = () => {
                                                     onClick={handleTambahData}
                                                     className="text-base text-white px-3 py-2 bg-green-500 rounded-md text-center disabled:opacity-50 disabled:cursor-not-allowed"
                                                     disabled={
-                                                        dataKucing.length === 0
+                                                        dataKucing.length === 0 && menu === "Tabel Data Transaksi"
                                                     }
                                                 >
                                                     Tambah Data
